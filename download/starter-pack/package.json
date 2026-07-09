@@ -1,0 +1,42 @@
+{
+  "name": "datasphere-rh-guinee",
+  "version": "0.1.0",
+  "private": true,
+  "description": "SIRH premium SaaS multi-tenant pour la Guinée",
+  "license": "MIT",
+  "packageManager": "pnpm@9.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:web": "pnpm --filter @dsrh/web dev",
+    "dev:api": "pnpm --filter @dsrh/api dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:logs": "docker compose logs -f postgres redis minio",
+    "db:studio": "pnpm --filter @dsrh/db studio",
+    "db:migrate": "pnpm --filter @dsrh/db prisma migrate dev",
+    "db:reset": "pnpm --filter @dsrh/db prisma migrate reset --force",
+    "db:seed": "pnpm --filter @dsrh/db tsx seed/index.ts",
+    "db:tenant:create": "pnpm --filter @dsrh/db tsx scripts/create-tenant.ts",
+    "db:tenant:list": "pnpm --filter @dsrh/db tsx scripts/list-tenants.ts"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "typescript": "^5.4.0",
+    "prettier": "^3.3.0",
+    "eslint": "^9.0.0",
+    "@types/node": "^20.14.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  }
+}

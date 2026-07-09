@@ -1,0 +1,388 @@
+// ============================================================
+// DataSphere RH Guinée — Prisma Schema (multi-tenant)
+// ============================================================
+// Ce schéma est appliqué DANS chaque schéma tenant (tenant_{slug}).
+// Le schéma public.tenants est créé par docker/postgres/init-multi-tenant.sh
+//
+// Migration initiale:
+//   pnpm db:migrate --name init
+//
+// Pour créer un nouveau tenant:
+//   pnpm db:tenant:create <slug>
+// (le script exécute ce schéma dans un nouveau schéma PG)
+// ============================================================
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema", "postgresqlExtensions"]
+  output          = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  schemas    = ["public", "tenant_demo"]
+  extensions = [uuid_ossp, pgcrypto, pg_trgm, btree_gin(map: "btree_gin")]
+}
+
+// ============================================================
+// SCHÉMA PUBLIC — gestion des tenants (cross-tenant)
+// ============================================================
+
+model Tenant {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  slug        String   @unique
+  schemaName  String   @unique @map("schema_name")
+  plan        String   @default("starter")
+  status      String   @default("active")
+  metadata    Json     @default("{}")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@schema("public")
+  @@map("tenants")
+  @@index([status])
+}
+
+// ============================================================
+// SCHÉMA TENANT — toutes les tables ci-dessous vivent dans tenant_{slug}
+// ============================================================
+
+model Company {
+  id                String    @id @default(uuid()) @db.Uuid
+  tenantId          String    @db.Uuid @map("tenant_id")
+  raisonSociale     String    @map("raison_sociale")
+  sigle             String?
+  nif               String?   @unique
+  rc                String?   @unique
+  cnssNumero        String?   @unique @map("cnss_numero")
+  adresse           String?
+  ville             String?
+  telephone         String?
+  email             String?
+  devisePrincipale  String    @default("GNF") @map("devise_principale") @db.Char(3)
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  employees         Employee[]
+  cnssParams        CnssParam[]
+
+  @@schema("tenant_demo")
+  @@map("companies")
+}
+
+model Employee {
+  id                String    @id @default(uuid()) @db.Uuid
+  tenantId          String    @db.Uuid @map("tenant_id")
+  companyId         String    @db.Uuid @map("company_id")
+  matricule         String
+  nom               String
+  prenoms           String
+  dateNaissance     DateTime? @map("date_naissance") @db.Date
+  lieuNaissance     String?   @map("lieu_naissance")
+  nationalite       String    @default("GN") @db.Char(2)
+  cnssNumero        String?   @unique @map("cnss_numero")
+  nir                String?
+  sexe              String?   @db.Char(1)
+  situationFamiliale String?  @map("situation_familiale")
+  nombreEnfants     Int       @default(0) @map("nombre_enfants")
+  adresse           String?
+  telephone         String?
+  email             String?
+  photoUrl          String?   @map("photo_url")
+  dateEmbauche      DateTime  @map("date_embauche") @db.Date
+  dateSortie        DateTime? @map("date_sortie") @db.Date
+  motifSortie       String?   @map("motif_sortie")
+  statut            String    @default("actif")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  company           Company   @relation(fields: [companyId], references: [id])
+  contracts         Contract[]
+  payslips          Payslip[]
+  leaveRequests     LeaveRequest[]
+  documents         EmployeeDocument[]
+  user              User?
+
+  @@schema("tenant_demo")
+  @@map("employees")
+  @@unique([tenantId, matricule])
+  @@unique([tenantId, cnssNumero])
+  @@index([companyId])
+  @@index([statut])
+}
+
+model Contract {
+  id              String    @id @default(uuid()) @db.Uuid
+  employeeId      String    @db.Uuid @map("employee_id")
+  type            String    // CDI | CDD | STAGE | PRESTATAIRE | EXPATRIE | APPRENTI
+  dateDebut       DateTime  @map("date_debut") @db.Date
+  dateFin         DateTime? @map("date_fin") @db.Date
+  poste           String
+  serviceId       String?   @db.Uuid @map("service_id")
+  salaireBase     Decimal   @map("salaire_base") @db.Decimal(14, 2)
+  devise          String    @default("GNF") @db.Char(3)
+  periodicite     String    @default("MENSUEL")
+  motifCdd        String?   @map("motif_cdd")
+  preavisJours    Int       @default(30) @map("preavis_jours")
+  clauses         Json      @default("{}")
+  avenantParent   String?   @db.Uuid @map("avenant_parent")
+  status          String    @default("ACTIF")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  employee        Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  payslips        Payslip[]
+
+  @@schema("tenant_demo")
+  @@map("contracts")
+  @@index([employeeId])
+  @@index([type])
+}
+
+model CnssParam {
+  id                       String    @id @default(uuid()) @db.Uuid
+  tenantId                 String    @db.Uuid @map("tenant_id")
+  tauxCnssSalarie          Decimal   @default(0.0500) @map("taux_cnss_salarie") @db.Decimal(5, 4)
+  tauxCnssEmployeur        Decimal   @default(0.0800) @map("taux_cnss_employeur") @db.Decimal(5, 4)
+  plafondCnss              Decimal   @default(4640000) @map("plafond_cnss") @db.Decimal(14, 2)
+  smig                     Decimal   @default(580000) @db.Decimal(14, 2)
+  tauxRts                  Decimal   @default(0.0100) @map("taux_rts") @db.Decimal(5, 4)
+  tauxVersementForfaitaire Decimal   @default(0.0400) @map("taux_versement_forfaitaire") @db.Decimal(5, 4)
+  tauxTaxeApprentissage    Decimal   @default(0.0100) @map("taux_taxe_apprentissage") @db.Decimal(5, 4)
+  tauxFormationPro         Decimal   @default(0.0300) @map("taux_formation_pro") @db.Decimal(5, 4)
+  tauxAccidentTravail      Decimal   @default(0.0200) @map("taux_accident_travail") @db.Decimal(5, 4)
+  periodicite              String    @default("MENSUEL")
+  dateEffet                DateTime  @map("date_effet") @db.Date
+  dateFin                  DateTime? @map("date_fin") @db.Date
+  createdAt                DateTime  @default(now()) @map("created_at")
+
+  company                  Company?
+
+  @@schema("tenant_demo")
+  @@map("cnss_params")
+}
+
+model PayrollPeriod {
+  id          String    @id @default(uuid()) @db.Uuid
+  tenantId    String    @db.Uuid @map("tenant_id")
+  mois        Int
+  annee       Int
+  libelle     String?
+  dateDebut   DateTime  @map("date_debut") @db.Date
+  dateFin     DateTime  @map("date_fin") @db.Date
+  status      String    @default("OUVERTE") // OUVERTE | CALCULEE | VALIDEE | CLOTUREE
+  lockedAt    DateTime? @map("locked_at")
+  lockedBy    String?   @db.Uuid @map("locked_by")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  payslips    Payslip[]
+
+  @@schema("tenant_demo")
+  @@map("payroll_periods")
+  @@unique([tenantId, mois, annee])
+}
+
+model Payslip {
+  id                    String    @id @default(uuid()) @db.Uuid
+  tenantId              String    @db.Uuid @map("tenant_id")
+  employeeId            String    @db.Uuid @map("employee_id")
+  periodId              String    @db.Uuid @map("period_id")
+  contractId            String    @db.Uuid @map("contract_id")
+  salaireBase           Decimal   @map("salaire_base") @db.Decimal(14, 2)
+  primes                Json      @default("[]")
+  heuresSupplementaires Json      @default("[]") @map("heures_supplementaires")
+  avantagesNature       Json      @default("[]") @map("avantages_nature")
+  salaireBrut           Decimal   @map("salaire_brut") @db.Decimal(14, 2)
+  salaireBrutImposable  Decimal   @map("salaire_brut_imposable") @db.Decimal(14, 2)
+  cnssSalarie           Decimal   @map("cnss_salarie") @db.Decimal(14, 2)
+  cnssEmployeur         Decimal   @map("cnss_employeur") @db.Decimal(14, 2)
+  rts                   Decimal   @db.Decimal(14, 2)
+  versementForfaitaire  Decimal   @map("versement_forfaitaire") @db.Decimal(14, 2)
+  taxeApprentissage     Decimal   @map("taxe_apprentissage") @db.Decimal(14, 2)
+  formationPro          Decimal   @map("formation_pro") @db.Decimal(14, 2)
+  retenuesDiverses      Json      @default("[]") @map("retenues_diverses")
+  netAPayer             Decimal   @map("net_a_payer") @db.Decimal(14, 2)
+  pdfKey                String?   @map("pdf_key")
+  pdfGeneratedAt        DateTime? @map("pdf_generated_at")
+  signatureHash         String?   @map("signature_hash") @db.VarChar(64)
+  createdAt             DateTime  @default(now()) @map("created_at")
+
+  employee              Employee      @relation(fields: [employeeId], references: [id])
+  period                PayrollPeriod @relation(fields: [periodId], references: [id])
+  contract              Contract      @relation(fields: [contractId], references: [id])
+
+  @@schema("tenant_demo")
+  @@map("payslips")
+  @@unique([tenantId, employeeId, periodId])
+  @@index([periodId])
+}
+
+model LeaveRequest {
+  id          String    @id @default(uuid()) @db.Uuid
+  tenantId    String    @db.Uuid @map("tenant_id")
+  employeeId  String    @db.Uuid @map("employee_id")
+  type        String    // CONGE_PAYE | MALADIE | MATERNITE | PATERNITE | MARIAGE | DECES | SANS_SOLDE
+  dateDebut   DateTime  @map("date_debut") @db.Date
+  dateFin     DateTime  @map("date_fin") @db.Date
+  demiJournee Boolean   @default(false) @map("demi_journee")
+  motif       String?
+  statut      String    @default("EN_ATTENTE") // EN_ATTENTE | APPROUVE | REFUSE | ANNULE
+  approvedBy  String?   @db.Uuid @map("approved_by")
+  approvedAt  DateTime? @map("approved_at")
+  justificatifKey String? @map("justificatif_key")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  employee    Employee  @relation(fields: [employeeId], references: [id])
+
+  @@schema("tenant_demo")
+  @@map("leave_requests")
+  @@index([employeeId])
+  @@index([statut])
+}
+
+model EmployeeDocument {
+  id          String    @id @default(uuid()) @db.Uuid
+  employeeId  String    @db.Uuid @map("employee_id")
+  type        String    // CONTRAT | CV | DIPLOME | CNSS_CARTE | PIECE_IDENTITE | ATTESTATION
+  fileKey     String    @map("file_key") // MinIO object key
+  fileName    String    @map("file_name")
+  fileSize    Int       @map("file_size")
+  mimeType    String    @map("mime_type")
+  signedAt    DateTime? @map("signed_at")
+  signedBy    String?   @db.Uuid @map("signed_by")
+  signatureHash String? @map("signature_hash")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  employee    Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@schema("tenant_demo")
+  @@map("employee_documents")
+  @@index([employeeId])
+}
+
+model User {
+  id            String    @id @default(uuid()) @db.Uuid
+  tenantId      String    @db.Uuid @map("tenant_id")
+  email         String    @unique
+  phone         String?
+  passwordHash  String    @map("password_hash")
+  mfaSecret     String?   @map("mfa_secret")
+  mfaEnabled    Boolean   @default(false) @map("mfa_enabled")
+  status        String    @default("ACTIF") // ACTIF | SUSPENDU | LOCKED
+  lastLoginAt   DateTime? @map("last_login_at")
+  failedAttempts Int      @default(0) @map("failed_attempts")
+  lockedUntil   DateTime? @map("locked_until")
+  employeeId    String?   @db.Uuid @map("employee_id")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  employee      Employee? @relation(fields: [employeeId], references: [id])
+  userRoles     UserRole[]
+  auditLogs     AuditLog[]
+
+  @@schema("tenant_demo")
+  @@map("users")
+  @@index([tenantId])
+}
+
+model Role {
+  id          String    @id @default(uuid()) @db.Uuid
+  code        String    @unique // SUPER_ADMIN | ADMIN_ENTREPRISE | RH | MANAGER | COMPTABLE | EMPLOYE
+  name        String
+  description String?
+  permissions Json      @default("[]") // liste de permissions "module:action"
+  isSystem    Boolean   @default(true) @map("is_system")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  userRoles   UserRole[]
+
+  @@schema("tenant_demo")
+  @@map("roles")
+}
+
+model UserRole {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid @map("user_id")
+  roleId    String   @db.Uuid @map("role_id")
+  scope     String?  //périmètre: company_id, service_id, ou NULL pour tout le tenant
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleId], references: [id])
+
+  @@schema("tenant_demo")
+  @@map("user_roles")
+  @@unique([userId, roleId])
+}
+
+model AuditLog {
+  id          BigInt    @id @default(autoincrement())
+  tenantId    String    @db.Uuid @map("tenant_id")
+  userId      String?   @db.Uuid @map("user_id")
+  action      String    // CREATE | UPDATE | DELETE | VALIDATE | EXPORT | LOGIN | LOGOUT
+  entityType  String    @map("entity_type")
+  entityId    String?   @db.Uuid @map("entity_id")
+  diff        Json?     // {before: {...}, after: {...}}
+  ipAddress   String?   @map("ip_address") @db.Inet
+  userAgent   String?   @map("user_agent")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  user        User?     @relation(fields: [userId], references: [id])
+
+  @@schema("tenant_demo")
+  @@map("audit_logs")
+  @@index([tenantId, createdAt(sort: Desc)])
+  @@index([entityType, entityId])
+}
+
+model Holiday {
+  id          String    @id @default(uuid()) @db.Uuid
+  tenantId    String    @db.Uuid @map("tenant_id")
+  date        DateTime  @db.Date
+  name        String
+  type        String    @default("LEGAL") // LEGAL | RELIGIEUX | OPTIONNEL
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  @@schema("tenant_demo")
+  @@map("holidays")
+  @@unique([tenantId, date])
+}
+
+model LeavePolicy {
+  id              String    @id @default(uuid()) @db.Uuid
+  tenantId        String    @db.Uuid @map("tenant_id")
+  type            String    // CONGE_PAYE | MALADIE | MATERNITE | ...
+  name            String
+  defaultDays     Int       @map("default_days")
+  isPaid          Boolean   @default(true) @map("is_paid")
+  needsApproval   Boolean   @default(true) @map("needs_approval")
+  needsJustificatif Boolean  @default(false) @map("needs_justificatif")
+  carryOver       Boolean   @default(true) @map("carry_over")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@schema("tenant_demo")
+  @@map("leave_policies")
+  @@unique([tenantId, type])
+}
+
+model PayrollElement {
+  id            String    @id @default(uuid()) @db.Uuid
+  tenantId      String    @db.Uuid @map("tenant_id")
+  employeeId    String    @db.Uuid @map("employee_id")
+  periodId      String    @db.Uuid @map("period_id")
+  type          String    // PRIME | HEURE_SUP | AVANTAGE_NATURE | INDEMNITE | RETENUE | AVANCE
+  label         String
+  amount        Decimal   @db.Decimal(14, 2)
+  quantity      Decimal?  @db.Decimal(8, 2) // pour les heures supp
+  rate          Decimal?  @db.Decimal(8, 2) // taux horaire
+  imposable     Boolean   @default(true)
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  @@schema("tenant_demo")
+  @@map("payroll_elements")
+  @@index([employeeId, periodId])
+}

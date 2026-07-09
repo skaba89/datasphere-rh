@@ -1,0 +1,746 @@
+openapi: 3.1.0
+info:
+  title: DataSphere RH Guinée API
+  version: 1.0.0
+  description: |
+    SIRH premium SaaS multi-tenant pour la Guinée.
+    Authentification JWT Bearer + header X-Tenant-ID.
+    Toutes les réponses au format `{data, meta, error}`.
+  contact:
+    name: DataSphere RH Guinée
+    email: dev@datasphererh.gn
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:3001/api/v1
+    description: Local dev
+  - url: https://api.datasphererh.gn/api/v1
+    description: Production
+
+tags:
+  - name: Auth
+    description: Authentification, 2FA, refresh, reset
+  - name: Tenants
+    description: Gestion des tenants (Super Admin)
+  - name: Companies
+    description: Sociétés d'un tenant
+  - name: Employees
+    description: Employés
+  - name: Contracts
+    description: Contrats et avenants
+  - name: Leaves
+    description: Congés et absences
+  - name: Payroll
+    description: Périodes de paie et bulletins
+  - name: Audit
+    description: Journal d'audit
+  - name: Dashboard
+    description: Tableaux de bord
+
+security:
+  - bearerAuth: []
+
+paths:
+  # ━━━ Auth ━━━
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Connexion
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
+                mfaCode: { type: string, description: "Code TOTP 6 chiffres (si 2FA actif)" }
+      responses:
+        '200':
+          description: Succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      accessToken: { type: string }
+                      refreshToken: { type: string }
+                      user: { $ref: '#/components/schemas/User' }
+                      requiresMfa: { type: boolean }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '423': { description: Compte verrouillé }
+
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      summary: Refresh access token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refreshToken]
+              properties:
+                refreshToken: { type: string }
+      responses:
+        '200': { description: Nouveaux tokens }
+        '401': { description: Refresh token invalide ou réutilisé }
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Déconnexion (révocation refresh)
+      responses:
+        '204': { description: Déconnecté }
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Profil utilisateur courant
+      responses:
+        '200':
+          description: Profil + permissions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { $ref: '#/components/schemas/User' }
+
+  /auth/2fa/setup:
+    post:
+      tags: [Auth]
+      summary: Configure 2FA TOTP
+      responses:
+        '200':
+          description: QR code + codes de secours
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      qrCodeUrl: { type: string }
+                      secret: { type: string }
+                      backupCodes: { type: array, items: { type: string } }
+
+  /auth/2fa/verify:
+    post:
+      tags: [Auth]
+      summary: Vérifie et active 2FA
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code: { type: string }
+
+  /auth/password/forgot:
+    post:
+      tags: [Auth]
+      summary: Demande reset mot de passe
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: { type: string, format: email }
+
+  /auth/password/reset:
+    post:
+      tags: [Auth]
+      summary: Réinitialise mot de passe
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, newPassword]
+              properties:
+                token: { type: string }
+                newPassword: { type: string }
+
+  # ━━━ Tenants ━━━
+  /tenants:
+    get:
+      tags: [Tenants]
+      summary: Liste paginée des tenants
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Liste paginée
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/Tenant' }
+                  meta: { $ref: '#/components/schemas/Pagination' }
+    post:
+      tags: [Tenants]
+      summary: Crée un tenant + schéma PostgreSQL dédié
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, slug, plan]
+              properties:
+                name: { type: string }
+                slug: { type: string, pattern: '^[a-z0-9-]+$' }
+                plan: { type: string, enum: [micro, starter, business, enterprise] }
+
+  /tenants/{id}:
+    parameters:
+      - $ref: '#/components/parameters/TenantIdParam'
+    get:
+      tags: [Tenants]
+      summary: Détail d'un tenant
+      responses:
+        '200': { description: Tenant }
+    patch:
+      tags: [Tenants]
+      summary: Modifie un tenant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                plan: { type: string }
+                status: { type: string }
+    delete:
+      tags: [Tenants]
+      summary: Supprime un tenant (soft delete + anonymisation)
+
+  # ━━━ Companies ━━━
+  /companies:
+    get:
+      tags: [Companies]
+      summary: Liste des sociétés du tenant courant
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Liste paginée
+    post:
+      tags: [Companies]
+      summary: Crée une société
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CompanyInput' }
+
+  /companies/{id}:
+    parameters:
+      - $ref: '#/components/parameters/CompanyIdParam'
+    get:
+      tags: [Companies]
+      summary: Détail société
+    patch:
+      tags: [Companies]
+      summary: Modifie société
+
+  /cnss-params:
+    get:
+      tags: [Companies]
+      summary: Paramètres CNSS du tenant
+      responses:
+        '200':
+          description: Paramètres CNSS
+    put:
+      tags: [Companies]
+      summary: Met à jour les paramètres CNSS (avec date d'effet)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CnssParamsInput' }
+
+  # ━━━ Employees ━━━
+  /employees:
+    get:
+      tags: [Employees]
+      summary: Liste paginée des employés
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: filter[status]
+          in: query
+          schema: { type: string, enum: [actif, suspendu, sorti] }
+        - name: filter[company_id]
+          in: query
+          schema: { type: string, format: uuid }
+        - name: include
+          in: query
+          schema: { type: string, description: "Relations à inclure (company,contracts,payslips)" }
+      responses:
+        '200':
+          description: Liste paginée
+    post:
+      tags: [Employees]
+      summary: Crée un employé (wizard 5 étapes)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EmployeeInput' }
+
+  /employees/{id}:
+    parameters:
+      - $ref: '#/components/parameters/EmployeeIdParam'
+    get:
+      tags: [Employees]
+      summary: Détail employé
+    patch:
+      tags: [Employees]
+      summary: Modifie employé
+    delete:
+      tags: [Employees]
+      summary: Anonymise employé (RGPD droit à l'oubli)
+
+  /employees/{id}/contracts:
+    parameters:
+      - $ref: '#/components/parameters/EmployeeIdParam'
+    get:
+      tags: [Employees]
+      summary: Liste contrats de l'employé
+    post:
+      tags: [Employees]
+      summary: Ajoute un contrat ou avenant
+
+  /employees/{id}/payslips:
+    parameters:
+      - $ref: '#/components/parameters/EmployeeIdParam'
+    get:
+      tags: [Employees]
+      summary: Liste bulletins de l'employé
+
+  /employees/{id}/documents:
+    parameters:
+      - $ref: '#/components/parameters/EmployeeIdParam'
+    get:
+      tags: [Employees]
+      summary: Liste documents
+    post:
+      tags: [Employees]
+      summary: Upload document (presigned URL MinIO)
+
+  /employees/export:
+    get:
+      tags: [Employees]
+      summary: Export Excel/CSV
+      parameters:
+        - name: format
+          in: query
+          schema: { type: string, enum: [xlsx, csv] }
+
+  /employees/import:
+    post:
+      tags: [Employees]
+      summary: Import en masse (CSV/Excel)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file: { type: string, format: binary }
+                dryRun: { type: boolean, default: true }
+
+  # ━━━ Leaves ━━━
+  /leaves:
+    get:
+      tags: [Leaves]
+      summary: Liste demandes de congé
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - name: filter[status]
+          in: query
+          schema: { type: string, enum: [EN_ATTENTE, APPROUVE, REFUSE, ANNULE] }
+        - name: filter[employee_id]
+          in: query
+          schema: { type: string, format: uuid }
+    post:
+      tags: [Leaves]
+      summary: Nouvelle demande de congé
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LeaveRequestInput' }
+
+  /leaves/{id}:
+    parameters:
+      - $ref: '#/components/parameters/LeaveIdParam'
+    get:
+      tags: [Leaves]
+      summary: Détail demande
+
+  /leaves/{id}/approve:
+    parameters:
+      - $ref: '#/components/parameters/LeaveIdParam'
+    post:
+      tags: [Leaves]
+      summary: Approuve (Manager)
+
+  /leaves/{id}/reject:
+    parameters:
+      - $ref: '#/components/parameters/LeaveIdParam'
+    post:
+      tags: [Leaves]
+      summary: Rejette
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [motif]
+              properties:
+                motif: { type: string }
+
+  /leaves/balances/{employeeId}:
+    parameters:
+      - name: employeeId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    get:
+      tags: [Leaves]
+      summary: Soldes de congés par type
+
+  /leaves/calendar:
+    get:
+      tags: [Leaves]
+      summary: Calendrier des congés (équipe)
+      parameters:
+        - name: start
+          in: query
+          schema: { type: string, format: date }
+        - name: end
+          in: query
+          schema: { type: string, format: date }
+
+  # ━━━ Payroll ━━━
+  /payroll/periods:
+    get:
+      tags: [Payroll]
+      summary: Liste périodes de paie
+    post:
+      tags: [Payroll]
+      summary: Ouvre une nouvelle période
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [mois, annee, companyId]
+              properties:
+                mois: { type: integer, minimum: 1, maximum: 12 }
+                annee: { type: integer }
+                companyId: { type: string, format: uuid }
+
+  /payroll/periods/{id}:
+    parameters:
+      - $ref: '#/components/parameters/PeriodIdParam'
+    get:
+      tags: [Payroll]
+      summary: Détail période (employés inclus)
+
+  /payroll/periods/{id}/run:
+    parameters:
+      - $ref: '#/components/parameters/PeriodIdParam'
+    post:
+      tags: [Payroll]
+      summary: Lance le calcul de paie (8 étapes, async via BullMQ)
+      responses:
+        '202':
+          description: Calcul en cours
+
+  /payroll/periods/{id}/lock:
+    parameters:
+      - $ref: '#/components/parameters/PeriodIdParam'
+    post:
+      tags: [Payroll]
+      summary: Clôture définitivement la période
+
+  /payroll/payslips:
+    get:
+      tags: [Payroll]
+      summary: Liste bulletins
+      parameters:
+        - name: filter[period_id]
+          in: query
+          schema: { type: string, format: uuid }
+
+  /payroll/payslips/{id}:
+    parameters:
+      - $ref: '#/components/parameters/PayslipIdParam'
+    get:
+      tags: [Payroll]
+      summary: Détail bulletin
+
+  /payroll/payslips/{id}/pdf:
+    parameters:
+      - $ref: '#/components/parameters/PayslipIdParam'
+    get:
+      tags: [Payroll]
+      summary: Téléchargement bulletin PDF
+      responses:
+        '200':
+          description: PDF binaire
+          content:
+            application/pdf:
+              schema: { type: string, format: binary }
+
+  /payroll/payslips/{id}/verify:
+    parameters:
+      - $ref: '#/components/parameters/PayslipIdParam'
+    get:
+      tags: [Payroll]
+      summary: Vérifie la signature électronique du bulletin
+
+  /payroll/declarations/cnss:
+    get:
+      tags: [Payroll]
+      summary: Génère déclaration CNSS trimestrielle
+      parameters:
+        - name: trimestre
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 4 }
+        - name: annee
+          in: query
+          schema: { type: integer }
+
+  # ━━━ Audit ━━━
+  /audit:
+    get:
+      tags: [Audit]
+      summary: Journal d'audit (paginé, filtrable)
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - name: filter[user_id]
+          in: query
+          schema: { type: string, format: uuid }
+        - name: filter[entity_type]
+          in: query
+          schema: { type: string }
+        - name: filter[action]
+          in: query
+          schema: { type: string }
+        - name: filter[from]
+          in: query
+          schema: { type: string, format: date-time }
+        - name: filter[to]
+          in: query
+          schema: { type: string, format: date-time }
+
+  /audit/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer }
+    get:
+      tags: [Audit]
+      summary: Détail log avec diff before/after
+
+  # ━━━ Dashboard ━━━
+  /dashboard/hr:
+    get:
+      tags: [Dashboard]
+      summary: KPIs RH (effectif, turn-over, congés)
+
+  /dashboard/dg:
+    get:
+      tags: [Dashboard]
+      summary: KPIs Direction Générale
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      schema: { type: integer, default: 1, minimum: 1 }
+    LimitParam:
+      name: limit
+      in: query
+      schema: { type: integer, default: 20, maximum: 100 }
+    TenantIdParam:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    CompanyIdParam:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    EmployeeIdParam:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    LeaveIdParam:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    PeriodIdParam:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    PayslipIdParam:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+
+  responses:
+    Unauthorized:
+      description: Non authentifié
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: Ressource introuvable
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code: { type: string }
+            title: { type: string }
+            detail: { type: string }
+            instance: { type: string }
+
+    Pagination:
+      type: object
+      properties:
+        total: { type: integer }
+        page: { type: integer }
+        limit: { type: integer }
+        totalPages: { type: integer }
+
+    Tenant:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        slug: { type: string }
+        plan: { type: string }
+        status: { type: string }
+        createdAt: { type: string, format: date-time }
+
+    User:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        email: { type: string }
+        phone: { type: string }
+        roles: { type: array, items: { type: string } }
+        permissions: { type: array, items: { type: string } }
+        mfaEnabled: { type: boolean }
+        lastLoginAt: { type: string, format: date-time, nullable: true }
+
+    CompanyInput:
+      type: object
+      required: [raisonSociale]
+      properties:
+        raisonSociale: { type: string }
+        sigle: { type: string }
+        nif: { type: string }
+        rc: { type: string }
+        cnssNumero: { type: string }
+        adresse: { type: string }
+        ville: { type: string }
+        telephone: { type: string }
+        email: { type: string, format: email }
+        devisePrincipale: { type: string, default: GNF }
+
+    CnssParamsInput:
+      type: object
+      properties:
+        tauxCnssSalarie: { type: number, format: float, default: 0.05 }
+        tauxCnssEmployeur: { type: number, format: float, default: 0.08 }
+        plafondCnss: { type: number, default: 4640000 }
+        smig: { type: number, default: 580000 }
+        tauxRts: { type: number, format: float, default: 0.01 }
+        tauxVersementForfaitaire: { type: number, format: float, default: 0.04 }
+        tauxTaxeApprentissage: { type: number, format: float, default: 0.01 }
+        tauxFormationPro: { type: number, format: float, default: 0.03 }
+        dateEffet: { type: string, format: date }
+
+    EmployeeInput:
+      type: object
+      required: [matricule, nom, prenoms, dateEmbauche, companyId]
+      properties:
+        matricule: { type: string }
+        nom: { type: string }
+        prenoms: { type: string }
+        dateNaissance: { type: string, format: date }
+        cnssNumero: { type: string }
+        sexe: { type: string, enum: [M, F] }
+        situationFamiliale: { type: string }
+        nombreEnfants: { type: integer, default: 0 }
+        adresse: { type: string }
+        telephone: { type: string }
+        email: { type: string, format: email }
+        dateEmbauche: { type: string, format: date }
+        companyId: { type: string, format: uuid }
+
+    LeaveRequestInput:
+      type: object
+      required: [employeeId, type, dateDebut, dateFin]
+      properties:
+        employeeId: { type: string, format: uuid }
+        type: { type: string, enum: [CONGE_PAYE, MALADIE, MATERNITE, PATERNITE, MARIAGE, DECES, SANS_SOLDE] }
+        dateDebut: { type: string, format: date }
+        dateFin: { type: string, format: date }
+        demiJournee: { type: boolean, default: false }
+        motif: { type: string }
+        justificatifKey: { type: string }

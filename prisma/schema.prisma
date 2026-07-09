@@ -1,0 +1,1008 @@
+// DataSphere RH Guinée — Prisma schema (SQLite pour démo)
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id              String     @id @default(cuid())
+  raisonSociale   String
+  sigle           String?
+  nif             String?   @unique
+  rc              String?   @unique
+  cnssNumero      String?   @unique
+  adresse         String?
+  ville           String?
+  telephone       String?
+  email           String?
+  devise          String    @default("GNF")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  employees       Employee[]
+  cnssParams      CnssParam[]
+  users           User[]
+  candidates      Candidate[]
+  documents       Document[]
+  reports         Report[]
+  notifications   Notification[]
+  trainings       Training[]
+  budgetItems     BudgetItem[]
+  onboardingTasks OnboardingTask[]
+  jobOffers       JobOffer[]
+  surveys         Survey[]
+  skills          Skill[]
+  complianceItems ComplianceItem[]
+  expenseReports  ExpenseReport[]
+  interviews      Interview[]
+  careerPaths     CareerPath[]
+  contractors     Contractor[]
+  aiInsights      AIInsight[]
+  workLocations   WorkLocation[]
+  forecasts       Forecast[]
+  healthRecords   HealthRecord[]
+  feedback360s    Feedback360[]
+  announcements   Announcement[]
+  helpdeskTickets HelpdeskTicket[]
+  benefits        Benefit[]
+  loans           Loan[]
+  shifts          Shift[]
+  equipment       Equipment[]
+  contractSuppliers ContractSupplier[]
+  certificates    Certificate[]
+  modelTrainings  ModelTraining[]
+  advancedAuditLogs AdvancedAuditLog[]
+  webhookConfigs  WebhookConfig[]
+  webhookDeliveries WebhookDelivery[]
+}
+
+model Employee {
+  id              String   @id @default(cuid())
+  companyId       String
+  matricule       String
+  nom             String
+  prenoms         String
+  dateNaissance   String?
+  cnssNumero      String?  @unique
+  sexe            String?
+  situationFamiliale String?
+  nombreEnfants   Int      @default(0)
+  telephone       String?
+  email           String?
+  poste           String
+  dateEmbauche    String
+  dateSortie      String?
+  statut          String   @default("actif")
+  photoUrl        String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  company         Company  @relation(fields: [companyId], references: [id])
+  contracts       Contract[]
+  payslips        Payslip[]
+  leaveRequests   LeaveRequest[]
+  documents       Document[]
+  objectives      Objective[]
+  evaluations     Evaluation[]
+  timeEntries     TimeEntry[]
+  trainingEnrollments TrainingEnrollment[]
+  signatures      Signature[]
+  onboardingTasks OnboardingTask[]
+  surveyResponses SurveyResponse[]
+  skillAssessments SkillAssessment[]
+  expenseReports  ExpenseReport[]
+  interviews      Interview[]
+  careerPaths     CareerPath[]
+  aiInsights      AIInsight[]
+  geoCheckIns     GeoCheckIn[]
+  healthRecords   HealthRecord[]
+  feedback360s    Feedback360[]
+  benefits        Benefit[]
+  loans           Loan[]
+  shifts          Shift[]
+
+  @@unique([matricule])
+}
+
+model Contract {
+  id              String   @id @default(cuid())
+  employeeId      String
+  type            String   // CDI | CDD | STAGE | PRESTATAIRE | EXPATRIE | APPRENTI
+  dateDebut       String
+  dateFin         String?
+  poste           String
+  salaireBase     Float
+  devise          String   @default("GNF")
+  motifCdd        String?
+  preavisJours    Int      @default(30)
+  status          String   @default("ACTIF")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  employee        Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  payslips        Payslip[]
+}
+
+model CnssParam {
+  id                       String  @id @default(cuid())
+  companyId                String
+  tauxCnssSalarie          Float   @default(0.05)
+  tauxCnssEmployeur        Float   @default(0.08)
+  plafondCnss              Float   @default(4640000)
+  smig                     Float   @default(580000)
+  tauxRts                  Float   @default(0.01)
+  tauxVersementForfaitaire Float   @default(0.04)
+  tauxTaxeApprentissage    Float   @default(0.01)
+  tauxFormationPro         Float   @default(0.03)
+  tauxAccidentTravail      Float   @default(0.02)
+  dateEffet                String  @default("2024-01-01")
+  createdAt                DateTime @default(now())
+
+  company                  Company @relation(fields: [companyId], references: [id])
+}
+
+model PayrollPeriod {
+  id          String   @id @default(cuid())
+  companyId   String
+  mois        Int
+  annee       Int
+  status      String   @default("OUVERTE")
+  lockedAt    DateTime?
+  createdAt   DateTime @default(now())
+
+  payslips    Payslip[]
+}
+
+model Payslip {
+  id                    String   @id @default(cuid())
+  employeeId            String
+  periodId              String?
+  contractId            String?
+  mois                  Int
+  annee                 Int
+  salaireBase           Float
+  primes                Float    @default(0)
+  heuresSup             Float    @default(0)
+  avantagesNature       Float    @default(0)
+  salaireBrut           Float
+  salaireBrutImposable  Float
+  cnssSalarie           Float
+  cnssEmployeur         Float
+  rts                   Float
+  versementForfaitaire  Float
+  taxeApprentissage     Float
+  formationPro          Float
+  netAPayer             Float
+  createdAt             DateTime @default(now())
+
+  employee              Employee @relation(fields: [employeeId], references: [id])
+  period                PayrollPeriod? @relation(fields: [periodId], references: [id])
+  contract              Contract? @relation(fields: [contractId], references: [id])
+}
+
+model LeaveRequest {
+  id          String   @id @default(cuid())
+  employeeId  String
+  type        String   // CONGE_PAYE | MALADIE | MATERNITE | PATERNITE | MARIAGE | DECES
+  dateDebut   String
+  dateFin     String
+  motif       String?
+  statut      String   @default("EN_ATTENTE")
+  approvedBy  String?
+  createdAt   DateTime @default(now())
+
+  employee    Employee @relation(fields: [employeeId], references: [id])
+}
+
+model Holiday {
+  id          String   @id @default(cuid())
+  date        String
+  name        String
+  type        String   @default("LEGAL")
+}
+
+model AuditLog {
+  id          Int      @id @default(autoincrement())
+  action      String
+  entityType  String
+  entityId    String?
+  userId      String?
+  diff        String?
+  createdAt   DateTime @default(now())
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String
+  role          String   @default("RH") // SUPER_ADMIN | ADMIN_ENTREPRISE | RH | MANAGER | COMPTABLE | EMPLOYE
+  passwordHash  String
+  companyId     String?
+  active        Boolean  @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  company       Company? @relation(fields: [companyId], references: [id])
+}
+
+// ━━━ Module Recrutement & Onboarding ━━━
+
+model Candidate {
+  id              String   @id @default(cuid())
+  companyId       String
+  firstName       String
+  lastName        String
+  email           String?
+  phone           String?
+  positionApplied String  // poste visé
+  source          String   @default("PORTAIL") // PORTAIL | LINKEDIN | REFERRAL | CABINET
+  status          String   @default("NOUVEAU") // NOUVEAU | EN_ENTRETIEN | OFFRE | ACCEPTE | REFUSE
+  rating          Int      @default(0) // 0-5
+  expectedSalary  Float?
+  availability    String?  // dispo (date ou "immédiate")
+  notes           String?
+  resumeKey       String?  // MinIO object key
+  interviewDate   DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Coffre-fort RH (documents) ━━━
+
+model Document {
+  id          String   @id @default(cuid())
+  companyId   String
+  employeeId  String?
+  name        String
+  type        String   // CONTRAT | CV | DIPLOME | CNSS_CARTE | PIECE_IDENTITE | ATTESTATION | OTHER
+  fileKey     String   // MinIO object key
+  fileSize    Int
+  mimeType    String
+  category    String   @default("RH") // RH | PAIE | ADMIN | LEGAL
+  confidential Boolean @default(false)
+  retentionYears Int   @default(10)
+  signedAt    DateTime?
+  signatureHash String?
+  uploadedBy  String?
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee    Employee? @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+}
+
+// ━━━ Reporting DG ━━━
+
+model Report {
+  id          String   @id @default(cuid())
+  companyId   String
+  type        String   // MONTHLY | QUARTERLY | ANNUAL | HEADCOUNT | PAYROLL
+  period      String   // "2026-07" ou "2026-Q3" ou "2026"
+  data        String   // JSON stringified
+  generatedBy String?
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Évaluations & Objectifs ━━━
+
+model Objective {
+  id          String   @id @default(cuid())
+  employeeId  String
+  title       String
+  description String?
+  type        String   @default("INDIVIDUAL") // INDIVIDUAL | TEAM | COMPANY
+  status      String   @default("EN_COURS") // EN_COURS | ATTEINT | PARTIEL | NON_ATTEINT
+  progress    Int      @default(0) // 0-100
+  dueDate     String?
+  weight      Int      @default(1) // pondération 1-5
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+model Evaluation {
+  id            String   @id @default(cuid())
+  employeeId    String
+  period        String   // "2026-S1" ou "2026-annual"
+  type          String   @default("ANNUELLE") // ANNUELLE | SEMESTRIELLE | PROBATION
+  globalRating  Int      @default(0) // 0-5
+  strengths     String?
+  improvements  String?
+  goals         String?
+  managerNotes  String?
+  employeeNotes String?
+  status        String   @default("BROUILLON") // BROUILLON | EN_COURS | TERMINE
+  evaluatorId   String?
+  evaluatedAt   DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  employee      Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Notifications ━━━
+
+model Notification {
+  id          String   @id @default(cuid())
+  companyId   String
+  recipient   String   // email ou phone
+  channel     String   // EMAIL | WHATSAPP | SMS | IN_APP
+  subject     String?
+  message     String
+  status      String   @default("EN_ATTENTE") // EN_ATTENTE | ENVOYE | ECHEC | LU
+  type        String   @default("INFO") // INFO | ALERTE | CONGE | PAIE | CONTRAT
+  metadata    String?  // JSON stringified (employeeId, etc.)
+  sentAt      DateTime?
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Temps & Présence (pointage) ━━━
+
+model TimeEntry {
+  id          String   @id @default(cuid())
+  employeeId  String
+  date        String   // YYYY-MM-DD
+  checkIn     String?  // HH:MM
+  checkOut    String?  // HH:MM
+  breakMinutes Int     @default(60) // pause déjeuner en minutes
+  workedMinutes Int    @default(0) // calculé checkOut - checkIn - break
+  overtimeMinutes Int  @default(0) // au-delà de 8h (480 min)
+  status      String   @default("PRESENT") // PRESENT | ABSENT | RETARD | CONGE | MISSION
+  location    String?  // lieu de pointage
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Formation ━━━
+
+model Training {
+  id          String   @id @default(cuid())
+  companyId   String
+  title       String
+  description String?
+  category    String   @default("RH") // RH | TECHNIQUE | SECURITE | MANAGEMENT | LANGUES
+  duration    Int      // heures
+  format      String   @default("PRESENTIEL") // PRESENTIEL | EN_LIGNE | MIXTE
+  startDate   String?
+  endDate     String?
+  trainer     String?
+  location    String?
+  maxParticipants Int?
+  status      String   @default("PLANIFIEE") // PLANIFIEE | EN_COURS | TERMINEE | ANNULEE
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  enrollments TrainingEnrollment[]
+}
+
+model TrainingEnrollment {
+  id          String   @id @default(cuid())
+  trainingId  String
+  employeeId  String
+  status      String   @default("INSCRIT") // INSCRIT | CONFIRME | COMPLETE | ABSENT
+  progress    Int      @default(0) // 0-100
+  certificate String?  // URL ou clé MinIO du certificat
+  enrolledAt  DateTime @default(now())
+  completedAt DateTime?
+
+  training    Training @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Signature électronique ━━━
+
+model Signature {
+  id          String   @id @default(cuid())
+  documentId  String?  // référence Document si lié
+  employeeId  String?
+  signerName  String
+  signerRole  String   // EMPLOYE | RH | MANAGER | ADMIN | WITNESS
+  documentType String  // CONTRAT | BULLETIN | ATTESTATION | LETTRE | OTHER
+  documentTitle String
+  documentHash String  // SHA-256 du contenu signé
+  qrToken     String   @unique // token pour vérification publique via QR code
+  signedAt    DateTime @default(now())
+  ipAddress   String?
+  userAgent   String?
+  metadata    String?  // JSON: {bytes, pages, etc.}
+
+  employee    Employee? @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+}
+
+// ━━━ Budget RH ━━━
+
+model BudgetItem {
+  id          String   @id @default(cuid())
+  companyId   String
+  category    String   // MASSE_SALARIALE | CHARGES | FORMATION | RECRUTEMENT | AUTRE
+  label       String
+  amount      Float
+  period      String   // "2026-07" ou "2026-Q3" ou "2026"
+  type        String   @default("PREVU") // PREVU | REALISE
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Onboarding ━━━
+
+model OnboardingTask {
+  id          String   @id @default(cuid())
+  companyId   String
+  employeeId  String
+  title       String
+  description String?
+  category    String   @default("ADMIN") // ADMIN | IT | RH | FORMATION | EQUIPEMENT
+  status      String   @default("A_FAIRE") // A_FAIRE | EN_COURS | TERMINE | BLOQUE
+  dueDate     String?
+  assignedTo  String?  // RH | IT | MANAGER
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Recrutement avancé (offres d'emploi) ━━━
+
+model JobOffer {
+  id          String   @id @default(cuid())
+  companyId   String
+  title       String
+  description String?
+  department  String?
+  location    String?
+  contractType String  @default("CDI")
+  salaryMin   Float?
+  salaryMax   Float?
+  requirements String?
+  benefits    String?
+  status      String   @default("PUBLIEE") // BROUILLON | PUBLIEE | FERMEE | POURVUE
+  publishedAt DateTime?
+  closingDate String?
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Satisfaction employé ━━━
+
+model Survey {
+  id          String   @id @default(cuid())
+  companyId   String
+  title       String
+  description String?
+  type        String   @default("NPS") // NPS | ENGAGEMENT | EXIT | 360
+  status      String   @default("OUVERTE") // BROUILLON | OUVERTE | FERMEE
+  startDate   String?
+  endDate     String?
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  responses   SurveyResponse[]
+}
+
+model SurveyResponse {
+  id          String   @id @default(cuid())
+  surveyId    String
+  employeeId  String
+  score       Int      // 0-10 pour NPS, 0-5 pour autres
+  comment     String?
+  submittedAt DateTime @default(now())
+
+  survey      Survey   @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Compétences ━━━
+
+model Skill {
+  id          String   @id @default(cuid())
+  companyId   String
+  name        String
+  category    String   @default("TECHNIQUE") // TECHNIQUE | SOFT | LANGUE | MANAGEMENT
+  description String?
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  assessments SkillAssessment[]
+}
+
+model SkillAssessment {
+  id          String   @id @default(cuid())
+  skillId     String
+  employeeId  String
+  level       Int      @default(1) // 1-5 (1=débutant, 5=expert)
+  targetLevel Int      @default(3) // niveau cible
+  assessedAt  DateTime @default(now())
+
+  skill       Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Conformité légale ━━━
+
+model ComplianceItem {
+  id          String   @id @default(cuid())
+  companyId   String
+  title       String
+  description String?
+  category    String   @default("TRAVAIL") // TRAVAIL | CNSS | FISCAL | RGPD | AUTRE
+  status      String   @default("A_JOUR") // A_JOUR | A_VERIFIER | EN_RETARD | NON_APPLICABLE
+  dueDate     String?
+  lastCheck   String?
+  frequency   String   @default("ANNUEL") // MENSUEL | TRIMESTRIEL | ANNUEL | PONCTUEL
+  responsible String?
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Notes de frais ━━━
+
+model ExpenseReport {
+  id          String   @id @default(cuid())
+  companyId   String
+  employeeId  String
+  title       String
+  category    String   @default("AUTRE") // TRANSPORT | REPAS | HEBERGEMENT | FORMATION | MATERIEL | AUTRE
+  amount      Float
+  date        String
+  description String?
+  status      String   @default("EN_ATTENTE") // EN_ATTENTE | APPROUVE | REFUSE | REMBOURSE
+  receiptKey  String?  // MinIO key
+  submittedAt DateTime @default(now())
+  approvedBy  String?
+  approvedAt  DateTime?
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Entretiens professionnels ━━━
+
+model Interview {
+  id          String   @id @default(cuid())
+  companyId   String
+  employeeId  String
+  type        String   @default("ANNUEL") // ANNUEL | PROFESSIONNEL | RECALAGE | SORTIE
+  scheduledAt DateTime?
+  status      String   @default("PLANIFIE") // PLANIFIE | REALISE | ANNULE | REPORT
+  location    String?
+  conductedBy String?
+  agenda      String?  // ordre du jour
+  minutes     String?  // compte-rendu
+  actions     String?  // actions convenues (JSON)
+  rating      Int      @default(0) // 0-5 satisfaction entretien
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Plan de carrière ━━━
+
+model CareerPath {
+  id          String   @id @default(cuid())
+  companyId   String
+  employeeId  String
+  currentRole String
+  targetRole  String
+  timeline    String   @default("12 mois") // horizon
+  readiness   Int      @default(3) // 1-5 (prêt pour mobilité)
+  status      String   @default("EN_COURS") // EN_COURS | ATTEINT | REORIENTE
+  gaps        String?  // écarts de compétences
+  actions     String?  // plan d'action
+  mentor      String?  // mentor proposé
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Prestataires B2B ━━━
+
+model Contractor {
+  id          String   @id @default(cuid())
+  companyId   String
+  name        String
+  type        String   @default("PRESTATAIRE") // PRESTATAIRE | CONSULTANT | FREELANCE | STAGIAIRE
+  service     String   // service fourni
+  contractStart String
+  contractEnd String?
+  monthlyRate Float?   // taux mensuel GNF
+  dailyRate   Float?   // taux journalier GNF
+  contactName String?
+  contactEmail String?
+  contactPhone String?
+  status      String   @default("ACTIF") // ACTIF | TERMINE | SUSPENDU
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Aide à la décision IA ━━━
+
+model AIInsight {
+  id          String   @id @default(cuid())
+  companyId   String
+  category    String   // TURNOVER_RISK | PROMOTION | TRAINING_NEED | BUDGET_OPTIMIZATION | COMPLIANCE_RISK
+  title       String
+  description String
+  severity    String   @default("INFO") // INFO | WARNING | CRITICAL
+  confidence  Int      @default(70) // 0-100
+  affectedEmployeeId String?
+  recommendation String?
+  status      String   @default("NOUVEAU") // NOUVEAU | VU | ACTION_NECESSAIRE | RESOLU
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee    Employee? @relation(fields: [affectedEmployeeId], references: [id], onDelete: SetNull)
+}
+
+// ━━━ Géolocalisation & Télétravail ━━━
+
+model WorkLocation {
+  id          String   @id @default(cuid())
+  companyId   String
+  name        String   // nom du lieu (Bureau Conakry, Domicile, Site Boké)
+  address     String?
+  latitude    Float?
+  longitude   Float?
+  radius      Int      @default(100) // rayon en mètres pour le géofencing
+  type        String   @default("BUREAU") // BUREAU | DOMICILE | SITE | COWORKING
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  geoCheckIns GeoCheckIn[]
+}
+
+model GeoCheckIn {
+  id          String   @id @default(cuid())
+  employeeId  String
+  workLocationId String?
+  date        String
+  checkIn     String   // HH:MM
+  checkOut    String?
+  latitude    Float?
+  longitude   Float?
+  mode        String   @default("PRESENTIEL") // PRESENTIEL | TELETRAVAIL | MISSION
+  verified    Boolean  @default(false) // si dans le rayon géofencing
+  distance    Float?   // distance du point de référence en mètres
+  createdAt   DateTime @default(now())
+
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  workLocation WorkLocation? @relation(fields: [workLocationId], references: [id], onDelete: SetNull)
+}
+
+// ━━━ Prévisions IA ━━━
+
+model Forecast {
+  id          String   @id @default(cuid())
+  companyId   String
+  category    String   // TURNOVER | HEADCOUNT | PAYROLL | RECRUITMENT | ABSENTEEISM
+  period      String   // "2026-Q3" ou "2027" ou "2026-08"
+  predicted   Float
+  confidence  Int      @default(75)
+  trend       String   @default("STABLE") // UP | DOWN | STABLE
+  factors     String?  // JSON: facteurs influençant la prédiction
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Santé & Wellness ━━━
+
+model HealthRecord {
+  id          String   @id @default(cuid())
+  companyId   String
+  employeeId  String
+  type        String   // VISITE_MEDICALE | VACCINATION | ARRET_MALADIE | ERGONOMIE | BILAN_SANTE
+  date        String
+  nextDate    String?
+  status      String   @default("PLANIFIE") // PLANIFIE | REALISE | ANNULE
+  provider    String?  // médecin/clinique
+  result      String?  // apte / inapte / restrictions
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Entretiens 360° ━━━
+
+model Feedback360 {
+  id          String   @id @default(cuid())
+  companyId   String
+  employeeId  String
+  period      String   // "2026-S1"
+  status      String   @default("OUVERT") // OUVERT | CLOTURE
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  responses   FeedbackResponse[]
+}
+
+model FeedbackResponse {
+  id          String   @id @default(cuid())
+  feedbackId  String
+  evaluatorId String?  // employeeId de l'évaluateur
+  evaluatorName String
+  evaluatorRole String // MANAGER | PAIR | SUBORDONNE | SELF | CLIENT
+  rating      Int      @default(0) // 0-5
+  strengths   String?
+  improvements String?
+  submittedAt DateTime @default(now())
+
+  feedback    Feedback360 @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Communication interne ━━━
+
+model Announcement {
+  id          String   @id @default(cuid())
+  companyId   String
+  title       String
+  content     String
+  category    String   @default("INFO") // INFO | ALERT | EVENT | POLICY
+  priority    String   @default("NORMAL") // URGENT | NORMAL | LOW
+  pinned      Boolean  @default(false)
+  authorId    String?
+  authorName  String?
+  publishedAt DateTime @default(now())
+  expiresAt   String?
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Helpdesk RH ━━━
+
+model HelpdeskTicket {
+  id          String   @id @default(cuid())
+  companyId   String
+  employeeId  String?
+  employeeName String
+  subject     String
+  description String
+  category    String   @default("AUTRE") // PAIE | CONGE | CONTRAT | TECHNIQUE | RH | AUTRE
+  priority    String   @default("NORMAL") // URGENT | NORMAL | LOW
+  status      String   @default("OUVERT") // OUVERT | EN_COURS | RESOLU | FERME
+  assignedTo  String?
+  response    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Avantages sociaux ━━━
+
+model Benefit {
+  id          String   @id @default(cuid())
+  companyId   String
+  employeeId  String
+  type        String   // MUTUELLE | TRANSPORT | REPAS | RETRAITE | PREVOYANCE | AUTRE
+  label       String
+  provider    String?
+  employeeContribution Float @default(0)
+  employerContribution Float @default(0)
+  startDate   String
+  endDate     String?
+  status      String   @default("ACTIF") // ACTIF | SUSPENDU | TERMINE
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Prêts & Avances ━━━
+
+model Loan {
+  id          String   @id @default(cuid())
+  companyId   String
+  employeeId  String
+  type        String   @default("AVANCE") // AVANCE | PRET | AVANCE_SALAIRE
+  amount      Float
+  reason      String?
+  requestDate String
+  approvalDate String?
+  status      String   @default("EN_ATTENTE") // EN_ATTENTE | APPROUVE | REFUSE | REMBOURSE
+  monthlyDeduction Float? // déduction mensuelle GNF
+  totalMonths Int?     // nombre de mois de remboursement
+  remainingAmount Float? // montant restant à rembourser
+  approvedBy  String?
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Planning d'équipe (shifts) ━━━
+
+model Shift {
+  id          String   @id @default(cuid())
+  companyId   String
+  employeeId  String
+  date        String
+  startTime   String   // HH:MM
+  endTime     String   // HH:MM
+  type        String   @default("MATIN") // MATIN | APRES_MIDI | NUIT | JOURNEE
+  location    String?
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Inventaire matériel ━━━
+
+model Equipment {
+  id          String   @id @default(cuid())
+  companyId   String
+  name        String
+  category    String   @default("IT") // IT | VEHICULE | BUREAU | AUTRE
+  serialNumber String?
+  brand       String?
+  model       String?
+  purchaseDate String?
+  purchasePrice Float?
+  assignedTo  String?  // employeeId
+  assignDate  String?
+  condition   String   @default("NEUF") // NEUF | BON | USAGE | A_REPARER | HORS_SERVICE
+  status      String   @default("EN_STOCK") // EN_STOCK | ATTRIBUE | EN_REPARATION | RETIRE
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Contrats fournisseurs (Contract Management) ━━━
+
+model ContractSupplier {
+  id            String   @id @default(cuid())
+  companyId     String
+  title         String
+  supplier      String
+  type          String   // PRESTATION_IT | AUDIT | ASSURANCE | FORMATION | TELECOM | TRAVAUX
+  description   String?
+  amount        Float
+  currency      String   @default("GNF")
+  clauses       Int      @default(0)
+  startDate     String
+  endDate       String
+  renewalDate   String?
+  status        String   @default("ACTIF") // ACTIF | EXPIRE_BIENTOT | EXPIRE | RESILIE
+  owner         String?
+  alerts        Int      @default(0)
+  txHash        String?  // hash blockchain pour audit
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  company       Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Certificats blockchain ━━━
+
+model Certificate {
+  id            String   @id @default(cuid())
+  companyId     String
+  documentTitle String
+  documentType  String   // ATTESTATION | CONTRAT | BULLETIN | CERTIFICAT | AUTRE
+  hash          String   @unique
+  txHash        String
+  blockNumber   Int
+  qrToken       String   @unique
+  signerName    String
+  signerRole    String
+  employeeId    String?
+  employeeName  String?
+  status        String   @default("ACTIVE") // ACTIVE | REVOKED | PENDING
+  revocationReason String?
+  revokedAt     DateTime?
+  revokedBy     String?
+  immutable     Boolean  @default(true)
+  timestamp     DateTime @default(now())
+  createdAt     DateTime @default(now())
+
+  company       Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Entraînements de modèles IA ━━━
+
+model ModelTraining {
+  id            String   @id @default(cuid())
+  companyId     String
+  modelVersion  String
+  sampleSize    Int
+  features      String   // JSON serialized
+  trainDurationMs Int
+  turnoverAccuracy  Float
+  turnoverF1        Float
+  performanceAccuracy Float
+  performanceF1     Float
+  promotionAccuracy  Float
+  promotionF1       Float
+  avgTurnoverScore  Int
+  avgPerfScore      Int
+  avgPromoScore     Int
+  status        String   @default("TRAINED")
+  triggeredBy  String   @default("Système")
+  createdAt    DateTime @default(now())
+
+  company       Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Journal d'audit avancé (modules avancés) ━━━
+
+model AdvancedAuditLog {
+  id            String   @id @default(cuid())
+  companyId     String
+  module        String   // CONTRACTS_MGMT | BLOCKCHAIN | PREDICTIVE | DATA_GOVERNANCE | ...
+  action        String   // RENEW | REVOKE | TRAIN | EXPORT | CREATE | UPDATE | DELETE
+  targetType    String?  // ContractSupplier | Certificate | ModelTraining | ...
+  targetId      String?
+  targetLabel   String?
+  performedBy   String   @default("Système")
+  details       String?  // JSON serialized
+  txHash        String?  // hash blockchain si applicable
+  ipAddress     String?
+  createdAt     DateTime @default(now())
+
+  company       Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ Webhook configurations ━━━
+
+model WebhookConfig {
+  id            String   @id @default(cuid())
+  companyId     String
+  name          String
+  url           String
+  events        String   // JSON array: ["contract.renewed", "certificate.revoked", ...]
+  isActive      Boolean  @default(true)
+  secret        String?
+  lastTriggered DateTime?
+  createdAt     DateTime @default(now())
+
+  company       Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  deliveries    WebhookDelivery[]
+}
+
+model WebhookDelivery {
+  id            String   @id @default(cuid())
+  companyId     String
+  webhookId     String
+  webhookName   String   // dénormalisé pour garder l'historique même après suppression
+  event         String   // contract.renewed, certificate.revoked, model.trained, ...
+  payload       String   // JSON serialized
+  httpStatus    Int?     // 200, 404, 500, null si timeout/erreur réseau
+  ok            Boolean  // true si HTTP 2xx
+  errorMsg      String?  // message d'erreur si timeout/erreur réseau
+  durationMs    Int      // durée d'exécution
+  deliveredAt   DateTime @default(now())
+
+  company       Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  webhookConfig WebhookConfig @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+}

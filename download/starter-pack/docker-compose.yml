@@ -1,0 +1,91 @@
+version: "3.9"
+
+# ============================================================
+# DataSphere RH Guinée — Docker Compose (local dev)
+# Démarrage: docker compose up -d
+# ============================================================
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: dsrh-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dsrh
+      POSTGRES_PASSWORD: dsrh_dev_password
+      POSTGRES_DB: dsrh_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init-multi-tenant.sh:/docker-entrypoint-initdb.d/init-multi-tenant.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dsrh -d dsrh_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: dsrh-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    container_name: dsrh-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: dsrh_minio_admin
+      MINIO_ROOT_PASSWORD: dsrh_minio_dev_password
+    ports:
+      - "9000:9000"  # API S3
+      - "9001:9001"  # Console web
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+
+  # MinIO bootstrap: create buckets on first run
+  minio-init:
+    image: minio/mc:latest
+    container_name: dsrh-minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://minio:9000 dsrh_minio_admin dsrh_minio_dev_password;
+      mc mb local/payslips --ignore-existing;
+      mc mb local/documents --ignore-existing;
+      mc mb local/avatars --ignore-existing;
+      mc mb local/exports --ignore-existing;
+      mc anonymous set download local/avatars;
+      echo 'Buckets créés.';
+      "
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: dsrh-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:

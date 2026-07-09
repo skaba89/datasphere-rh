@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Diagrammes DataSphere RH Guinée</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: #fff; }
+  .canvas { width: 1400px; background: #fff; padding: 40px; }
+  .diagram { margin-bottom: 60px; page-break-after: always; }
+  .diagram:last-child { page-break-after: auto; }
+  .diagram-title { font-size: 24px; font-weight: 700; color: #202224; margin-bottom: 8px; text-align: center; }
+  .diagram-sub { font-size: 13px; color: #747a7e; margin-bottom: 24px; text-align: center; font-style: italic; }
+
+  /* Architecture diagram */
+  .arch-layer {
+    display: flex; gap: 16px; justify-content: center; margin-bottom: 18px;
+    position: relative;
+  }
+  .arch-layer-label {
+    position: absolute; left: -10px; top: 50%; transform: translateY(-50%);
+    background: #435862; color: #fff; padding: 6px 10px; font-size: 11px;
+    font-weight: 600; border-radius: 4px; letter-spacing: 0.5px;
+  }
+  .arch-box {
+    background: #eff6ff; border: 1.5px solid #27698a; border-radius: 8px;
+    padding: 14px 18px; min-width: 130px; text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .arch-box .title { font-size: 13px; font-weight: 700; color: #202224; margin-bottom: 4px; }
+  .arch-box .desc { font-size: 10.5px; color: #747a7e; line-height: 1.4; }
+  .arch-box.gateway { background: #fef3c7; border-color: #96783c; }
+  .arch-box.db { background: #f0fdf4; border-color: #478e5e; }
+  .arch-box.cache { background: #fce7f3; border-color: #b94659; }
+  .arch-arrow {
+    width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent;
+    border-top: 14px solid #435862; margin: 0 auto;
+  }
+
+  /* ER Diagram */
+  .er-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 20px; }
+  .er-entity {
+    background: #fff; border: 1.5px solid #435862; border-radius: 6px;
+    overflow: hidden;
+  }
+  .er-entity-header {
+    background: #435862; color: #fff; padding: 8px 12px;
+    font-size: 12px; font-weight: 700; text-align: center;
+  }
+  .er-entity-body { padding: 8px 12px; }
+  .er-field { font-size: 10px; color: #202224; padding: 2px 0; font-family: 'Inter', monospace; }
+  .er-field.pk { font-weight: 700; color: #27698a; }
+  .er-field.fk { color: #96783c; }
+  .er-relations {
+    background: #f9fafb; border: 1px solid #abbec8; border-radius: 6px;
+    padding: 12px 16px; margin-top: 16px;
+  }
+  .er-relations h4 { font-size: 13px; font-weight: 700; color: #435862; margin-bottom: 8px; }
+  .er-relations ul { list-style: none; padding-left: 0; }
+  .er-relations li { font-size: 10.5px; color: #202224; padding: 3px 0; }
+  .er-relations li::before { content: '→ '; color: #27698a; font-weight: 700; }
+
+  /* Workflow Paie */
+  .workflow {
+    display: flex; flex-direction: column; gap: 0; align-items: center;
+  }
+  .workflow-step {
+    background: #eff0f1; border: 1.5px solid #435862; border-radius: 8px;
+    padding: 14px 24px; width: 80%; position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .workflow-step.highlight { background: #fef3c7; border-color: #96783c; }
+  .workflow-step.final { background: #f0fdf4; border-color: #478e5e; }
+  .workflow-step .step-num {
+    position: absolute; left: -16px; top: 50%; transform: translateY(-50%);
+    background: #27698a; color: #fff; width: 28px; height: 28px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+  }
+  .workflow-step .step-title { font-size: 13px; font-weight: 700; color: #202224; margin-bottom: 4px; }
+  .workflow-step .step-desc { font-size: 11px; color: #5a6168; line-height: 1.5; }
+  .workflow-step .step-formula {
+    font-family: 'Sarasa Mono SC', monospace; font-size: 10.5px;
+    background: #fff; padding: 6px 10px; margin-top: 6px;
+    border-left: 3px solid #27698a; color: #435862;
+  }
+  .workflow-connector {
+    width: 2px; height: 24px; background: #435862; margin: 0;
+  }
+
+  /* RACI Matrix */
+  table.raci { border-collapse: collapse; width: 100%; font-size: 11px; }
+  table.raci th, table.raci td { border: 1px solid #abbec8; padding: 8px 10px; text-align: center; }
+  table.raci th { background: #435862; color: #fff; font-weight: 700; }
+  table.raci td:first-child { background: #eff0f1; text-align: left; font-weight: 600; }
+  table.raci tr:nth-child(even) td { background: #f9fafb; }
+  table.raci tr:nth-child(even) td:first-child { background: #e7e8e9; }
+  .raci-r { background: #b94659 !important; color: #fff; font-weight: 700; }
+  .raci-a { background: #27698a !important; color: #fff; font-weight: 700; }
+  .raci-c { background: #96783c !important; color: #fff; font-weight: 700; }
+  .raci-i { background: #478e5e !important; color: #fff; font-weight: 700; }
+
+  /* Roadmap */
+  .roadmap { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; padding: 20px 0; }
+  .sprint {
+    background: #fff; border: 1.5px solid #435862; border-radius: 6px;
+    padding: 12px 8px; text-align: center;
+  }
+  .sprint .s-num { background: #27698a; color: #fff; padding: 4px 8px;
+    border-radius: 4px; font-size: 11px; font-weight: 700; display: inline-block; margin-bottom: 6px; }
+  .sprint .s-title { font-size: 11px; font-weight: 600; color: #202224; line-height: 1.3; margin-bottom: 4px; }
+  .sprint .s-weeks { font-size: 10px; color: #747a7e; }
+  .sprint.premium { border-color: #96783c; background: #fffbeb; }
+  .sprint.premium .s-num { background: #96783c; }
+
+  /* User journey */
+  .journey { display: flex; gap: 0; align-items: stretch; padding: 20px 0; }
+  .journey-step {
+    flex: 1; background: #eff0f1; border: 1.5px solid #435862;
+    border-radius: 8px; padding: 14px; position: relative; margin: 0 6px;
+  }
+  .journey-step .step-icon {
+    background: #27698a; color: #fff; width: 36px; height: 36px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; margin-bottom: 8px;
+  }
+  .journey-step h4 { font-size: 13px; font-weight: 700; color: #202224; margin-bottom: 6px; }
+  .journey-step ul { list-style: none; padding-left: 0; }
+  .journey-step li { font-size: 10.5px; color: #5a6168; padding: 2px 0; padding-left: 10px; position: relative; }
+  .journey-step li::before { content: '•'; position: absolute; left: 0; color: #27698a; font-weight: 700; }
+  .journey-arrow {
+    display: flex; align-items: center; color: #27698a; font-size: 24px;
+  }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+<!-- Diagram 1: Architecture Technique -->
+<div class="diagram">
+  <div class="diagram-title">Architecture Technique Multi-Tenant — DataSphere RH Guinée</div>
+  <div class="diagram-sub">Stack Next.js + NestJS + PostgreSQL (schema-per-tenant) + MinIO + Redis</div>
+  <div class="arch-layer">
+    <div class="arch-box gateway">
+      <div class="title">Web / Mobile / API</div>
+      <div class="desc">Next.js 14 App Router<br/>React Native (mobile)<br/>PWA employé</div>
+    </div>
+  </div>
+  <div class="arch-arrow"></div>
+  <div class="arch-layer">
+    <div class="arch-box gateway">
+      <div class="title">API Gateway / CDN</div>
+      <div class="desc">Cloudflare / Nginx<br/>WAF, rate limiting<br/>TLS 1.3, HSTS</div>
+    </div>
+  </div>
+  <div class="arch-arrow"></div>
+  <div class="arch-layer">
+    <div class="arch-box">
+      <div class="title">Auth Service</div>
+      <div class="desc">JWT + refresh<br/>RBAC, 2FA TOTP<br/>SSO entreprise</div>
+    </div>
+    <div class="arch-box">
+      <div class="title">Core RH Service</div>
+      <div class="desc">Employés, contrats<br/>Congés, documents</div>
+    </div>
+    <div class="arch-box">
+      <div class="title">Paie Service</div>
+      <div class="desc">CNSS, RTS, VF<br/>Bulletins PDF</div>
+    </div>
+    <div class="arch-box">
+      <div class="title">Audit Service</div>
+      <div class="desc">Trail immuable<br/>Logs structurés</div>
+    </div>
+  </div>
+  <div class="arch-arrow"></div>
+  <div class="arch-layer">
+    <div class="arch-box db">
+      <div class="title">PostgreSQL 16</div>
+      <div class="desc">Multi-tenant<br/>schema-per-tenant<br/>PgBouncer, réplication</div>
+    </div>
+    <div class="arch-box cache">
+      <div class="title">Redis</div>
+      <div class="desc">Sessions, cache<br/>File de tâches<br/>Rate limiter</div>
+    </div>
+    <div class="arch-box db">
+      <div class="title">MinIO / S3</div>
+      <div class="desc">Documents RH<br/>Bulletins PDF<br/>Backup chiffré</div>
+    </div>
+    <div class="arch-box">
+      <div class="title">Workers Celery</div>
+      <div class="desc">Génération paie<br/>Envoi notifications<br/>Exports Excel/PDF</div>
+    </div>
+  </div>
+  <div class="arch-arrow"></div>
+  <div class="arch-layer">
+    <div class="arch-box">
+      <div class="title">WhatsApp / SMS / Email</div>
+      <div class="desc">Twilio, SendGrid<br/>Templates multilingues</div>
+    </div>
+    <div class="arch-box">
+      <div class="title">Observabilité</div>
+      <div class="desc">Sentry, Grafana<br/>Prometheus, Loki</div>
+    </div>
+  </div>
+</div>
+
+<!-- Diagram 2: Modèle ER -->
+<div class="diagram">
+  <div class="diagram-title">Modèle de Données — Vue d'ensemble des entités principales</div>
+  <div class="diagram-sub">25+ tables PostgreSQL, multi-tenant via <code>tenant_id</code> + schema-per-tenant pour isolation</div>
+  <div class="er-grid">
+    <div class="er-entity">
+      <div class="er-entity-header">tenants</div>
+      <div class="er-entity-body">
+        <div class="er-field pk">id (UUID)</div>
+        <div class="er-field">name</div>
+        <div class="er-field">plan (enum)</div>
+        <div class="er-field">status</div>
+        <div class="er-field">created_at</div>
+      </div>
+    </div>
+    <div class="er-entity">
+      <div class="er-entity-header">companies</div>
+      <div class="er-entity-body">
+        <div class="er-field pk">id</div>
+        <div class="er-field fk">tenant_id</div>
+        <div class="er-field">raison_sociale</div>
+        <div class="er-field">nif, rc</div>
+        <div class="er-field">cnss_numero</div>
+      </div>
+    </div>
+    <div class="er-entity">
+      <div class="er-entity-header">users</div>
+      <div class="er-entity-body">
+        <div class="er-field pk">id</div>
+        <div class="er-field fk">tenant_id</div>
+        <div class="er-field">email, phone</div>
+        <div class="er-field">password_hash</div>
+        <div class="er-field">mfa_secret</div>
+      </div>
+    </div>
+    <div class="er-entity">
+      <div class="er-entity-header">roles</div>
+      <div class="er-entity-body">
+        <div class="er-field pk">id</div>
+        <div class="er-field">name (enum)</div>
+        <div class="er-field">permissions JSONB</div>
+      </div>
+    </div>
+    <div class="er-entity">
+      <div class="er-entity-header">employees</div>
+      <div class="er-entity-body">
+        <div class="er-field pk">id</div>
+        <div class="er-field fk">tenant_id, company_id</div>
+        <div class="er-field">matricule</div>
+        <div class="er-field">nom, prenoms</div>
+        <div class="er-field">cnss_numero</div>
+        <div class="er-field">date_embauche</div>
+      </div>
+    </div>
+    <div class="er-entity">
+      <div class="er-entity-header">contracts</div>
+      <div class="er-entity-body">
+        <div class="er-field pk">id</div>
+        <div class="er-field fk">employee_id</div>
+        <div class="er-field">type (CDI/CDD...)</div>
+        <div class="er-field">salaire_base</div>
+        <div class="er-field">date_debut, date_fin</div>
+      </div>
+    </div>
+    <div class="er-entity">
+      <div class="er-entity-header">payroll_periods</div>
+      <div class="er-entity-body">
+        <div class="er-field pk">id</div>
+        <div class="er-field fk">tenant_id</div>
+        <div class="er-field">mois, annee</div>
+        <div class="er-field">status</div>
+        <div class="er-field">locked_at</div>
+      </div>
+    </div>
+    <div class="er-entity">
+      <div class="er-entity-header">payslips</div>
+      <div class="er-entity-body">
+        <div class="er-field pk">id</div>
+        <div class="er-field fk">employee_id, period_id</div>
+        <div class="er-field">salaire_brut</div>
+        <div class="er-field">cnss, rts, vf</div>
+        <div class="er-field">net_a_payer</div>
+      </div>
+    </div>
+    <div class="er-entity">
+      <div class="er-entity-header">leave_requests</div>
+      <div class="er-entity-body">
+        <div class="er-field pk">id</div>
+        <div class="er-field fk">employee_id</div>
+        <div class="er-field">type (congé/maladie)</div>
+        <div class="er-field">date_debut, date_fin</div>
+        <div class="er-field">status</div>
+      </div>
+    </div>
+    <div class="er-entity">
+      <div class="er-entity-header">cnss_params</div>
+      <div class="er-entity-body">
+        <div class="er-field pk">id</div>
+        <div class="er-field fk">tenant_id</div>
+        <div class="er-field">taux_sal, taux_emp</div>
+        <div class="er-field">plafond, plancher</div>
+        <div class="er-field">periodicite</div>
+      </div>
+    </div>
+    <div class="er-entity">
+      <div class="er-entity-header">documents</div>
+      <div class="er-entity-body">
+        <div class="er-field pk">id</div>
+        <div class="er-field fk">employee_id</div>
+        <div class="er-field">type, file_key</div>
+        <div class="er-field">signed_at</div>
+      </div>
+    </div>
+    <div class="er-entity">
+      <div class="er-entity-header">audit_logs</div>
+      <div class="er-entity-body">
+        <div class="er-field pk">id</div>
+        <div class="er-field fk">user_id, tenant_id</div>
+        <div class="er-field">action, entity</div>
+        <div class="er-field">diff JSONB</div>
+        <div class="er-field">ip, user_agent</div>
+      </div>
+    </div>
+  </div>
+  <div class="er-relations">
+    <h4>Relations principales</h4>
+    <ul>
+      <li><b>tenants</b> 1—N <b>companies</b> 1—N <b>employees</b> 1—N <b>contracts</b></li>
+      <li><b>employees</b> 1—N <b>leave_requests</b> | <b>payslips</b> | <b>documents</b></li>
+      <li><b>payroll_periods</b> 1—N <b>payslips</b> 1—1 <b>payslip_pdf</b> (S3)</li>
+      <li><b>users</b> N—N <b>roles</b> via <b>user_roles</b> | <b>users</b> 1—1 <b>employees</b> (optionnel)</li>
+      <li><b>cnss_params</b> 1—1 <b>tenants</b> (configurable par tenant)</li>
+      <li><b>audit_logs</b> référence toute entité via <i>entity_type + entity_id</i></li>
+    </ul>
+  </div>
+</div>
+
+<!-- Diagram 3: Workflow Paie Guinéenne -->
+<div class="diagram">
+  <div class="diagram-title">Workflow Calcul de Paie Guinéenne — CNSS, RTS, Versement Forfaitaire</div>
+  <div class="diagram-sub">Processus mensuel automatisé avec paramètres configurables par tenant</div>
+  <div class="workflow">
+    <div class="workflow-step">
+      <div class="step-num">1</div>
+      <div class="step-title">Collecte des éléments variables</div>
+      <div class="step-desc">Primes, heures supplémentaires (majoration 25%/50%/100%), indemnités, avantages en nature, absences</div>
+    </div>
+    <div class="workflow-connector"></div>
+    <div class="workflow-step">
+      <div class="step-num">2</div>
+      <div class="step-title">Calcul du salaire brut imposable</div>
+      <div class="step-desc">Salaire de base + primes + heures supp + avantages en nature - indemnités non imposables</div>
+      <div class="step-formula">BRUT_IMP = BASE + PRIMES + HS_MAJORE + AV_NATURE - INDEMNITES_EXON</div>
+    </div>
+    <div class="workflow-connector"></div>
+    <div class="workflow-step highlight">
+      <div class="step-num">3</div>
+      <div class="step-title">Cotisation CNSS Guinée — salarié 5%</div>
+      <div class="step-desc">Plafonnée à 8× SMIG mensuel (SMIG 2024 ≈ 580 000 GNF). Retenue opérée sur le brut imposable</div>
+      <div class="step-formula">CNSS_SAL = min(BRUT_IMP, 8 × SMIG) × 5%</div>
+    </div>
+    <div class="workflow-connector"></div>
+    <div class="workflow-step highlight">
+      <div class="step-num">4</div>
+      <div class="step-title">Cotisation CNSS — employeur 8%</div>
+      <div class="step-desc">Part patronale, même plafond. Charge employeur non visible sur le bulletin salarié</div>
+      <div class="step-formula">CNSS_EMP = min(BRUT_IMP, 8 × SMIG) × 8%</div>
+    </div>
+    <div class="workflow-connector"></div>
+    <div class="workflow-step">
+      <div class="step-num">5</div>
+      <div class="step-title">Retenue RTS (Impôt sur salaire)</div>
+      <div class="step-desc">Retenue à la source de l'impôt sur le revenu, taux paramétrable ~1% du brut imposable</div>
+      <div class="step-formula">RTS = BRUT_IMP × 1% (paramétrable par tenant)</div>
+    </div>
+    <div class="workflow-connector"></div>
+    <div class="workflow-step">
+      <div class="step-num">6</div>
+      <div class="step-title">Versement forfaitaire &amp; taxes employeur</div>
+      <div class="step-desc">Taxe d'apprentissage 1%, formation professionnelle 3%, versement forfaitaire — charges patronales</div>
+      <div class="step-formula">VF = BRUT_IMP × (1% + 3% + paramètres_tenant)</div>
+    </div>
+    <div class="workflow-connector"></div>
+    <div class="workflow-step">
+      <div class="step-num">7</div>
+      <div class="step-title">Calcul du net à payer</div>
+      <div class="step-desc">Déduction de l'ensemble des retenues salarié du brut imposable</div>
+      <div class="step-formula">NET = BRUT_IMP − CNSS_SAL − RTS − AVANCES − RETENUES_DIVERS</div>
+    </div>
+    <div class="workflow-connector"></div>
+    <div class="workflow-step final">
+      <div class="step-num">8</div>
+      <div class="step-title">Génération bulletin PDF + Déclaration CNSS</div>
+      <div class="step-desc">Bulletin PDF horodaté signé, déclaration CNSS trimestrielle, état des charges patronales, export Excel comptable</div>
+    </div>
+  </div>
+</div>
+
+<!-- Diagram 4: Matrice RACI -->
+<div class="diagram">
+  <div class="diagram-title">Matrice RACI — Rôles et Responsabilités SIRH</div>
+  <div class="diagram-sub">R = Responsable, A = Approbateur, C = Consulté, I = Informé</div>
+  <table class="raci">
+    <thead>
+      <tr>
+        <th>Processus / Activité</th>
+        <th>Super Admin</th>
+        <th>Admin Entreprise</th>
+        <th>RH</th>
+        <th>Manager</th>
+        <th>Comptable</th>
+        <th>Employé</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Création tenant / entreprise cliente</td><td class="raci-a">A</td><td class="raci-r">R</td><td class="raci-i">I</td><td></td><td></td><td></td></tr>
+      <tr><td>Gestion utilisateurs et rôles</td><td class="raci-a">A</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-i">I</td><td></td></tr>
+      <tr><td>Configuration paramètres paie CNSS</td><td class="raci-a">A</td><td class="raci-r">R</td><td class="raci-c">C</td><td></td><td class="raci-c">C</td><td></td></tr>
+      <tr><td>Embauche / création employé</td><td></td><td class="raci-a">A</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-i">I</td></tr>
+      <tr><td>Gestion contrats et avenants</td><td></td><td class="raci-i">I</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-i">I</td><td class="raci-i">I</td></tr>
+      <tr><td>Demande de congé</td><td></td><td></td><td class="raci-c">C</td><td class="raci-a">A</td><td></td><td class="raci-r">R</td></tr>
+      <tr><td>Validation congé / absence</td><td></td><td class="raci-i">I</td><td class="raci-c">C</td><td class="raci-r">R</td><td></td><td class="raci-i">I</td></tr>
+      <tr><td>Saisie éléments variables paie</td><td></td><td></td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-a">A</td><td class="raci-i">I</td></tr>
+      <tr><td>Clôture période de paie</td><td></td><td class="raci-a">A</td><td class="raci-r">R</td><td></td><td class="raci-r">R</td><td class="raci-i">I</td></tr>
+      <tr><td>Génération bulletins PDF</td><td></td><td class="raci-i">I</td><td class="raci-c">C</td><td></td><td class="raci-r">R</td><td class="raci-i">I</td></tr>
+      <tr><td>Déclarations CNSS / fiscales</td><td></td><td class="raci-a">A</td><td class="raci-c">C</td><td></td><td class="raci-r">R</td><td></td></tr>
+      <tr><td>Consultation bulletin / portail</td><td></td><td></td><td class="raci-i">I</td><td class="raci-i">I</td><td class="raci-i">I</td><td class="raci-r">R</td></tr>
+      <tr><td>Audit trail / conformité</td><td class="raci-r">R</td><td class="raci-i">I</td><td class="raci-i">I</td><td class="raci-i">I</td><td class="raci-i">I</td><td></td></tr>
+      <tr><td>Reporting direction générale</td><td class="raci-i">I</td><td class="raci-a">A</td><td class="raci-r">R</td><td class="raci-c">C</td><td class="raci-c">C</td><td></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Diagram 5: Roadmap Sprints -->
+<div class="diagram">
+  <div class="diagram-title">Roadmap MVP — 8 Sprints de 2 semaines (16 semaines)</div>
+  <div class="diagram-sub">Livraison incrémentale du SIRH premium DataSphere RH Guinée</div>
+  <div class="roadmap">
+    <div class="sprint">
+      <div class="s-num">S1</div>
+      <div class="s-title">Auth &amp; Multi-tenant</div>
+      <div class="s-weeks">Sem 1-2</div>
+    </div>
+    <div class="sprint">
+      <div class="s-num">S2</div>
+      <div class="s-title">Entreprises &amp; Employés</div>
+      <div class="s-weeks">Sem 3-4</div>
+    </div>
+    <div class="sprint">
+      <div class="s-num">S3</div>
+      <div class="s-title">Contrats &amp; Documents</div>
+      <div class="s-weeks">Sem 5-6</div>
+    </div>
+    <div class="sprint">
+      <div class="s-num">S4</div>
+      <div class="s-title">Congés &amp; Absences</div>
+      <div class="s-weeks">Sem 7-8</div>
+    </div>
+    <div class="sprint">
+      <div class="s-num">S5</div>
+      <div class="s-title">Paie CNSS Paramétrable</div>
+      <div class="s-weeks">Sem 9-10</div>
+    </div>
+    <div class="sprint">
+      <div class="s-num">S6</div>
+      <div class="s-title">Bulletins PDF</div>
+      <div class="s-weeks">Sem 11-12</div>
+    </div>
+    <div class="sprint">
+      <div class="s-num">S7</div>
+      <div class="s-title">Dashboards &amp; Exports</div>
+      <div class="s-weeks">Sem 13-14</div>
+    </div>
+    <div class="sprint">
+      <div class="s-num">S8</div>
+      <div class="s-title">Audit &amp; Déploiement</div>
+      <div class="s-weeks">Sem 15-16</div>
+    </div>
+  </div>
+  <div class="roadmap" style="margin-top: 20px;">
+    <div class="sprint premium">
+      <div class="s-num">P1</div>
+      <div class="s-title">Recrutement &amp; Onboarding</div>
+      <div class="s-weeks">Sem 17-20</div>
+    </div>
+    <div class="sprint premium">
+      <div class="s-num">P2</div>
+      <div class="s-title">Portail employé &amp; Signature</div>
+      <div class="s-weeks">Sem 21-24</div>
+    </div>
+    <div class="sprint premium">
+      <div class="s-num">P3</div>
+      <div class="s-title">Notifications WhatsApp/SMS</div>
+      <div class="s-weeks">Sem 25-28</div>
+    </div>
+    <div class="sprint premium">
+      <div class="s-num">P4</div>
+      <div class="s-title">App mobile employé</div>
+      <div class="s-weeks">Sem 29-34</div>
+    </div>
+    <div class="sprint premium">
+      <div class="s-num">P5</div>
+      <div class="s-title">IA RH (contrats, lettres)</div>
+      <div class="s-weeks">Sem 35-40</div>
+    </div>
+    <div class="sprint premium">
+      <div class="s-num">P6</div>
+      <div class="s-title">Coffre-fort &amp; e-signature</div>
+      <div class="s-weeks">Sem 41-44</div>
+    </div>
+    <div class="sprint premium">
+      <div class="s-num">P7</div>
+      <div class="s-title">Reporting DG avancé</div>
+      <div class="s-weeks">Sem 45-48</div>
+    </div>
+    <div class="sprint premium">
+      <div class="s-num">P8</div>
+      <div class="s-title">Intégrations externes</div>
+      <div class="s-weeks">Sem 49-52</div>
+    </div>
+  </div>
+</div>
+
+<!-- Diagram 6: Parcours Employé -->
+<div class="diagram">
+  <div class="diagram-title">Parcours Employé — Du recrutement au départ</div>
+  <div class="diagram-sub">User journey complet à travers les modules DataSphere RH Guinée</div>
+  <div class="journey">
+    <div class="journey-step">
+      <div class="step-icon">1</div>
+      <h4>Recrutement</h4>
+      <ul>
+        <li>Candidature portail</li>
+        <li>Entretiens</li>
+        <li>Offre / acceptation</li>
+        <li>Création employé</li>
+      </ul>
+    </div>
+    <div class="journey-arrow">→</div>
+    <div class="journey-step">
+      <div class="step-icon">2</div>
+      <h4>Onboarding</h4>
+      <ul>
+        <li>Contrat signé</li>
+        <li>Documents administratifs</li>
+        <li>Compte portail créé</li>
+        <li>Affectation service/poste</li>
+      </ul>
+    </div>
+    <div class="journey-arrow">→</div>
+    <div class="journey-step">
+      <div class="step-icon">3</div>
+      <h4>Vie active</h4>
+      <ul>
+        <li>Congés / absences</li>
+        <li>Demandes primes</li>
+        <li>Documents (attestations)</li>
+        <li>Évaluations</li>
+      </ul>
+    </div>
+    <div class="journey-arrow">→</div>
+    <div class="journey-step">
+      <div class="step-icon">4</div>
+      <h4>Paie mensuelle</h4>
+      <ul>
+        <li>Éléments variables saisis</li>
+        <li>Calcul CNSS/RTS</li>
+        <li>Bulletin PDF notifié</li>
+        <li>Déclaration CNSS</li>
+      </ul>
+    </div>
+    <div class="journey-arrow">→</div>
+    <div class="journey-step">
+      <div class="step-icon">5</div>
+      <h4>Départ</h4>
+      <ul>
+        <li>Préavis / solde tout compte</li>
+        <li>Certificat de travail</li>
+        <li>Archivage dossier</li>
+        <li>Revue exit</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

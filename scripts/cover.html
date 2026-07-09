@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>DataSphere RH Guinée — Couverture</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --c-bg: #f3f4f5;
+    --c-page: #ffffff;
+    --c-primary: #202224;
+    --c-accent: #27698a;
+    --c-accent-2: #b94659;
+    --c-muted: #747a7e;
+    --c-border: #abbec8;
+    --c-fill: #435862;
+    --c-success: #478e5e;
+    --c-warning: #96783c;
+    --u: 39.7px; /* W * 0.05 = 794 * 0.05 */
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 794px; height: 1123px;
+    margin: 0; padding: 0;
+    background: var(--c-page);
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--c-primary);
+  }
+  @page { size: 794px 1123px; margin: 0; }
+
+  .cover-page {
+    position: relative;
+    width: 794px; height: 1123px;
+    background: var(--c-page);
+    border: none !important;
+    outline: none !important;
+    overflow: hidden;
+  }
+
+  /* Layer 1 - Background: subtle grid */
+  .layer-1 {
+    position: absolute; inset: 0;
+    z-index: 1; overflow: hidden;
+    background-image:
+      linear-gradient(rgba(39, 105, 138, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(39, 105, 138, 0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  /* Background watermark - large number */
+  .watermark {
+    position: absolute;
+    right: -30px;
+    bottom: 60px;
+    font-size: 320px;
+    font-weight: 900;
+    color: rgba(39, 105, 138, 0.04);
+    letter-spacing: -10px;
+    line-height: 0.85;
+    z-index: 1;
+    user-select: none;
+  }
+
+  /* Layer 2 - Structure: thick vertical anchor line */
+  .layer-2 { position: absolute; inset: 0; z-index: 2; }
+  .anchor-line {
+    position: absolute;
+    left: 95px; /* 0.12 * 794 = 95 */
+    top: 112px; /* 0.10 * 1123 */
+    width: 6px;
+    height: 899px; /* 0.80 * 1123 */
+    background: var(--c-accent);
+  }
+  /* Accent flag stripe - small Guinée accent: red/yellow/green */
+  .flag-accent {
+    position: absolute;
+    left: 95px;
+    top: 60px;
+    width: 6px;
+    height: 36px;
+    background: linear-gradient(to bottom,
+      var(--c-accent-2) 0% 33%,
+      var(--c-warning) 33% 66%,
+      var(--c-success) 66% 100%);
+  }
+  /* Horizontal accent line above meta */
+  .h-divider {
+    position: absolute;
+    left: 158px; /* 95 + 6 + 57 */
+    right: 95px;
+    top: 800px;
+    height: 1px;
+    background: var(--c-border);
+  }
+
+  /* Layer 3 - Content */
+  .layer-3 { position: absolute; inset: 0; z-index: 3; }
+
+  /* Kicker - top zone A */
+  .kicker {
+    position: absolute;
+    left: 158px;
+    top: 168px; /* 0.15 * 1123 */
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--c-muted);
+    opacity: 0.85;
+  }
+  .kicker .badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: var(--c-accent);
+    color: #fff;
+    border-radius: 3px;
+    margin-right: 12px;
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+
+  /* Hero Title - zone B */
+  .hero-title {
+    position: absolute;
+    left: 158px;
+    top: 260px; /* 0.23 * 1123 */
+    right: 95px;
+    font-size: 64px;
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    color: var(--c-primary);
+  }
+  .hero-title .accent {
+    color: var(--c-accent);
+    display: block;
+  }
+  .hero-title .country {
+    display: block;
+    font-size: 36px;
+    font-weight: 300;
+    letter-spacing: 8px;
+    margin-top: 14px;
+    color: var(--c-muted);
+  }
+
+  /* Subtitle / document type */
+  .subtitle {
+    position: absolute;
+    left: 158px;
+    top: 540px;
+    right: 95px;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--c-fill);
+    line-height: 1.3;
+  }
+  .subtitle .pipe {
+    color: var(--c-accent-2);
+    margin: 0 8px;
+  }
+
+  /* Summary - zone C */
+  .summary {
+    position: absolute;
+    left: 158px;
+    top: 620px; /* 0.55 * 1123 */
+    width: 540px; /* W * 0.68 */
+    font-size: 14.5px;
+    font-weight: 400;
+    line-height: 1.65;
+    color: var(--c-primary);
+    opacity: 0.85;
+  }
+
+  /* Stats block */
+  .stats {
+    position: absolute;
+    left: 158px;
+    top: 830px;
+    display: flex;
+    gap: 36px;
+  }
+  .stat {
+    border-left: 2px solid var(--c-accent);
+    padding-left: 14px;
+  }
+  .stat .num {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--c-primary);
+    line-height: 1;
+  }
+  .stat .label {
+    font-size: 10px;
+    color: var(--c-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 6px;
+  }
+
+  /* Meta - zone D */
+  .meta {
+    position: absolute;
+    left: 158px;
+    top: 970px; /* 0.86 * 1123 */
+    right: 95px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .meta-left .org {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--c-primary);
+    letter-spacing: 0.5px;
+  }
+  .meta-left .role {
+    font-size: 11px;
+    color: var(--c-muted);
+    margin-top: 4px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .meta-right {
+    text-align: right;
+  }
+  .meta-right .date {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--c-primary);
+  }
+  .meta-right .location {
+    font-size: 11px;
+    color: var(--c-muted);
+    margin-top: 4px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* Footer corner mark */
+  .footer-mark {
+    position: absolute;
+    right: 60px;
+    top: 60px;
+    text-align: right;
+    z-index: 3;
+  }
+  .footer-mark .doc-ref {
+    font-size: 10px;
+    color: var(--c-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .footer-mark .doc-id {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--c-accent);
+    margin-top: 4px;
+    font-family: 'Inter', monospace;
+  }
+</style>
+</head>
+<body>
+<div class="cover-page">
+
+  <!-- Layer 1: background -->
+  <div class="layer-1"></div>
+  <div class="watermark">RH</div>
+
+  <!-- Layer 2: structure -->
+  <div class="layer-2">
+    <div class="flag-accent"></div>
+    <div class="anchor-line"></div>
+    <div class="h-divider"></div>
+  </div>
+
+  <!-- Layer 3: content -->
+  <div class="layer-3">
+
+    <div class="footer-mark">
+      <div class="doc-ref">Document de référence</div>
+      <div class="doc-id">DSRH-GN-2026-V1.0</div>
+    </div>
+
+    <div class="kicker">
+      <span class="badge">SaaS SIRH</span>
+      Plateforme premium multi-tenant
+    </div>
+
+    <div class="hero-title">
+      <span>DataSphere</span>
+      <span class="accent">RH Guinée</span>
+      <span class="country">SIRH &middot; PAIE &middot; CNSS</span>
+    </div>
+
+    <div class="subtitle">
+      Cahier des charges complet<span class="pipe">/</span>Architecture technique<span class="pipe">/</span>Business plan Guinée
+    </div>
+
+    <div class="summary">
+      Document stratégique et technique pour la conception, le développement et la commercialisation d'un SIRH premium SaaS multi-tenant adapté au contexte réglementaire guinéen (CNSS, RTS, versement forfaitaire). Architecture Next.js + NestJS + PostgreSQL, 18 modules couvrant le MVP et les fonctionnalités premium, prêt pour commercialisation auprès des PME, ONG, banques, cliniques, écoles, sociétés minières et BTP.
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="num">18</div>
+        <div class="label">Modules</div>
+      </div>
+      <div class="stat">
+        <div class="num">10</div>
+        <div class="label">Livrables</div>
+      </div>
+      <div class="stat">
+        <div class="num">80+</div>
+        <div class="label">Endpoints API</div>
+      </div>
+      <div class="stat">
+        <div class="num">9.5</div>
+        <div class="label">Score cible</div>
+      </div>
+    </div>
+
+    <div class="meta">
+      <div class="meta-left">
+        <div class="org">DataSphere RH Guinée</div>
+        <div class="role">Architecture &amp; Product Ownership</div>
+      </div>
+      <div class="meta-right">
+        <div class="date">Juillet 2026</div>
+        <div class="location">Conakry &middot; République de Guinée</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>
