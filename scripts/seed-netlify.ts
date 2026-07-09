@@ -1,6 +1,6 @@
 /**
  * Seed pour déploiement Netlify + Neon SQL
- * Crée une société démo + employés + données RAG si la base est vide
+ * Ne s'exécute que si la base est vide
  */
 import { PrismaClient } from '@prisma/client'
 
@@ -8,47 +8,29 @@ const db = new PrismaClient()
 
 async function main() {
   console.log('🌱 Seed Netlify/Neon...')
-
-  // Vérifie si déjà seedé
   const existing = await db.company.count()
-  if (existing > 0) {
-    console.log('⊘ Base déjà peuplée, skip')
-    return
-  }
+  if (existing > 0) { console.log('⊘ Base déjà peuplée, skip'); return }
 
-  // 1. Société démo
+  const bcrypt = await import('bcryptjs')
   const company = await db.company.create({
     data: {
-      raisonSociale: 'DataSphere Demo SARL',
-      sigle: 'DSD',
-      nif: 'NIF-DEMO-001',
-      rc: 'RC-DEMO-001',
-      cnssNumero: 'CNSS-DEMO-001',
-      adresse: 'Kaloum, Conakry',
-      ville: 'Conakry',
-      telephone: '+224 620 000 000',
-      email: 'demo@datasphere.gn',
-      devise: 'GNF',
+      raisonSociale: 'DataSphere Demo SARL', sigle: 'DSD',
+      nif: 'NIF-DEMO-001', rc: 'RC-DEMO-001', cnssNumero: 'CNSS-DEMO-001',
+      adresse: 'Kaloum, Conakry', ville: 'Conakry',
+      telephone: '+224 620 000 000', email: 'demo@datasphere.gn', devise: 'GNF',
     },
   })
-  console.log(`  ✓ Société: ${company.raisonSociale}`)
+  console.log('  ✓ Société créée')
 
-  // 2. Utilisateur admin
-  const bcrypt = await import('bcryptjs')
-  const passwordHash = await bcrypt.hash('demo123', 10)
   await db.user.create({
     data: {
-      email: 'admin@datasphere.gn',
-      name: 'Administrateur Démo',
-      role: 'SUPER_ADMIN',
-      passwordHash,
-      companyId: company.id,
-      active: true,
+      email: 'admin@datasphere.gn', name: 'Administrateur Démo',
+      role: 'SUPER_ADMIN', passwordHash: await bcrypt.hash('demo123', 10),
+      companyId: company.id, active: true,
     },
   })
-  console.log('  ✓ Utilisateur: admin@datasphere.gn / demo123')
+  console.log('  ✓ User admin créé (admin@datasphere.gn / demo123)')
 
-  // 3. Employés démo
   const employees = [
     { matricule: 'DS-001', nom: 'Camara', prenoms: 'Mamadou', poste: 'Directeur Général', sexe: 'M', dateEmbauche: '2020-01-15', salaire: 5000000, type: 'CDI' },
     { matricule: 'DS-002', nom: 'Diallo', prenoms: 'Aïcha', poste: 'DRH', sexe: 'F', dateEmbauche: '2020-03-01', salaire: 3500000, type: 'CDI' },
@@ -64,37 +46,23 @@ async function main() {
   for (const emp of employees) {
     const employee = await db.employee.create({
       data: {
-        companyId: company.id,
-        matricule: emp.matricule,
-        nom: emp.nom,
-        prenoms: emp.prenoms,
-        sexe: emp.sexe,
-        poste: emp.poste,
-        dateEmbauche: emp.dateEmbauche,
-        statut: 'actif',
+        companyId: company.id, matricule: emp.matricule, nom: emp.nom, prenoms: emp.prenoms,
+        sexe: emp.sexe, poste: emp.poste, dateEmbauche: emp.dateEmbauche, statut: 'actif',
         telephone: '+224 620 00 00 0' + emp.matricule.slice(-1),
         email: `${emp.prenoms.toLowerCase()}.${emp.nom.toLowerCase()}@datasphere.gn`,
-        situationFamiliale: 'Célibataire',
-        nombreEnfants: 0,
+        situationFamiliale: 'Célibataire', nombreEnfants: 0,
       },
     })
-
     await db.contract.create({
       data: {
-        employeeId: employee.id,
-        type: emp.type,
-        dateDebut: emp.dateEmbauche,
-        dateFin: emp.type === 'CDD' ? '2025-09-01' : null,
-        poste: emp.poste,
-        salaireBase: emp.salaire,
-        devise: 'GNF',
-        status: 'ACTIF',
+        employeeId: employee.id, type: emp.type, dateDebut: emp.dateEmbauche,
+        dateFin: emp.type === 'CDD' ? '2025-09-01' : null, poste: emp.poste,
+        salaireBase: emp.salaire, devise: 'GNF', status: 'ACTIF',
       },
     })
   }
-  console.log(`  ✓ Employés: ${employees.length} créés`)
+  console.log(`  ✓ ${employees.length} employés créés`)
 
-  // 4. RAG documents
   const ragDocs = [
     { source: 'policy', title: 'Politique de télétravail', content: "Le télétravail est autorisé 2 jours par semaine pour les employés en CDI avec 3 mois d'ancienneté. L'entreprise fournit un ordinateur portable et rembourse la connexion internet jusqu'à 200 000 GNF/mois." },
     { source: 'policy', title: 'Politique de congés', content: "30 jours calendaires de congés payés par an. Congé maternité 14 semaines. Congé paternité 3 jours. L'entreprise ferme du 24 décembre au 2 janvier." },
@@ -102,48 +70,12 @@ async function main() {
     { source: 'law', title: 'Code du travail guinéen', content: "Période d'essai: 1 mois ouvriers, 2 mois agents de maîtrise, 3 mois cadres. Préavis: 1 mois à 3 mois selon grade. Heures supplémentaires majorées 25% puis 50%." },
     { source: 'manual', title: 'Manuel onboarding', content: "Jour 1: accueil RH, signature contrat, badge. Semaine 1: formation produit, shadowing. Documents requis: CNI, photo, CNSS, extrait de naissance, casier judiciaire." },
   ]
-
   for (const doc of ragDocs) {
-    await db.documentChunk.create({
-      data: {
-        companyId: company.id,
-        source: doc.source,
-        title: doc.title,
-        content: doc.content,
-        chunkIndex: 0,
-      },
-    })
+    await db.documentChunk.create({ data: { companyId: company.id, source: doc.source, title: doc.title, content: doc.content, chunkIndex: 0 } })
   }
-  console.log(`  ✓ RAG: ${ragDocs.length} documents`)
+  console.log(`  ✓ ${ragDocs.length} documents RAG`)
 
-  // 5. Contrats fournisseurs
-  const contracts = [
-    { title: 'Maintenance ERP', supplier: 'DataSphere GN', type: 'PRESTATION_IT', amount: 450000000, status: 'ACTIF', daysEnd: 185, owner: 'Aïcha Diallo', clauses: 12, alerts: 0, desc: 'Maintenance ERP' },
-    { title: 'Audit financier', supplier: 'KPMG', type: 'AUDIT', amount: 180000000, status: 'ACTIF', daysEnd: 305, owner: 'Mamadou Camara', clauses: 8, alerts: 0, desc: 'Audit annuel' },
-    { title: 'Assurance multi-risques', supplier: 'NSIA', type: 'ASSURANCE', amount: 95000000, status: 'EXPIRE_BIENTOT', daysEnd: 65, owner: 'Fatou Touré', clauses: 15, alerts: 2, desc: 'Police automobile' },
-    { title: 'Cybersécurité', supplier: 'Sentry Africa', type: 'PRESTATION_IT', amount: 125000000, status: 'EXPIRE_BIENTOT', daysEnd: 25, owner: 'Lamine Barry', clauses: 9, alerts: 3, desc: 'Pentest annuel' },
-    { title: 'Formation', supplier: 'Institut PME', type: 'FORMATION', amount: 45000000, status: 'ACTIF', daysEnd: 335, owner: 'Sékou Traoré', clauses: 6, alerts: 0, desc: 'Formation cadres' },
-  ]
-
-  for (const c of contracts) {
-    const endDate = new Date(); endDate.setDate(endDate.getDate() + c.daysEnd)
-    const startDate = new Date(); startDate.setDate(startDate.getDate() - 180)
-    await db.contractSupplier.create({
-      data: {
-        companyId: company.id,
-        title: c.title, supplier: c.supplier, type: c.type, description: c.desc,
-        amount: c.amount, currency: 'GNF', clauses: c.clauses,
-        startDate: startDate.toISOString(), endDate: endDate.toISOString(),
-        status: c.status, owner: c.owner, alerts: c.alerts,
-      },
-    })
-  }
-  console.log(`  ✓ Contrats: ${contracts.length}`)
-
-  console.log('\n✅ Seed terminé !')
-  console.log('   Login: admin@datasphere.gn / demo123')
+  console.log('\n✅ Seed terminé ! Login: admin@datasphere.gn / demo123')
 }
 
-main()
-  .catch((e) => { console.error('Erreur seed:', e); process.exit(1) })
-  .finally(async () => { await db.$disconnect() })
+main().catch(e => { console.error('Erreur:', e); process.exit(1) }).finally(() => db.$disconnect())
