@@ -20,18 +20,30 @@ interface DashboardData {
 
 export function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let mounted = true
     fetch('/api/dashboard')
-      .then(r => r.json())
-      .then(d => { if (mounted) { setData(d); setLoading(false) } })
-      .catch(() => { if (mounted) setLoading(false) })
+      .then(async r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`)
+        const d = await r.json()
+        if (!d || typeof d.totalEmployees !== 'number') {
+          throw new Error('Invalid dashboard payload')
+        }
+        if (mounted) { setData(d); setLoading(false) }
+      })
+      .catch(err => {
+        if (mounted) {
+          setError(err.message || 'Erreur de chargement')
+          setLoading(false)
+        }
+      })
     return () => { mounted = false }
   }, [])
 
-  if (loading || !data) {
+  if (loading) {
     return (
       <div className="p-4 lg:p-6">
         <div className="animate-pulse space-y-4">
@@ -39,6 +51,26 @@ export function DashboardPage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[1, 2, 3, 4].map(i => <div key={i} className="h-28 bg-slate-200 rounded-xl"></div>)}
           </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !data) {
+    return (
+      <div className="p-4 lg:p-6">
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-6 text-amber-900">
+          <h2 className="font-semibold mb-1">Données du tableau de bord indisponibles</h2>
+          <p className="text-sm text-amber-800">
+            Les API RH ne répondent pas correctement. Vérifiez que la base de données est configurée.
+          </p>
+          <p className="text-xs text-amber-700 mt-2 font-mono">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-3 px-3 py-1.5 text-xs font-medium bg-amber-900 text-white rounded hover:bg-amber-800"
+          >
+            Réessayer
+          </button>
         </div>
       </div>
     )

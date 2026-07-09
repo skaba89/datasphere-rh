@@ -71,7 +71,7 @@ async function main() {
     { source: 'manual', title: 'Manuel onboarding', content: "Jour 1: accueil RH, signature contrat, badge. Semaine 1: formation produit, shadowing. Documents requis: CNI, photo, CNSS, extrait de naissance, casier judiciaire." },
   ]
   for (const doc of ragDocs) {
-    await db.documentChunk.create({ data: { companyId: company.id, source: doc.source, title: doc.title, content: doc.content, chunkIndex: 0 } })
+    await db.document.create({ data: { companyId: company.id, name: doc.title, type: 'OTHER', fileKey: `rag/${doc.source}/${doc.title}`, fileSize: doc.content.length, mimeType: 'text/plain', category: 'RH' } })
   }
   console.log(`  ✓ ${ragDocs.length} documents RAG`)
 
