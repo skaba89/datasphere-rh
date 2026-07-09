@@ -15,6 +15,14 @@ export const metadata: Metadata = {
   description: "Système d'Information Ressources Humaines premium adapté au contexte guinéen : CNSS, RTS, versement forfaitaire, paie, congés, contrats.",
   keywords: ["SIRH", "Guinée", "CNSS", "paie", "RH", "SaaS", "Conakry"],
   authors: [{ name: "DataSphere RH Guinée" }],
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({
