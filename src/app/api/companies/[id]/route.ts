@@ -82,7 +82,7 @@ export async function DELETE(
     // Vérifier que la société existe
     const company = await db.company.findUnique({
       where: { id },
-      include: { _count: { select: { employees: true } } },
+      select: { id: true, raisonSociale: true, _count: { select: { employees: true } } },
     })
 
     if (!company) {
@@ -98,8 +98,128 @@ export async function DELETE(
       )
     }
 
-    // La suppression en cascade est gérée par Prisma (onDelete: Cascade sur les relations)
-    await db.company.delete({ where: { id } })
+    // Suppression manuelle transactionnelle de toutes les dépendances
+    // On ne peut pas compter sur onDelete: Cascade si le schéma DB n'est pas à jour
+    await db.$transaction(async (tx) => {
+      // 1. Supprimer les enregistrements qui n'ont pas de cascade configuré
+      // Users: SetNull (détacher sans supprimer)
+      await tx.user.updateMany({
+        where: { companyId: id },
+        data: { companyId: null },
+      })
+
+      // 2. Supprimer les employés d'abord (leurs sous-relations cascaderont)
+      // Mais d'abord supprimer les records qui référencent employeeId directement
+      // pour éviter les contraintes FK
+
+      // Documents
+      await tx.document.deleteMany({ where: { companyId: id } })
+
+      // Notifications
+      await tx.notification.deleteMany({ where: { companyId: id } })
+
+      // Reports
+      await tx.report.deleteMany({ where: { companyId: id } })
+
+      // Trainings
+      await tx.training.deleteMany({ where: { companyId: id } })
+
+      // BudgetItems
+      await tx.budgetItem.deleteMany({ where: { companyId: id } })
+
+      // JobOffers
+      await tx.jobOffer.deleteMany({ where: { companyId: id } })
+
+      // Surveys
+      await tx.survey.deleteMany({ where: { companyId: id } })
+
+      // Skills
+      await tx.skill.deleteMany({ where: { companyId: id } })
+
+      // ComplianceItems
+      await tx.complianceItem.deleteMany({ where: { companyId: id } })
+
+      // ExpenseReports
+      await tx.expenseReport.deleteMany({ where: { companyId: id } })
+
+      // Interviews
+      await tx.interview.deleteMany({ where: { companyId: id } })
+
+      // Candidates
+      await tx.candidate.deleteMany({ where: { companyId: id } })
+
+      // Contractors
+      await tx.contractor.deleteMany({ where: { companyId: id } })
+
+      // CnssParams
+      await tx.cnssParam.deleteMany({ where: { companyId: id } })
+
+      // PayrollPeriods
+      await tx.payrollPeriod.deleteMany({ where: { companyId: id } })
+
+      // OnboardingTasks
+      await tx.onboardingTask.deleteMany({ where: { companyId: id } })
+
+      // WorkLocations
+      await tx.workLocation.deleteMany({ where: { companyId: id } })
+
+      // Shifts
+      await tx.shift.deleteMany({ where: { companyId: id } })
+
+      // Equipment
+      await tx.equipment.deleteMany({ where: { companyId: id } })
+
+      // Loans
+      await tx.loan.deleteMany({ where: { companyId: id } })
+
+      // Benefits
+      await tx.benefit.deleteMany({ where: { companyId: id } })
+
+      // Announcements
+      await tx.announcement.deleteMany({ where: { companyId: id } })
+
+      // HelpdeskTickets
+      await tx.helpdeskTicket.deleteMany({ where: { companyId: id } })
+
+      // Feedback360
+      await tx.feedback360.deleteMany({ where: { companyId: id } })
+
+      // HealthRecords
+      await tx.healthRecord.deleteMany({ where: { companyId: id } })
+
+      // CareerPaths
+      await tx.careerPath.deleteMany({ where: { companyId: id } })
+
+      // Certificates
+      await tx.certificate.deleteMany({ where: { companyId: id } })
+
+      // Forecasts
+      await tx.forecast.deleteMany({ where: { companyId: id } })
+
+      // AIInsights
+      await tx.aIInsight.deleteMany({ where: { companyId: id } })
+
+      // ModelTrainings
+      await tx.modelTraining.deleteMany({ where: { companyId: id } })
+
+      // WebhookConfigs
+      await tx.webhookConfig.deleteMany({ where: { companyId: id } })
+
+      // WebhookDeliveries
+      await tx.webhookDelivery.deleteMany({ where: { companyId: id } })
+
+      // ContractSuppliers
+      await tx.contractSupplier.deleteMany({ where: { companyId: id } })
+
+      // AdvancedAuditLogs
+      await tx.advancedAuditLog.deleteMany({ where: { companyId: id } })
+
+      // 3. Maintenant supprimer les employés (leurs contracts/payslips/leaves cascaderont)
+      await tx.employee.deleteMany({ where: { companyId: id } })
+
+      // 4. Enfin, supprimer la société elle-même
+      await tx.company.delete({ where: { id } })
+    }, { timeout: 120000, maxWait: 120000 })
 
     return NextResponse.json({
       success: true,
@@ -111,8 +231,18 @@ export async function DELETE(
     // Gérer les erreurs de contrainte d'intégrité
     if (error?.code === 'P2003') {
       return NextResponse.json(
-        { error: 'Impossible de supprimer : des enregistrements liés existent. Supprimez d\'abord les dépendances.' },
+        {
+          error: 'Contrainte de clé étrangère bloquée. Certaines données liées n\'ont pas pu être supprimées.',
+          detail: error?.meta?.field_name || 'unknown',
+        },
         { status: 400 }
+      )
+    }
+
+    if (error?.code === 'P2025') {
+      return NextResponse.json(
+        { error: 'Société introuvable ou déjà supprimée' },
+        { status: 404 }
       )
     }
 
