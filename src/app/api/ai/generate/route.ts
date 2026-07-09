@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import ZAI from 'z-ai-web-dev-sdk'
+import { getZAI, isZAIConfigured } from '@/lib/zai'
+import { generateDocumentTemplate } from '@/lib/document-templates'
 
 export async function POST(request: Request) {
   try {
@@ -154,17 +155,32 @@ Format lettre recommandée avec accusé de réception, en français.`,
     }
 
     // Appel au LLM via z-ai-web-dev-sdk
-    const zai = await ZAI.create()
-    const completion = await zai.chat.completions.create({
-      messages: [
-        { role: 'system', content: 'Tu es un assistant juridique RH spécialisé en droit du travail guinéen. Tu génères des documents RH professionnels, conformes à la législation guinéenne (Code du travail Loi L/2014/072/AN, CNSS Guinée). Réponds uniquement avec le document demandé, sans commentaire additionnel.' },
-        { role: 'user', content: prompt },
-      ],
-      temperature: 0.7,
-      max_tokens: 3000,
-    })
+    // Si la clé API n'est pas configurée, on génère un template basique à la place
+    let generatedContent: string
+    let generatedBy: 'ai' | 'template'
 
-    const generatedContent = completion.choices[0]?.message?.content || ''
+    if (isZAIConfigured()) {
+      try {
+        const zai = await getZAI()
+        const completion = await zai.chat.completions.create({
+          messages: [
+            { role: 'system', content: 'Tu es un assistant juridique RH spécialisé en droit du travail guinéen. Tu génères des documents RH professionnels, conformes à la législation guinéenne (Code du travail Loi L/2014/072/AN, CNSS Guinée). Réponds uniquement avec le document demandé, sans commentaire additionnel.' },
+            { role: 'user', content: prompt },
+          ],
+          temperature: 0.7,
+          max_tokens: 3000,
+        })
+        generatedContent = completion.choices[0]?.message?.content || ''
+        generatedBy = 'ai'
+      } catch (aiError) {
+        console.error('AI generation failed, falling back to template:', aiError)
+        generatedContent = generateDocumentTemplate(type, context)
+        generatedBy = 'template'
+      }
+    } else {
+      generatedContent = generateDocumentTemplate(type, context)
+      generatedBy = 'template'
+    }
 
     // Audit log
     await db.auditLog.create({
@@ -182,6 +198,7 @@ Format lettre recommandée avec accusé de réception, en français.`,
       content: generatedContent,
       type,
       context,
+      generatedBy,
       generatedAt: new Date().toISOString(),
     })
   } catch (error) {
