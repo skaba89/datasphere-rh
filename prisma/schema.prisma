@@ -81,7 +81,7 @@ model Employee {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  company         Company  @relation(fields: [companyId], references: [id])
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   contracts       Contract[]
   payslips        Payslip[]
   leaveRequests   LeaveRequest[]
@@ -142,7 +142,7 @@ model CnssParam {
   dateEffet                String  @default("2024-01-01")
   createdAt                DateTime @default(now())
 
-  company                  Company @relation(fields: [companyId], references: [id])
+  company                  Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 }
 
 model PayrollPeriod {
@@ -227,7 +227,7 @@ model User {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  company       Company? @relation(fields: [companyId], references: [id])
+  company       Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
 }
 
 // ━━━ Module Recrutement & Onboarding ━━━

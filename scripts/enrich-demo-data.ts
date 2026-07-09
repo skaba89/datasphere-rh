@@ -33,18 +33,28 @@ async function main() {
   })
   console.log('  ✓ Société Minière de Boké créée')
 
-  // Admin for Mine
-  await db.user.create({
-    data: {
-      email: 'admin@minebokedemo.gn',
-      name: 'Mamadou Camara (Admin Mine)',
-      role: 'SUPER_ADMIN',
-      passwordHash: await bcrypt.hash('demo123', 10),
-      companyId: mine.id,
-      active: true,
-    },
-  })
-  console.log('  ✓ User admin mine créé')
+  // Admin for Mine — upsert (user may already exist if company was previously deleted)
+  const bcryptMod = await import('bcryptjs')
+  const existingMineUser = await db.user.findUnique({ where: { email: 'admin@minebokedemo.gn' } })
+  if (existingMineUser) {
+    await db.user.update({
+      where: { id: existingMineUser.id },
+      data: { companyId: mine.id, active: true },
+    })
+    console.log('  ✓ User admin mine reconnecté à la nouvelle société')
+  } else {
+    await db.user.create({
+      data: {
+        email: 'admin@minebokedemo.gn',
+        name: 'Mamadou Camara (Admin Mine)',
+        role: 'SUPER_ADMIN',
+        passwordHash: await bcryptMod.hash('demo123', 10),
+        companyId: mine.id,
+        active: true,
+      },
+    })
+    console.log('  ✓ User admin mine créé')
+  }
 
   // === 15 employees for Mine de Boké ===
   const mineEmployees = [
