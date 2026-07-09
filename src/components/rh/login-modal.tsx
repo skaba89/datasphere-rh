@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -13,17 +13,18 @@ interface LoginModalProps {
   onSuccess: (user: { email: string; name: string; role: string }) => void
 }
 
+const DEMO_PASSWORD = 'demo123'
+
 const DEMO_ACCOUNTS = [
-  { email: 'admin@demo.gn', role: 'Admin Entreprise', company: 'Demo SARL' },
-  { email: 'rh@demo.gn', role: 'RH', company: 'Demo SARL' },
-  { email: 'comptable@demo.gn', role: 'Comptable', company: 'Demo SARL' },
-  { email: 'manager@demo.gn', role: 'Manager', company: 'Demo SARL' },
-  { email: 'admin@minebokedemo.gn', role: 'Admin Mine', company: 'Mine de Boké' },
+  { email: 'admin@datasphere.gn', role: 'Super Admin', company: 'DataSphere Demo SARL' },
+  { email: 'rh@datasphere.gn', role: 'RH', company: 'DataSphere Demo SARL' },
+  { email: 'comptable@datasphere.gn', role: 'Comptable', company: 'DataSphere Demo SARL' },
+  { email: 'manager@datasphere.gn', role: 'Manager', company: 'DataSphere Demo SARL' },
 ]
 
 export function LoginModal({ onClose, onSuccess }: LoginModalProps) {
-  const [email, setEmail] = useState('admin@demo.gn')
-  const [password, setPassword] = useState('Demo1234!')
+  const [email, setEmail] = useState('admin@datasphere.gn')
+  const [password, setPassword] = useState(DEMO_PASSWORD)
   const [loading, setLoading] = useState(false)
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -58,6 +59,9 @@ export function LoginModal({ onClose, onSuccess }: LoginModalProps) {
             </div>
             Connexion
           </DialogTitle>
+          <DialogDescription className="text-xs text-slate-500">
+            Connectez-vous à votre espace RH DataSphere
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleLogin} className="space-y-3">
@@ -69,7 +73,7 @@ export function LoginModal({ onClose, onSuccess }: LoginModalProps) {
               value={email}
               onChange={e => setEmail(e.target.value)}
               className="mt-1"
-              placeholder="admin@demo.gn"
+              placeholder="admin@datasphere.gn"
               required
             />
           </div>
@@ -92,12 +96,12 @@ export function LoginModal({ onClose, onSuccess }: LoginModalProps) {
         </form>
 
         <div className="pt-3 border-t border-slate-200">
-          <p className="text-xs font-semibold text-slate-700 mb-2">Comptes de démonstration (mot de passe : Demo1234!) :</p>
+          <p className="text-xs font-semibold text-slate-700 mb-2">Comptes de démonstration (mot de passe : {DEMO_PASSWORD}) :</p>
           <div className="space-y-1 max-h-40 overflow-y-auto">
             {DEMO_ACCOUNTS.map(acc => (
               <button
                 key={acc.email}
-                onClick={() => { setEmail(acc.email); setPassword('Demo1234!') }}
+                onClick={() => { setEmail(acc.email); setPassword(DEMO_PASSWORD) }}
                 className="w-full text-left p-2 rounded border border-slate-200 hover:bg-slate-50 text-xs"
               >
                 <div className="font-medium text-slate-900">{acc.email}</div>
