@@ -106,3 +106,29 @@ export async function getWebhookDeliveries(webhookId: string, limit = 50) {
     take: Math.min(limit, 200),
   })
 }
+
+/**
+ * Récupère la file d'attente des retries (livraisons échouées) pour une société.
+ * Retourne les livraisons échouées (ok = false) les plus récentes,
+ * triées par date décroissante, limitées à `limit` entrées.
+ */
+export async function getRetryQueue(companyId: string, limit = 100) {
+  return db.webhookDelivery.findMany({
+    where: {
+      companyId,
+      ok: false,
+    },
+    orderBy: { deliveredAt: 'desc' },
+    take: Math.min(limit, 500),
+    select: {
+      id: true,
+      webhookId: true,
+      webhookName: true,
+      event: true,
+      httpStatus: true,
+      errorMsg: true,
+      durationMs: true,
+      deliveredAt: true,
+    },
+  })
+}

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getSession } from '@/app/api/auth/login/route'
 import { can, type Permission } from './rbac'
+import { db } from '@/lib/db'
 
 export interface RequestUser {
   userId: string
@@ -43,4 +44,45 @@ export function checkPermission(request: Request, permission: Permission): NextR
     { error: 'Permission refusée', required: permission, role: user.role },
     { status: 403 }
   )
+}
+
+/**
+ * Récupère le contexte d'entreprise depuis la session utilisateur.
+ * En mode démo (non authentifié), utilise la première société disponible.
+ *
+ * Retourne soit { companyId, user } en cas de succès,
+ * soit { error: NextResponse } en cas d'échec (401 ou 404).
+ */
+export async function getCompanyContext(request: Request): Promise<
+  | { companyId: string; user: RequestUser | null; error?: undefined }
+  | { error: NextResponse; companyId?: undefined; user?: undefined }
+> {
+  const user = getUserFromRequest(request)
+
+  // Si l'utilisateur est authentifié et a une société, l'utiliser
+  if (user?.companyId) {
+    return { companyId: user.companyId, user }
+  }
+
+  // Mode démo : récupérer la première société disponible
+  try {
+    const company = await db.company.findFirst({ orderBy: { createdAt: 'asc' } })
+    if (!company) {
+      return {
+        error: NextResponse.json(
+          { error: 'Aucune société configurée. Initialisez la base avec les données de démo.' },
+          { status: 404 }
+        ),
+      }
+    }
+    return { companyId: company.id, user }
+  } catch (err) {
+    console.error('getCompanyContext error:', err)
+    return {
+      error: NextResponse.json(
+        { error: 'Erreur de base de données' },
+        { status: 500 }
+      ),
+    }
+  }
 }
