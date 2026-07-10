@@ -171,7 +171,7 @@ export function SettingsPage() {
             <Field label="CNSS employeur" value="17%" />
             <Field label="Plafond CNSS" value="4 640 000 GNF" />
             <Field label="SMIG mensuel" value="580 000 GNF" />
-            <Field label="ITS" value="1,5%" />
+            <Field label="ITS/RTS" value="1,5%" />
             <Field label="Versement forfaitaire" value="4%" />
             <Field label="Taxe apprentissage" value="1%" />
             <Field label="Formation pro" value="3%" />

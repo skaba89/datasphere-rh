@@ -13,10 +13,10 @@ import { toast } from 'sonner'
 
 const DEFAULT_PARAMS = {
   tauxCnssSalarie: 0.05,
-  tauxCnssEmployeur: 0.08,
+  tauxCnssEmployeur: 0.17,
   plafondCnss: 4640000,
   smig: 580000,
-  tauxRts: 0.01,
+  tauxRts: 0.015,
   tauxVersementForfaitaire: 0.04,
   tauxTaxeApprentissage: 0.01,
   tauxFormationPro: 0.03,
@@ -413,8 +413,8 @@ function CnssParamsEditor() {
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         <ParamCard label="CNSS salarié" value="5%" hint="Plafonné 8×SMIG" />
-        <ParamCard label="CNSS employeur" value="8%" hint="Plafonné 8×SMIG" />
-        <ParamCard label="RTS" value="1%" hint="Impôt sur salaire" />
+        <ParamCard label="CNSS employeur" value="17%" hint="Plafonné 8×SMIG" />
+        <ParamCard label="ITS/RTS" value="1,5%" hint="Impôt sur salaire" />
         <ParamCard label="Versement forfaitaire" value="4%" hint="Charge employeur" />
         <ParamCard label="Taxe apprentissage" value="1%" hint="Annuel" />
         <ParamCard label="Formation pro" value="3%" hint="Annuel" />
