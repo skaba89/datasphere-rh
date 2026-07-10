@@ -3,7 +3,7 @@
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Heart, Trophy, Footprints, Brain, Apple, Moon, Droplet, Dumbbell, Smile, TrendingUp, Plus, Check, Frown, Meh, Laugh, Phone, Stethoscope, Lotus } from 'lucide-react'
+import { Heart, Trophy, Footprints, Brain, Apple, Moon, Droplet, Dumbbell, Smile, TrendingUp, Plus, Check, Frown, Meh, Laugh, Phone, Stethoscope, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -145,7 +145,7 @@ export function WellnessPage() {
             <p className="text-xs text-slate-600">Visites médicales planifiées dans le module Santé & Wellness. Prochaine campagne : Septembre 2026.</p>
           </div>
           <div className="p-3 rounded-lg bg-white border border-slate-200">
-            <div className="font-medium text-slate-900 mb-1 inline-flex items-center gap-1"><Lotus className="w-4 h-4 text-[#27698a]" /> Sessions relaxation</div>
+            <div className="font-medium text-slate-900 mb-1 inline-flex items-center gap-1"><Sparkles className="w-4 h-4 text-[#27698a]" /> Sessions relaxation</div>
             <p className="text-xs text-slate-600">Sessions de méditation guidée tous les mardis 12h-12h30 en salle de repos. Gratuit, sans inscription.</p>
           </div>
         </div>

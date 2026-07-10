@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Heart, Plus, Loader2, Stethoscope, Syringe, Bed, Ergonomics, Activity, Calendar, CheckCircle2, Clock, AlertTriangle } from 'lucide-react'
+import { Heart, Plus, Loader2, Stethoscope, Syringe, Bed, Activity, Calendar, CheckCircle2, Clock, AlertTriangle } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDate } from '@/lib/utils-rh'
 
