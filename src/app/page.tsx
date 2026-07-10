@@ -118,9 +118,161 @@ export default function Home() {
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
     setUser(null)
+    setPage('dashboard')
     toast.success('Déconnecté')
   }
 
+  // === État de chargement ===
+  if (loadingUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="text-center">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#27698a] to-[#435862] flex items-center justify-center text-white font-bold text-lg mx-auto mb-4 animate-pulse">
+            DS
+          </div>
+          <p className="text-sm text-slate-500">Chargement de DataSphere RH...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // === Page d'accueil publique (non connecté) ===
+  if (!user) {
+    return (
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-[#27698a]/5">
+        {/* Header minimal */}
+        <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-sm border-b border-slate-200 h-14 flex items-center px-4 lg:px-6">
+          <div className="flex items-center gap-2 lg:gap-3">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#27698a] to-[#435862] flex items-center justify-center text-white font-bold text-sm">
+              DS
+            </div>
+            <div className="flex flex-col leading-tight">
+              <span className="font-semibold text-slate-900 text-sm">DataSphere RH</span>
+              <span className="text-[10px] text-slate-500 -mt-0.5">Guinée · SIRH Premium</span>
+            </div>
+          </div>
+          <div className="ml-auto">
+            <button
+              onClick={() => setLoginOpen(true)}
+              className="flex items-center gap-1.5 text-xs text-white bg-[#27698a] hover:bg-[#1f5570] px-3 py-1.5 rounded-lg font-medium transition-colors"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              Se connecter
+            </button>
+          </div>
+        </header>
+
+        {/* Hero section */}
+        <main className="flex-1 flex items-center justify-center px-4 lg:px-6 py-12 lg:py-20">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#27698a]/10 text-[#27698a] text-xs font-medium mb-6">
+              <span className="w-2 h-2 rounded-full bg-[#27698a] animate-pulse"></span>
+              SIRH Premium · Conforme au Code du travail guinéen
+            </div>
+
+            <h1 className="text-4xl lg:text-6xl font-bold text-slate-900 leading-tight mb-6">
+              Gérez vos ressources humaines
+              <span className="block bg-gradient-to-r from-[#27698a] to-[#478e5e] bg-clip-text text-transparent">
+                avec intelligence et simplicité
+              </span>
+            </h1>
+
+            <p className="text-lg lg:text-xl text-slate-600 max-w-2xl mx-auto mb-8">
+              Plateforme RH complète : paie & CNSS, congés, contrats, recrutement,
+              formations, évaluations, analytics. Adaptée au contexte guinéen.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-12">
+              <button
+                onClick={() => setLoginOpen(true)}
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-[#27698a] hover:bg-[#1f5570] text-white rounded-lg font-medium transition-colors"
+              >
+                <LogIn className="w-4 h-4" />
+                Accéder à la plateforme
+              </button>
+              <a
+                href="#features"
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-lg font-medium transition-colors"
+              >
+                Découvrir les fonctionnalités
+              </a>
+            </div>
+
+            {/* Stats */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-3xl mx-auto">
+              {[
+                { value: '60+', label: 'Modules RH' },
+                { value: '24', label: 'Employés démo' },
+                { value: '2', label: 'Sociétés' },
+                { value: '100%', label: 'Conforme Guinée' },
+              ].map(stat => (
+                <div key={stat.label} className="p-4 rounded-xl bg-white border border-slate-200">
+                  <div className="text-2xl lg:text-3xl font-bold text-[#27698a]">{stat.value}</div>
+                  <div className="text-xs text-slate-500 mt-1">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </main>
+
+        {/* Features section */}
+        <section id="features" className="px-4 lg:px-6 py-16 bg-white border-t border-slate-100">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 text-center mb-12">
+              Une suite complète pour la gestion RH
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { icon: '👥', title: 'Gestion des employés', desc: 'Fiches détaillées, contrats, documents, historique. Wizard de création en 5 étapes.' },
+                { icon: '💰', title: 'Paie & CNSS', desc: 'Calculs conformes CNSS (5%/17%), ITS 1.5%, versement forfaitaire. Bulletins PDF.' },
+                { icon: '📅', title: 'Congés & absences', desc: 'Workflow de validation multi-niveaux. Gestion des soldes et types de congés.' },
+                { icon: '📝', title: 'Contrats & documents', desc: 'Génération automatique de CDI, CDD, lettres, attestations par IA.' },
+                { icon: '🎯', title: 'Recrutement', desc: 'Pipeline candidats, offres d\'emploi, entretiens, lettres d\'embauche.' },
+                { icon: '📊', title: 'Analytics & reporting', desc: 'Tableaux de bord, KPIs, pyramide des âges, turnover, prévisions.' },
+                { icon: '🎓', title: 'Formations', desc: 'Planification, inscriptions, suivi des compétences et évaluations.' },
+                { icon: '🤖', title: 'IA & Chatbot', desc: 'Assistant RH propulsé par GLM-4. Génération de documents juridiques.' },
+                { icon: '🔐', title: 'Audit & sécurité', desc: 'Traçabilité complète, multi-tenant, rôles et permissions.' },
+              ].map(f => (
+                <div key={f.title} className="p-5 rounded-xl border border-slate-200 hover:border-[#27698a]/30 hover:shadow-md transition-all">
+                  <div className="text-3xl mb-3">{f.icon}</div>
+                  <h3 className="font-semibold text-slate-900 mb-1.5">{f.title}</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">{f.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="bg-slate-900 text-slate-400 px-4 lg:px-6 py-8 text-center text-xs">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <div className="w-6 h-6 rounded bg-gradient-to-br from-[#27698a] to-[#435862] flex items-center justify-center text-white font-bold text-[10px]">
+                DS
+              </div>
+              <span className="font-semibold text-white">DataSphere RH Guinée</span>
+            </div>
+            <p>© 2026 DataSphere RH · Conakry · République de Guinée</p>
+            <p className="mt-1 text-slate-500">SIRH Premium SaaS — Conforme au Code du travail (Loi L/2014/072/AN)</p>
+          </div>
+        </footer>
+
+        {/* Modal de connexion */}
+        {loginOpen && (
+          <LoginModal
+            onClose={() => setLoginOpen(false)}
+            onSuccess={(u) => {
+              setUser(u)
+              setLoginOpen(false)
+              setPage('dashboard')
+            }}
+          />
+        )}
+      </div>
+    )
+  }
+
+  // === Application complète (connecté) ===
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
       {/* Topbar */}
@@ -151,7 +303,7 @@ export default function Home() {
 
         <div className="ml-auto flex items-center gap-2 lg:gap-3">
           <NotificationsBell />
-          {user ? (
+          {user && (
             <>
               {/* Role badge */}
               <span className="hidden sm:inline text-xs px-2 py-0.5 rounded bg-[#27698a]/10 text-[#27698a] border border-[#27698a]/20 font-medium">
@@ -181,14 +333,6 @@ export default function Home() {
                 {user.name.slice(0, 2).toUpperCase()}
               </div>
             </>
-          ) : (
-            <button
-              onClick={() => setLoginOpen(true)}
-              className="flex items-center gap-1.5 text-xs text-white bg-[#27698a] hover:bg-[#1f5570] px-3 py-1.5 rounded-lg font-medium"
-            >
-              <LogIn className="w-3.5 h-3.5" />
-              Connexion
-            </button>
           )}
         </div>
       </header>
