@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import {
   Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter
 } from '@/components/ui/dialog'
-import { Settings, Building2, Users, Calculator, Bell, Plus, Trash2, Edit2, AlertTriangle, Loader2 } from 'lucide-react'
+import { Settings, Building2, Users, Calculator, Bell, Plus, Trash2, Edit2, AlertTriangle, Loader2, Boxes, Check, RotateCcw, Search } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface Company {
@@ -158,6 +158,9 @@ export function SettingsPage() {
           </div>
         )}
       </Card>
+
+      {/* Module management */}
+      <ModulesManager companies={companies} onCompanyChange={loadCompanies} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
         {/* CNSS */}
@@ -489,5 +492,313 @@ function Toggle({ label, desc, enabled, disabled }: { label: string; desc: strin
         }`}></div>
       </div>
     </div>
+  )
+}
+
+// ============================================
+// Gestionnaire de modules (feature flags)
+// ============================================
+
+interface ModuleInfo {
+  key: string
+  label: string
+  category: string
+  description: string
+  essential: boolean
+  enabled: boolean
+}
+
+function ModulesManager({
+  companies,
+  onCompanyChange,
+}: {
+  companies: Company[]
+  onCompanyChange: () => void
+}) {
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string>('')
+  const [modules, setModules] = useState<ModuleInfo[]>([])
+  const [loading, setLoading] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [search, setSearch] = useState('')
+  const [stats, setStats] = useState({ total: 0, enabled: 0, essential: 0 })
+
+  // Sélectionner la première société par défaut
+  useEffect(() => {
+    if (companies.length > 0 && !selectedCompanyId) {
+      setSelectedCompanyId(companies[0].id)
+    }
+  }, [companies, selectedCompanyId])
+
+  // Charger les modules quand la société change
+  useEffect(() => {
+    if (!selectedCompanyId) return
+    let mounted = true
+    setLoading(true)
+    fetch(`/api/companies/${selectedCompanyId}/features`)
+      .then(r => r.json())
+      .then(d => {
+        if (mounted && d.modules) {
+          setModules(d.modules)
+          setStats(d.stats || { total: 0, enabled: 0, essential: 0 })
+          setLoading(false)
+        }
+      })
+      .catch(() => {
+        if (mounted) setLoading(false)
+      })
+    return () => { mounted = false }
+  }, [selectedCompanyId])
+
+  const toggleModule = (key: string) => {
+    setModules(prev =>
+      prev.map(m =>
+        m.key === key && !m.essential
+          ? { ...m, enabled: !m.enabled }
+          : m
+      )
+    )
+  }
+
+  const enableCategory = (category: string) => {
+    setModules(prev =>
+      prev.map(m =>
+        m.category === category ? { ...m, enabled: true } : m
+      )
+    )
+  }
+
+  const disableCategory = (category: string) => {
+    setModules(prev =>
+      prev.map(m =>
+        m.category === category && !m.essential ? { ...m, enabled: false } : m
+      )
+    )
+  }
+
+  const handleSave = async () => {
+    setSaving(true)
+    try {
+      const enabledKeys = modules.filter(m => m.enabled).map(m => m.key)
+      const res = await fetch(`/api/companies/${selectedCompanyId}/features`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ modules: enabledKeys }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        toast.error(data.error || 'Échec de la sauvegarde')
+      } else {
+        toast.success(data.message || 'Modules mis à jour')
+        // Mettre à jour les stats locales
+        setStats(prev => ({ ...prev, enabled: enabledKeys.length }))
+      }
+    } catch {
+      toast.error('Erreur réseau')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleReset = async () => {
+    setSaving(true)
+    try {
+      const res = await fetch(`/api/companies/${selectedCompanyId}/features`, {
+        method: 'POST',
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        toast.error(data.error || 'Échec de la réinitialisation')
+      } else {
+        toast.success('Modules réinitialisés aux valeurs par défaut')
+        // Recharger les modules
+        const refresh = await fetch(`/api/companies/${selectedCompanyId}/features`)
+        const refreshData = await refresh.json()
+        if (refreshData.modules) {
+          setModules(refreshData.modules)
+          setStats(refreshData.stats)
+        }
+      }
+    } catch {
+      toast.error('Erreur réseau')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  // Grouper par catégorie et filtrer par recherche
+  const categories = modules.reduce((acc, m) => {
+    if (!acc[m.category]) acc[m.category] = []
+    acc[m.category].push(m)
+    return acc
+  }, {} as Record<string, ModuleInfo[]>)
+
+  const filteredCategories = Object.entries(categories)
+    .map(([cat, mods]) => ({
+      category: cat,
+      modules: mods.filter(m =>
+        !search ||
+        m.label.toLowerCase().includes(search.toLowerCase()) ||
+        m.description.toLowerCase().includes(search.toLowerCase())
+      ),
+    }))
+    .filter(c => c.modules.length > 0)
+
+  return (
+    <Card className="p-5">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-4">
+        <div className="flex items-center gap-2">
+          <Boxes className="w-5 h-5 text-[#27698a]" />
+          <div>
+            <h2 className="font-semibold text-slate-900">Gestion des modules</h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Activez ou désactivez les fonctionnalités selon les besoins du client
+            </p>
+          </div>
+        </div>
+        {companies.length > 0 && (
+          <div className="flex items-center gap-2">
+            <Label className="text-xs text-slate-500 whitespace-nowrap">Société :</Label>
+            <select
+              value={selectedCompanyId}
+              onChange={e => setSelectedCompanyId(e.target.value)}
+              className="text-xs border border-slate-200 rounded px-2 py-1 bg-white"
+            >
+              {companies.map(c => (
+                <option key={c.id} value={c.id}>{c.raisonSociale}</option>
+              ))}
+            </select>
+          </div>
+        )}
+      </div>
+
+      {/* Stats bar */}
+      <div className="flex items-center gap-4 mb-4 p-3 rounded-lg bg-slate-50 border border-slate-200">
+        <div className="text-sm">
+          <span className="font-bold text-[#27698a]">{stats.enabled}</span>
+          <span className="text-slate-500"> / {stats.total} modules activés</span>
+        </div>
+        <div className="text-xs text-slate-500">
+          ({stats.essential} essentiels non désactivables)
+        </div>
+        <div className="ml-auto flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleReset}
+            disabled={saving || loading}
+            className="text-xs h-7"
+          >
+            <RotateCcw className="w-3 h-3 mr-1" />
+            Réinitialiser
+          </Button>
+          <Button
+            size="sm"
+            onClick={handleSave}
+            disabled={saving || loading}
+            className="bg-[#27698a] hover:bg-[#1f5570] text-xs h-7"
+          >
+            {saving ? (
+              <><Loader2 className="w-3 h-3 mr-1 animate-spin" />Sauvegarde...</>
+            ) : (
+              <><Check className="w-3 h-3 mr-1" />Sauvegarder</>
+            )}
+          </Button>
+        </div>
+      </div>
+
+      {/* Search */}
+      <div className="relative mb-4">
+        <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+        <Input
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Rechercher un module..."
+          className="pl-9 text-sm"
+        />
+      </div>
+
+      {/* Modules by category */}
+      {loading ? (
+        <div className="flex items-center justify-center py-8 text-slate-400">
+          <Loader2 className="w-5 h-5 animate-spin mr-2" />
+          Chargement des modules...
+        </div>
+      ) : filteredCategories.length === 0 ? (
+        <div className="text-center py-8 text-slate-400 text-sm">
+          Aucun module trouvé
+        </div>
+      ) : (
+        <div className="space-y-4 max-h-[600px] overflow-y-auto pr-1">
+          {filteredCategories.map(({ category, modules: mods }) => (
+            <div key={category}>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-700">
+                  {category}
+                </h3>
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => enableCategory(category)}
+                    className="text-[10px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                  >
+                    Tout activer
+                  </button>
+                  <button
+                    onClick={() => disableCategory(category)}
+                    className="text-[10px] px-2 py-0.5 rounded bg-slate-50 text-slate-600 hover:bg-slate-100"
+                  >
+                    Tout désactiver
+                  </button>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                {mods.map(m => (
+                  <button
+                    key={m.key}
+                    onClick={() => toggleModule(m.key)}
+                    disabled={m.essential}
+                    className={`text-left p-2.5 rounded-lg border text-xs transition-all ${
+                      m.enabled
+                        ? 'border-[#27698a]/30 bg-[#27698a]/5'
+                        : 'border-slate-200 bg-white opacity-60'
+                    } ${m.essential ? 'cursor-not-allowed' : 'cursor-pointer hover:border-slate-300'}`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5">
+                          <span className={`font-medium ${m.enabled ? 'text-slate-900' : 'text-slate-500'}`}>
+                            {m.label}
+                          </span>
+                          {m.essential && (
+                            <span className="text-[9px] px-1 py-0.5 rounded bg-amber-100 text-amber-700 font-medium">
+                              Essentiel
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[10px] text-slate-500 mt-0.5 line-clamp-2">
+                          {m.description}
+                        </p>
+                      </div>
+                      <div className={`w-8 h-4 rounded-full p-0.5 transition-colors shrink-0 ${
+                        m.enabled ? 'bg-[#27698a]' : 'bg-slate-300'
+                      }`}>
+                        <div className={`w-3 h-3 rounded-full bg-white transition-transform ${
+                          m.enabled ? 'translate-x-4' : ''
+                        }`} />
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="mt-4 p-3 rounded-lg bg-blue-50 border border-blue-200 text-xs text-blue-800">
+        <strong>Note :</strong> Les modifications sont appliquées après sauvegarde.
+        La sidebar de l'utilisateur connecté se met à jour automatiquement au prochain chargement.
+        Les modules essentiels (Tableau de bord, Employés, Paie, Congés, Paramètres) ne peuvent pas être désactivés.
+      </div>
+    </Card>
   )
 }

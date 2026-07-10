@@ -20,6 +20,7 @@ model Company {
   telephone       String?
   email           String?
   devise          String    @default("GNF")
+  features        String?   // JSON string of enabled modules (null = all enabled)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 

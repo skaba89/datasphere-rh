@@ -74,7 +74,7 @@ import { LoginModal } from '@/components/rh/login-modal'
 import { CompanySelector } from '@/components/rh/company-selector'
 import { EmployeeDetailModal } from '@/components/rh/employee-detail'
 import { ImportModal } from '@/components/rh/import-modal'
-import { LogOut, LogIn, Upload, Users, Wallet, CalendarDays, FileText, Target, BarChart3, GraduationCap, Bot, ShieldCheck, ClipboardList } from 'lucide-react'
+import { LogOut, LogIn, Upload, Users, Wallet, CalendarDays, FileText, Target, BarChart3, GraduationCap, Bot, ShieldCheck, ClipboardList, Menu } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface AuthUser {
@@ -95,6 +95,7 @@ export default function Home() {
   const [selectedEmployee, setSelectedEmployee] = useState<string | null>(null)
   const [selectedCompany, setSelectedCompany] = useState<string>('')
   const [employeesTick, setEmployeesTick] = useState(0)
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
   const [user, setUser] = useState<AuthUser | null>(null)
   const [loadingUser, setLoadingUser] = useState(true)
 
@@ -283,6 +284,14 @@ export default function Home() {
       {/* Topbar */}
       <header className="sticky top-0 z-40 bg-white border-b border-slate-200 h-14 flex items-center px-4 lg:px-6 gap-4">
         <div className="flex items-center gap-2 lg:gap-3">
+          {/* Mobile sidebar toggle */}
+          <button
+            onClick={() => setMobileSidebarOpen(true)}
+            className="md:hidden p-1.5 rounded hover:bg-slate-100 text-slate-600"
+            title="Menu"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#27698a] to-[#435862] flex items-center justify-center text-white font-bold text-sm">
             DS
           </div>
@@ -345,7 +354,13 @@ export default function Home() {
 
       {/* Main content */}
       <div className="flex flex-1 min-h-0">
-        <Sidebar current={page} onNavigate={setPage} />
+        <Sidebar
+          current={page}
+          onNavigate={setPage}
+          companyId={selectedCompany}
+          mobileOpen={mobileSidebarOpen}
+          onClose={() => setMobileSidebarOpen(false)}
+        />
 
         <main className="flex-1 min-w-0 overflow-x-hidden">
           {page === 'dashboard' && <DashboardPage />}

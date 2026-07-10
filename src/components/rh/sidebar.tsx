@@ -1,10 +1,11 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import {
   LayoutDashboard, LayoutGrid, Users, Calculator, CalendarDays, Settings, ScrollText,
   Briefcase, Sparkles, BarChart3, Lock, Award, Network, Bell, Download,
   User, Clock, GraduationCap, PenTool, Wallet, ClipboardList, Activity,
-  FileText, Smile, Brain, ShieldCheck, Receipt, MessageSquare, Compass, Lightbulb, MapPinned, TrendingUp, Settings2, Heart, RefreshCw, Megaphone, LifeBuoy, Calendar, Globe, Trophy, Gift, HandCoins, CalendarClock, Package, AlertTriangle, Zap, FolderKanban, GitBranch, Bot, ShieldAlert, Users2, HeartHandshake, Leaf, AlertOctagon, Plane, FileSignature, Database, Boxes
+  FileText, Smile, Brain, ShieldCheck, Receipt, MessageSquare, Compass, Lightbulb, MapPinned, TrendingUp, Settings2, Heart, RefreshCw, Megaphone, LifeBuoy, Calendar, Globe, Trophy, Gift, HandCoins, CalendarClock, Package, AlertTriangle, Zap, FolderKanban, GitBranch, Bot, ShieldAlert, Users2, HeartHandshake, Leaf, AlertOctagon, Plane, FileSignature, Database, Boxes, Loader2
 } from 'lucide-react'
 import type { PageKey } from '@/app/page'
 
@@ -13,9 +14,13 @@ interface SidebarProps {
   onNavigate: (page: PageKey) => void
   mobileOpen?: boolean
   onClose?: () => void
+  companyId?: string
 }
 
-const NAV_SECTIONS: Array<{ title: string; items: Array<{ key: PageKey; label: string; icon: React.ElementType; badge?: string }> }> = [
+type NavItem = { key: PageKey; label: string; icon: React.ElementType; badge?: string }
+type NavSection = { title: string; items: NavItem[] }
+
+const NAV_SECTIONS: NavSection[] = [
   {
     title: 'Pilotage',
     items: [
@@ -119,11 +124,100 @@ const NAV_SECTIONS: Array<{ title: string; items: Array<{ key: PageKey; label: s
   },
 ]
 
-export function Sidebar({ current, onNavigate }: SidebarProps) {
+export function Sidebar({ current, onNavigate, mobileOpen, onClose, companyId }: SidebarProps) {
+  const [enabledModules, setEnabledModules] = useState<Set<string> | null>(null)
+
+  useEffect(() => {
+    let mounted = true
+    setEnabledModules(null)
+    fetch('/api/modules')
+      .then(r => r.json())
+      .then(d => {
+        if (mounted) {
+          setEnabledModules(new Set(d.enabledModules || []))
+        }
+      })
+      .catch(() => {
+        if (mounted) setEnabledModules(new Set())
+      })
+    return () => { mounted = false }
+  }, [companyId]) // Re-fetch when company changes
+
+  // Filtrer les sections selon les modules activés
+  const filteredSections = NAV_SECTIONS.map(section => ({
+    ...section,
+    items: section.items.filter(item =>
+      !enabledModules || enabledModules.has(item.key)
+    ),
+  })).filter(section => section.items.length > 0)
+
+  // État de chargement
+  if (enabledModules === null) {
+    return (
+      <aside className="hidden md:flex w-60 lg:w-64 shrink-0 border-r border-slate-200 bg-white flex-col">
+        <nav className="flex-1 p-3 lg:p-4 flex items-center justify-center">
+          <Loader2 className="w-5 h-5 text-slate-400 animate-spin" />
+        </nav>
+      </aside>
+    )
+  }
+
   return (
-    <aside className="hidden md:flex w-60 lg:w-64 shrink-0 border-r border-slate-200 bg-white flex-col">
+    <>
+      {/* Desktop sidebar */}
+      <aside className="hidden md:flex w-60 lg:w-64 shrink-0 border-r border-slate-200 bg-white flex-col">
+        <SidebarContent
+          sections={filteredSections}
+          current={current}
+          onNavigate={onNavigate}
+        />
+      </aside>
+
+      {/* Mobile sidebar (overlay) */}
+      {mobileOpen && (
+        <div className="md:hidden fixed inset-0 z-50 flex">
+          <div
+            className="absolute inset-0 bg-slate-900/50 backdrop-blur-sm"
+            onClick={onClose}
+          />
+          <aside className="relative w-72 max-w-[80vw] bg-white flex flex-col shadow-xl">
+            <div className="h-14 flex items-center justify-between px-4 border-b border-slate-200">
+              <span className="font-semibold text-slate-900 text-sm">Menu</span>
+              <button
+                onClick={onClose}
+                className="p-1.5 rounded hover:bg-slate-100 text-slate-500"
+              >
+                ✕
+              </button>
+            </div>
+            <SidebarContent
+              sections={filteredSections}
+              current={current}
+              onNavigate={(p) => {
+                onNavigate(p)
+                onClose?.()
+              }}
+            />
+          </aside>
+        </div>
+      )}
+    </>
+  )
+}
+
+function SidebarContent({
+  sections,
+  current,
+  onNavigate,
+}: {
+  sections: NavSection[]
+  current: PageKey
+  onNavigate: (page: PageKey) => void
+}) {
+  return (
+    <>
       <nav className="flex-1 p-3 lg:p-4 space-y-4 overflow-y-auto">
-        {NAV_SECTIONS.map(section => (
+        {sections.map(section => (
           <div key={section.title}>
             <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold px-3 mb-2">
               {section.title}
@@ -162,6 +256,6 @@ export function Sidebar({ current, onNavigate }: SidebarProps) {
           <div className="text-[10px] text-slate-500 mt-1">Statut : OUVERTE</div>
         </div>
       </div>
-    </aside>
+    </>
   )
 }
