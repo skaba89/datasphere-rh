@@ -1,0 +1,854 @@
+11:39:49 PM: build-image version: 969defd95f3977f8de9cb1f48802a7e6f3d8c0b3 (noble-new-builds)
+11:39:49 PM: buildbot version: 969defd95f3977f8de9cb1f48802a7e6f3d8c0b3
+11:39:49 PM: Building with cache
+11:39:49 PM: Starting to prepare the repo for build
+11:39:49 PM: Preparing Git Reference refs/heads/main
+11:39:51 PM: Custom publish path detected. Proceeding with the specified path: '.next'
+11:39:51 PM: Custom build command detected. Proceeding with the specified command: 'npm run build:netlify'
+11:39:51 PM: Installing dependencies
+11:39:51 PM: mise ~/.config/mise/config.toml tools: python@3.14.3
+11:39:51 PM: mise ~/.config/mise/config.toml tools: ruby@3.4.8
+11:39:51 PM: mise ~/.config/mise/config.toml tools: go@1.26.2
+11:39:52 PM: v20.20.2 is already installed.
+11:39:52 PM: Now using node v20.20.2 (npm v10.8.2)
+11:39:52 PM: Enabling Node.js Corepack
+11:39:52 PM: No npm workspaces detected
+11:39:52 PM: Installing npm packages using npm version 10.8.2
+11:39:57 PM: up to date, audited 852 packages in 5s
+11:39:57 PM: 275 packages are looking for funding
+11:39:57 PM:   run `npm fund` for details
+11:39:58 PM: 25 vulnerabilities (2 low, 11 moderate, 12 high)
+11:39:58 PM: To address issues that do not require attention, run:
+11:39:58 PM:   npm audit fix
+11:39:58 PM: To address all issues possible (including breaking changes), run:
+11:39:58 PM:   npm audit fix --force
+11:39:58 PM: Some issues need review, and may require choosing
+11:39:58 PM: a different dependency.
+11:39:58 PM: Run `npm audit` for details.
+11:39:58 PM: npm packages installed
+11:39:58 PM: Successfully installed dependencies
+11:39:58 PM: Detected 1 framework(s)
+11:39:58 PM: "next" at version "16.1.3"
+11:39:58 PM: Starting build script
+11:39:59 PM: Section completed: initializing
+11:40:01 PM: ​
+11:40:01 PM: Netlify Build                                                 
+11:40:01 PM: ────────────────────────────────────────────────────────────────
+11:40:01 PM: ​
+11:40:01 PM: ❯ Version
+11:40:01 PM:   @netlify/build 36.1.2
+11:40:01 PM: ​
+11:40:01 PM: ❯ Flags
+11:40:01 PM:   accountId: 6a500281b342e3d68cad1c04
+11:40:01 PM:   baseRelDir: true
+11:40:01 PM:   buildId: 6a5166a4a0323d00088a2873
+11:40:01 PM:   deployId: 6a5166a4a0323d00088a2875
+11:40:01 PM: ​
+11:40:01 PM: ❯ Current directory
+11:40:01 PM:   /opt/build/repo
+11:40:01 PM: ​
+11:40:01 PM: ❯ Config file
+11:40:01 PM:   /opt/build/repo/netlify.toml
+11:40:01 PM: ​
+11:40:01 PM: ❯ Context
+11:40:01 PM:   production
+11:40:01 PM: ​
+11:40:01 PM: ❯ Warning: @netlify/plugin-nextjs will be executed with Node.js version 22.23.1
+11:40:01 PM:   The plugin cannot be executed with your defined Node.js version 20.20.2
+11:40:01 PM: ​
+11:40:01 PM:   Read more about our minimum required version in our forums announcement
+11:40:01 PM: ​
+11:40:01 PM: ❯ Using Next.js Runtime - v5.15.12
+11:40:03 PM: No Next.js cache to restore
+11:40:03 PM: ​
+11:40:03 PM: build.command from netlify.toml                               
+11:40:03 PM: ────────────────────────────────────────────────────────────────
+11:40:03 PM: ​
+11:40:03 PM: $ npm run build:netlify
+11:40:03 PM: > nextjs_tailwind_shadcn_ts@0.2.0 build:netlify
+11:40:03 PM: > npx prisma generate && next build
+11:40:04 PM: Environment variables loaded from .env
+11:40:04 PM: Prisma schema loaded from prisma/schema.prisma
+11:40:05 PM: ┌─────────────────────────────────────────────────────────┐
+11:40:05 PM: │  Update available 6.19.2 -> 7.8.0                       │
+11:40:05 PM: │                                                         │
+11:40:05 PM: │  This is a major update - please follow the guide at    │
+11:40:05 PM: │  https://pris.ly/d/major-version-upgrade                │
+11:40:05 PM: │                                                         │
+11:40:05 PM: │  Run the following to update                            │
+11:40:05 PM: │    npm i --save-dev prisma@latest                       │
+11:40:05 PM: │    npm i @prisma/client@latest                          │
+11:40:05 PM: └─────────────────────────────────────────────────────────┘
+11:40:05 PM: ✔ Generated Prisma Client (v6.19.2) to ./node_modules/@prisma/client in 696ms
+11:40:05 PM: Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+11:40:05 PM: Tip: Interested in query caching in just a few lines of code? Try Accelerate today! https://pris.ly/tip-3-accelerate
+11:40:08 PM: ⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+11:40:08 PM: ▲ Next.js 16.1.3 (Turbopack)
+11:40:08 PM: - Environments: .env
+11:40:08 PM: - Experiments (use with caution):
+11:40:08 PM:   · optimizePackageImports
+11:40:08 PM:   Creating an optimized production build ...
+11:40:24 PM: > Build error occurred
+11:40:24 PM: Error: Turbopack build failed with 41 errors:
+11:40:24 PM: ./src/app/api/llm/rag/index/route.ts:4:1
+11:40:24 PM: Export deleteDocument doesn't exist in target module
+  2 | import { db } from '@/lib/db'
+11:40:24 PM:   3 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM: > 4 | import { indexDocument, listIndexedDocuments, deleteDocument, type DocumentSource } from '@/lib/llm/rag'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   5 |
+11:40:24 PM:   6 | // GET /api/llm/rag/index — liste les documents indexés
+11:40:24 PM:   7 | export async function GET(request: Request) {
+11:40:24 PM: The export deleteDocument was not found in module [project]/src/lib/llm/rag.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import indexDocument?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/rag/index/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/analytics-live/route.ts:2:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { db } from '@/lib/db'
+11:40:24 PM: > 2 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   3 |
+11:40:24 PM:   4 | // GET /api/analytics-live — flux SSE (Server-Sent Events) pour analytics temps réel
+11:40:24 PM:   5 | // Le navigateur peut s'abonner avec `new EventSource('/api/analytics-live')`.
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/analytics-live/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/chatbot-smart/route.ts:5:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  3 | import { getDefaultProvider } from '@/lib/llm/settings'
+11:40:24 PM:   4 | import { getFunctionsSchema, executeFunction, parseFunctionCall } from '@/lib/llm/functions'
+11:40:24 PM: > 5 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   6 | import { db } from '@/lib/db'
+11:40:24 PM:   7 | export async function POST(request: Request) {
+11:40:24 PM:   8 |   try {
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/chatbot-smart/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/dashboard-widgets/[id]/route.ts:3:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM:   2 | import { db } from '@/lib/db'
+11:40:24 PM: > 3 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   4 |
+11:40:24 PM:   5 | // PATCH /api/dashboard-widgets/[id] — update position/config
+11:40:24 PM:   6 | export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/dashboard-widgets/[id]/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/dashboard-widgets/route.ts:3:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM:   2 | import { db } from '@/lib/db'
+11:40:24 PM: > 3 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   4 |
+11:40:24 PM:   5 | // GET /api/dashboard-widgets — liste les widgets du dashboard personnalisé
+11:40:24 PM:   6 | export async function GET(request: Request) {
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/dashboard-widgets/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/incoming-webhooks/route.ts:3:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM:   2 | import { db } from '@/lib/db'
+11:40:24 PM: > 3 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   4 | import crypto from 'crypto'
+11:40:24 PM:   5 | export async function GET(request: Request) {
+11:40:24 PM:   6 |   const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/incoming-webhooks/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/api-keys/[id]/route.ts:3:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM:   2 | import { db } from '@/lib/db'
+11:40:24 PM: > 3 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   4 | export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+11:40:24 PM:   5 |   const { id } = await params; const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM:   6 |   const { isActive } = await request.json()
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/api-keys/[id]/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/api-keys/route.ts:2:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM: > 2 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   3 | import { createApiKey, listApiKeys, ALL_SCOPES, SCOPE_LABELS } from '@/lib/llm/api-keys'
+11:40:24 PM:   4 | export async function GET(request: Request) {
+11:40:24 PM:   5 |   const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/api-keys/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/chat/route.ts:4:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  2 | import { chat, type ChatMessage } from '@/lib/llm/router'
+11:40:24 PM:   3 | import { getProviderById } from '@/lib/llm/providers'
+11:40:24 PM: > 4 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   5 |
+11:40:24 PM:   6 | export async function POST(request: Request) {
+11:40:24 PM:   7 |   try {
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/chat/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/custom-workflows/[id]/route.ts:3:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM:   2 | import { db } from '@/lib/db'
+11:40:24 PM: > 3 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   4 | export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+11:40:24 PM:   5 |   const { id } = await params; const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM:   6 |   const w = await db.customWorkflow.findFirst({ where: { id, companyId: ctx.companyId } })
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/custom-workflows/[id]/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/custom-workflows/[id]/run/route.ts:4:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  2 | import { db } from '@/lib/db'
+11:40:24 PM:   3 | import { executeWorkflow, type Workflow } from '@/lib/llm/workflows'
+11:40:24 PM: > 4 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   5 | export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+11:40:24 PM:   6 |   const { id } = await params; const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM:   7 |   const { input } = await request.json(); if (!input) return NextResponse.json({ error: 'input requis' }, { status: 400 })
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/custom-workflows/[id]/run/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/custom-workflows/route.ts:3:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM:   2 | import { db } from '@/lib/db'
+11:40:24 PM: > 3 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   4 | import { PREDEFINED_WORKFLOWS } from '@/lib/llm/workflows'
+11:40:24 PM:   5 | export async function GET(request: Request) {
+11:40:24 PM:   6 |   const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/custom-workflows/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/generations/[id]/route.ts:2:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM: > 2 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   3 | import { getGeneration, toggleFavorite, archiveGeneration, deleteGeneration } from '@/lib/llm/generations'
+11:40:24 PM:   4 | export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+11:40:24 PM:   5 |   const { id } = await params; const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/generations/[id]/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/generations/route.ts:2:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM: > 2 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   3 | import { listGenerations, saveGeneration } from '@/lib/llm/generations'
+11:40:24 PM:   4 | export async function GET(request: Request) {
+11:40:24 PM:   5 |   const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/generations/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/marketplace/[id]/install/route.ts:3:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM:   2 | import { db } from '@/lib/db'
+11:40:24 PM: > 3 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   4 | export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+11:40:24 PM:   5 |   const { id } = await params; const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM:   6 |   const template = await db.workflowTemplate.findFirst({ where: { OR: [{ id }, { publicId: id }] } })
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/marketplace/[id]/install/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/marketplace/route.ts:3:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM:   2 | import { db } from '@/lib/db'
+11:40:24 PM: > 3 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   4 | import { PREDEFINED_WORKFLOWS } from '@/lib/llm/workflows'
+11:40:24 PM:   5 | export async function GET(request: Request) {
+11:40:24 PM:   6 |   const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/marketplace/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/outgoing-webhooks/[id]/route.ts:3:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM:   2 | import { db } from '@/lib/db'
+11:40:24 PM: > 3 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   4 | export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+11:40:24 PM:   5 |   const { id } = await params; const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM:   6 |   const { isActive } = await request.json()
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/outgoing-webhooks/[id]/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/outgoing-webhooks/route.ts:3:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM:   2 | import { db } from '@/lib/db'
+11:40:24 PM: > 3 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   4 | export async function GET(request: Request) {
+11:40:24 PM:   5 |   const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM:   6 |   const webhooks = await db.outgoingWebhook.findMany({ where: { companyId: ctx.companyId }, orderBy: { createdAt: 'desc' } })
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/outgoing-webhooks/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/rag/ask/route.ts:5:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  3 | import { getDefaultProvider } from '@/lib/llm/settings'
+11:40:24 PM:   4 | import { searchByKeywords, buildRagPrompt } from '@/lib/llm/rag'
+11:40:24 PM: > 5 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   6 |
+11:40:24 PM:   7 | export async function POST(request: Request) {
+11:40:24 PM:   8 |   try {
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/rag/ask/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/rag/embeddings/route.ts:2:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM: > 2 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   3 | import { reindexAllEmbeddings, generateEmbedding } from '@/lib/llm/embeddings'
+11:40:24 PM:   4 |
+11:40:24 PM:   5 | // GET /api/llm/rag/embeddings — statut des embeddings
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/rag/embeddings/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/rag/index/route.ts:3:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM:   2 | import { db } from '@/lib/db'
+11:40:24 PM: > 3 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   4 | import { indexDocument, listIndexedDocuments, deleteDocument, type DocumentSource } from '@/lib/llm/rag'
+11:40:24 PM:   5 |
+11:40:24 PM:   6 | // GET /api/llm/rag/index — liste les documents indexés
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/rag/index/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/rag/search/route.ts:3:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM:   2 | import { searchByKeywords } from '@/lib/llm/rag'
+11:40:24 PM: > 3 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   4 |
+11:40:24 PM:   5 | export async function GET(request: Request) {
+11:40:24 PM:   6 |   const { searchParams } = new URL(request.url)
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/rag/search/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/rag/vector-search/route.ts:2:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM: > 2 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   3 | import { searchByEmbeddings } from '@/lib/llm/embeddings'
+11:40:24 PM:   4 |
+11:40:24 PM:   5 | // GET /api/llm/rag/vector-search?q=XXX&limit=5
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/rag/vector-search/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/rate-limit/route.ts:2:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM: > 2 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   3 | import { checkRateLimit, DEFAULT_RATE_LIMITS } from '@/lib/llm/rate-limit'
+11:40:24 PM:   4 | export async function GET(request: Request) {
+11:40:24 PM:   5 |   const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/rate-limit/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/settings/[id]/route.ts:3:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM:   2 | import { db } from '@/lib/db'
+11:40:24 PM: > 3 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   4 | export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+11:40:24 PM:   5 |   const { id } = await params; const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM:   6 |   const { isDefault } = await request.json()
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/settings/[id]/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/settings/route.ts:2:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM: > 2 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   3 | import { getLlmSettings, upsertLlmSetting } from '@/lib/llm/settings'
+11:40:24 PM:   4 | export async function GET(request: Request) {
+11:40:24 PM:   5 |   const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/settings/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/stream/route.ts:2:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { getProviderById, type LlmProvider } from '@/lib/llm/providers'
+11:40:24 PM: > 2 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   3 | import { getDefaultProvider } from '@/lib/llm/settings'
+11:40:24 PM:   4 | import { trackUsage } from '@/lib/llm/usage'
+11:40:24 PM:   5 |
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/stream/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/templates/run/route.ts:6:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  4 | import { getTemplateById, fillTemplate } from '@/lib/llm/templates'
+11:40:24 PM:   5 | import { saveGeneration } from '@/lib/llm/generations'
+11:40:24 PM: > 6 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   7 |
+11:40:24 PM:   8 | export async function POST(request: Request) {
+11:40:24 PM:   9 |   try {
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/templates/run/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/usage/route.ts:2:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM: > 2 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   3 | import { getUsageStats } from '@/lib/llm/usage'
+11:40:24 PM:   4 | export async function GET(request: Request) {
+11:40:24 PM:   5 |   const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/usage/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/vision/route.ts:5:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  3 | import { getProviderById } from '@/lib/llm/providers'
+11:40:24 PM:   4 | import { getDefaultProvider } from '@/lib/llm/settings'
+11:40:24 PM: > 5 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   6 |
+11:40:24 PM:   7 | // POST /api/llm/vision
+11:40:24 PM:   8 | // Body: { provider?, model?, images: [{base64, mimeType}], prompt, temperature?, maxTokens? }
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/vision/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/llm/workflows/route.ts:3:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM:   2 | import { executeWorkflow, PREDEFINED_WORKFLOWS } from '@/lib/llm/workflows'
+11:40:24 PM: > 3 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   4 |
+11:40:24 PM:   5 | export async function GET() { return NextResponse.json({ workflows: PREDEFINED_WORKFLOWS.map(w => ({ ...w, stepsCount: w.steps.length })), total: PREDEFINED_WORKFLOWS.length }) }
+11:40:24 PM:   6 |
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/llm/workflows/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/plugins/[id]/route.ts:3:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM:   2 | import { db } from '@/lib/db'
+11:40:24 PM: > 3 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   4 |
+11:40:24 PM:   5 | // PATCH /api/plugins/[id] — active/désactive
+11:40:24 PM:   6 | export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/plugins/[id]/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/plugins/route.ts:3:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM:   2 | import { db } from '@/lib/db'
+11:40:24 PM: > 3 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   4 |
+11:40:24 PM:   5 | // GET /api/plugins — liste les plugins installés
+11:40:24 PM:   6 | export async function GET(request: Request) {
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/plugins/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/push/send/route.ts:2:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM: > 2 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   3 | import { db } from '@/lib/db'
+11:40:24 PM:   4 | export async function POST(request: Request) {
+11:40:24 PM:   5 |   const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/push/send/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/push/subscribe/route.ts:2:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM: > 2 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   3 | import { db } from '@/lib/db'
+11:40:24 PM:   4 | export async function POST(request: Request) {
+11:40:24 PM:   5 |   const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/push/subscribe/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/rgpd/consents/route.ts:2:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM: > 2 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   3 | import { db } from '@/lib/db'
+11:40:24 PM:   4 | export async function GET(request: Request) {
+11:40:24 PM:   5 |   const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/rgpd/consents/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/rgpd/export/route.ts:2:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM: > 2 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   3 | import { db } from '@/lib/db'
+11:40:24 PM:   4 | export async function GET(request: Request) {
+11:40:24 PM:   5 |   const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/rgpd/export/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/rgpd/requests/route.ts:2:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM: > 2 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   3 | import { db } from '@/lib/db'
+11:40:24 PM:   4 | export async function GET(request: Request) {
+11:40:24 PM:   5 |   const ctx = await getCompanyContext(request); if ('error' in ctx) return ctx.error
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/rgpd/requests/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/webhooks/retries/[id]/route.ts:3:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM:   2 | import { db } from '@/lib/db'
+11:40:24 PM: > 3 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   4 |
+11:40:24 PM:   5 | // POST /api/webhooks/retries/[id]/retry — retry manuel immédiat d'un webhook en queue
+11:40:24 PM:   6 | export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/webhooks/retries/[id]/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/webhooks/retries/route.ts:2:1
+11:40:24 PM: Export getCompanyContext doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM: > 2 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   3 | import { getRetryQueue } from '@/lib/advanced/webhook'
+11:40:24 PM:   4 |
+11:40:24 PM:   5 | // GET /api/webhooks/retries — liste les webhooks en retry queue
+11:40:24 PM: The export getCompanyContext was not found in module [project]/src/lib/advanced/auth-helpers.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getUserFromRequest?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/webhooks/retries/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM: ./src/app/api/webhooks/retries/route.ts:3:1
+11:40:24 PM: Export getRetryQueue doesn't exist in target module
+  1 | import { NextResponse } from 'next/server'
+11:40:24 PM:   2 | import { getCompanyContext } from '@/lib/advanced/auth-helpers'
+11:40:24 PM: > 3 | import { getRetryQueue } from '@/lib/advanced/webhook'
+11:40:24 PM:     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+11:40:24 PM:   4 |
+11:40:24 PM:   5 | // GET /api/webhooks/retries — liste les webhooks en retry queue
+11:40:24 PM:   6 | export async function GET(request: Request) {
+11:40:24 PM: The export getRetryQueue was not found in module [project]/src/lib/advanced/webhook.ts [app-route] (ecmascript).
+11:40:24 PM: Did you mean to import getWebhookDeliveries?
+11:40:24 PM: All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+11:40:24 PM: Import trace:
+11:40:24 PM:   App Route:
+11:40:24 PM:     ./src/app/api/webhooks/retries/route.ts
+11:40:24 PM:     ./src/lib/zai.ts
+11:40:24 PM:     ./src/app/api/ai/generate/route.ts
+11:40:24 PM:     at <unknown> (./src/app/api/llm/rag/index/route.ts:4:1)
+11:40:24 PM:     at <unknown> (./src/app/api/analytics-live/route.ts:2:1)
+11:40:24 PM:     at <unknown> (./src/app/api/chatbot-smart/route.ts:5:1)
+11:40:24 PM:     at <unknown> (./src/app/api/dashboard-widgets/[id]/route.ts:3:1)
+11:40:24 PM:     at <unknown> (./src/app/api/dashboard-widgets/route.ts:3:1)
+11:40:24 PM:     at <unknown> (./src/app/api/incoming-webhooks/route.ts:3:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/api-keys/[id]/route.ts:3:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/api-keys/route.ts:2:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/chat/route.ts:4:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/custom-workflows/[id]/route.ts:3:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/custom-workflows/[id]/run/route.ts:4:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/custom-workflows/route.ts:3:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/generations/[id]/route.ts:2:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/generations/route.ts:2:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/marketplace/[id]/install/route.ts:3:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/marketplace/route.ts:3:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/outgoing-webhooks/[id]/route.ts:3:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/outgoing-webhooks/route.ts:3:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/rag/ask/route.ts:5:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/rag/embeddings/route.ts:2:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/rag/index/route.ts:3:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/rag/search/route.ts:3:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/rag/vector-search/route.ts:2:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/rate-limit/route.ts:2:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/settings/[id]/route.ts:3:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/settings/route.ts:2:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/stream/route.ts:2:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/templates/run/route.ts:6:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/usage/route.ts:2:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/vision/route.ts:5:1)
+11:40:24 PM:     at <unknown> (./src/app/api/llm/workflows/route.ts:3:1)
+11:40:24 PM:     at <unknown> (./src/app/api/plugins/[id]/route.ts:3:1)
+11:40:24 PM:     at <unknown> (./src/app/api/plugins/route.ts:3:1)
+11:40:24 PM:     at <unknown> (./src/app/api/push/send/route.ts:2:1)
+11:40:24 PM:     at <unknown> (./src/app/api/push/subscribe/route.ts:2:1)
+11:40:24 PM:     at <unknown> (./src/app/api/rgpd/consents/route.ts:2:1)
+11:40:24 PM:     at <unknown> (./src/app/api/rgpd/export/route.ts:2:1)
+11:40:24 PM:     at <unknown> (./src/app/api/rgpd/requests/route.ts:2:1)
+11:40:24 PM:     at <unknown> (./src/app/api/webhooks/retries/[id]/route.ts:3:1)
+11:40:24 PM:     at <unknown> (./src/app/api/webhooks/retries/route.ts:2:1)
+11:40:24 PM:     at <unknown> (./src/app/api/webhooks/retries/route.ts:3:1)
+11:40:25 PM: Failed during stage 'building site': Build script returned non-zero exit code: 2 (https://ntl.fyi/exit-code-2)
+11:40:25 PM: ​
+11:40:25 PM: "build.command" failed                                        
+11:40:25 PM: ────────────────────────────────────────────────────────────────
+11:40:25 PM: ​
+11:40:25 PM:   Error message
+11:40:25 PM:   Command failed with exit code 1: npm run build:netlify (https://ntl.fyi/exit-code-1)
+11:40:25 PM: ​
+11:40:25 PM:   Error location
+11:40:25 PM:   In build.command from netlify.toml:
+11:40:25 PM:   npm run build:netlify
+11:40:25 PM: ​
+11:40:25 PM:   Resolved config
+11:40:25 PM:   build:
+11:40:25 PM:     command: npm run build:netlify
+11:40:25 PM:     commandOrigin: config
+11:40:25 PM:     environment:
+11:40:25 PM:       - CRON_SECRET
+11:40:25 PM:       - DATABASE_URL
+11:40:25 PM:       - NEXTAUTH_SECRET
+11:40:25 PM:       - NEXTAUTH_URL
+11:40:25 PM:       - NODE_VERSION
+11:40:25 PM:       - NPM_FLAGS
+11:40:25 PM:       - NETLIFY
+11:40:25 PM:     publish: /opt/build/repo/.next
+11:40:25 PM:     publishOrigin: config
+11:40:25 PM:   functions:
+11:40:25 PM:     "*":
+11:40:25 PM:       external_node_modules:
+11:40:25 PM:         - "@prisma/client"
+11:40:25 PM:         - bcryptjs
+11:40:25 PM:         - z-ai-web-dev-sdk
+11:40:25 PM:       node_bundler: esbuild
+11:40:25 PM:   plugins:
+11:40:25 PM:     - inputs: {}
+11:40:25 PM:       origin: config
+11:40:25 PM:       package: "@netlify/plugin-nextjs"
+11:40:25 PM: Build failed due to a user error: Build script returned non-zero exit code: 2
+11:40:25 PM: Failing build: Failed to build site
+11:40:26 PM: Finished processing build request in 36.387s
