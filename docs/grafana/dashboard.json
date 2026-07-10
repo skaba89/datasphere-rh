@@ -1,0 +1,216 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "DataSphere RH — Dashboard de monitoring complet (DB, LLM, RAG, API)",
+  "editable": true,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "title": "Statut global",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "datasphere_process_uptime_seconds",
+          "legendFormat": "Uptime",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "thresholds": {
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 60 },
+              { "color": "green", "value": 300 }
+            ]
+          }
+        }
+      },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" }
+    },
+    {
+      "title": "Sociétés",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 3, "x": 6, "y": 0 },
+      "targets": [{ "expr": "datasphere_companies_total", "refId": "A" }],
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed" }, "fixedColor": "#27698a", "thresholds": { "steps": [{ "color": "green", "value": null }] } } }
+    },
+    {
+      "title": "Employés",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 3, "x": 9, "y": 0 },
+      "targets": [{ "expr": "datasphere_employees_total", "refId": "A" }],
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed" }, "fixedColor": "#10b981" } }
+    },
+    {
+      "title": "Appels LLM (total)",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 3, "x": 12, "y": 0 },
+      "targets": [{ "expr": "datasphere_llm_usages_total", "refId": "A" }],
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed" }, "fixedColor": "#8b5cf6" } }
+    },
+    {
+      "title": "Tokens consommés",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 3, "x": 15, "y": 0 },
+      "targets": [{ "expr": "datasphere_llm_tokens_total", "refId": "A" }],
+      "fieldConfig": { "defaults": { "color": { "mode": "fixed" }, "fixedColor": "#f59e0b", "unit": "short" } }
+    },
+    {
+      "title": "Mémoire RSS",
+      "type": "gauge",
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+      "targets": [{ "expr": "datasphere_process_memory_rss_bytes", "refId": "A" }],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "thresholds": {
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 536870912 },
+              { "color": "red", "value": 1073741824 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Latence moyenne LLM (ms)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "targets": [
+        {
+          "expr": "datasphere_llm_avg_duration_ms",
+          "legendFormat": "Latence moyenne",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "custom": { "drawStyle": "line", "lineInterpolation": "smooth", "fillOpacity": 20 }
+        }
+      },
+      "options": { "legend": { "displayMode": "hidden" }, "tooltip": { "mode": "single" } }
+    },
+    {
+      "title": "Consommation tokens (cumulé)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "targets": [
+        { "expr": "datasphere_llm_prompt_tokens_total", "legendFormat": "Prompt tokens", "refId": "A" },
+        { "expr": "datasphere_llm_completion_tokens_total", "legendFormat": "Completion tokens", "refId": "B" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "drawStyle": "line", "lineInterpolation": "smooth", "fillOpacity": 20, "stacking": { "mode": "normal" } }
+        }
+      },
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" } }
+    },
+    {
+      "title": "Inventaire données",
+      "type": "table",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 12 },
+      "targets": [
+        {
+          "expr": "datasphere_companies_total",
+          "legendFormat": "Sociétés",
+          "refId": "A"
+        },
+        {
+          "expr": "datasphere_employees_total",
+          "legendFormat": "Employés",
+          "refId": "B"
+        },
+        {
+          "expr": "datasphere_contracts_total",
+          "legendFormat": "Contrats",
+          "refId": "C"
+        },
+        {
+          "expr": "datasphere_documents_total",
+          "legendFormat": "Documents",
+          "refId": "D"
+        },
+        {
+          "expr": "datasphere_rag_chunks_total",
+          "legendFormat": "Chunks RAG",
+          "refId": "E"
+        },
+        {
+          "expr": "datasphere_api_keys_total",
+          "legendFormat": "Clés API",
+          "refId": "F"
+        }
+      ],
+      "options": { "showHeader": true }
+    },
+    {
+      "title": "Activité IA",
+      "type": "table",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 12 },
+      "targets": [
+        { "expr": "datasphere_llm_usages_total", "legendFormat": "Appels LLM", "refId": "A" },
+        { "expr": "datasphere_llm_generations_total", "legendFormat": "Générations sauvées", "refId": "B" },
+        { "expr": "datasphere_custom_workflows_total", "legendFormat": "Workflows custom", "refId": "C" },
+        { "expr": "datasphere_webhooks_total", "legendFormat": "Webhooks", "refId": "D" }
+      ],
+      "options": { "showHeader": true }
+    },
+    {
+      "title": "Audit & Notifications",
+      "type": "table",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 12 },
+      "targets": [
+        { "expr": "datasphere_audit_logs_total", "legendFormat": "Logs audit", "refId": "A" },
+        { "expr": "datasphere_notifications_total", "legendFormat": "Notifications", "refId": "B" },
+        { "expr": "datasphere_leave_requests_total", "legendFormat": "Demandes congé", "refId": "C" },
+        { "expr": "datasphere_expense_reports_total", "legendFormat": "Notes de frais", "refId": "D" }
+      ],
+      "options": { "showHeader": true }
+    },
+    {
+      "title": "Heap mémoire (utilisé / total)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 20 },
+      "targets": [
+        { "expr": "datasphere_process_memory_heap_used_bytes", "legendFormat": "Heap utilisé", "refId": "A" },
+        { "expr": "datasphere_process_memory_heap_total_bytes", "legendFormat": "Heap total", "refId": "B" }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "custom": { "drawStyle": "line", "lineInterpolation": "smooth", "fillOpacity": 10 }
+        }
+      },
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" } }
+    }
+  ],
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": ["datasphere", "rh", "sirh"],
+  "templating": { "list": [] },
+  "time": { "from": "now-1h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "DataSphere RH — Monitoring",
+  "uid": "datasphere-rh",
+  "version": 1
+}

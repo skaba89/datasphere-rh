@@ -1,0 +1,22 @@
+# ━━━ Prometheus config — DataSphere RH ━━━
+
+global:
+  scrape_interval: 30s
+  evaluation_interval: 30s
+
+scrape_configs:
+  # DataSphere RH app
+  - job_name: 'datasphere-rh'
+    scrape_interval: 30s
+    metrics_path: '/api/metrics'
+    static_configs:
+      - targets: ['host.docker.internal:3000']
+        labels:
+          service: 'datasphere-rh'
+          env: 'production'
+
+  # PostgreSQL exporter (optionnel)
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['host.docker.internal:9187']
+    # Nécessite postgres_exporter : docker run -d -p 9187:9187 quay.io/prometheuscommunity/postgres-exporter

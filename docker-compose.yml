@@ -1,0 +1,47 @@
+# DataSphere RH — Docker Compose pour PostgreSQL + pgvector
+#
+# Usage :
+#   docker-compose up -d
+#   # Puis mettre à jour .env : DATABASE_URL=postgresql://datasphere:datasphere@localhost:5432/datasphere
+#   npx prisma migrate deploy
+#   npx prisma db seed
+
+version: '3.8'
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: datasphere-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: datasphere
+      POSTGRES_PASSWORD: datasphere
+      POSTGRES_DB: datasphere
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U datasphere"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Optionnel : Redis pour cache + sessions + rate limiting
+  redis:
+    image: redis:7-alpine
+    container_name: datasphere-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  redis_data:

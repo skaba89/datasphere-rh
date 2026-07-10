@@ -1,0 +1,50 @@
+{
+  "name": "@datasphere/rh-sdk",
+  "version": "1.0.0",
+  "description": "SDK client JavaScript/TypeScript pour l'API publique DataSphere RH — SIRH guinéen avec IA multi-providers (GLM, OpenAI, Claude, Gemini, Groq, Mistral, DeepSeek)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "test": "echo 'Run examples/basic.ts to test'"
+  },
+  "keywords": [
+    "datasphere",
+    "rh",
+    "sirh",
+    "llm",
+    "ai",
+    "guinea",
+    "api",
+    "glm",
+    "openai",
+    "claude",
+    "gemini",
+    "groq",
+    "hr",
+    "human-resources"
+  ],
+  "author": "DataSphere SARL <contact@datasphere.gn>",
+  "license": "MIT",
+  "homepage": "https://rh.datasphere.gn",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/datasphere-gn/rh-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/datasphere-gn/rh-sdk/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

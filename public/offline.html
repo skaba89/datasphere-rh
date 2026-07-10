@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DataSphere RH — Hors ligne</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .container {
+      text-align: center;
+      max-width: 400px;
+      padding: 2rem;
+    }
+    .logo {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #27698a, #435862);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 24px;
+      margin: 0 auto 1.5rem;
+    }
+    h1 { color: #27698a; font-size: 1.5rem; margin-bottom: 0.5rem; }
+    p { color: #64748b; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.5rem; }
+    button {
+      background: #27698a;
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover { background: #1f5670; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">DS</div>
+    <h1>Vous êtes hors ligne</h1>
+    <p>DataSphere RH ne peut pas accéder au serveur. Vérifiez votre connexion internet et réessayez.</p>
+    <button onclick="window.location.reload()">Réessayer</button>
+  </div>
+</body>
+</html>

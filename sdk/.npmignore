@@ -1,0 +1,11 @@
+# Fichiers à exclure du package npm
+examples/
+tsconfig.json
+*.md
+!README.md
+.git/
+.gitignore
+.eslintrc*
+*.log
+node_modules/
+src/
