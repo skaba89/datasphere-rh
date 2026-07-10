@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Users, ArrowRight, Calendar, CheckCircle2, Clock } from 'lucide-react'
+import { Users, ArrowRight, Calendar, CheckCircle2, Clock, Check } from 'lucide-react'
 import { formatDate } from '@/lib/utils-rh'
 
 interface Mentoring { id: string; mentor: any; mentee: any; topic: string; startDate: string; frequency: string; status: string; sessions: number; nextSession: string | null; progress: number }
@@ -31,7 +31,7 @@ export function MentoringPage() {
         {items.map(m => (
           <Card key={m.id} className="p-4">
             <div className="flex items-center justify-between mb-3">
-              <Badge variant="outline" className={m.status === 'ACTIF' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-50 text-slate-500 border-slate-200'}>{m.status === 'ACTIF' ? '● Actif' : '✓ Terminé'}</Badge>
+              <Badge variant="outline" className={`text-[10px] inline-flex items-center gap-1 ${m.status === 'ACTIF' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-50 text-slate-500 border-slate-200'}`}>{m.status === 'ACTIF' ? <><span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" /> Actif</> : <><Check className="w-3 h-3" /> Terminé</>}</Badge>
               <Badge variant="outline" className="text-[10px]">{FREQ_META[m.frequency] || m.frequency}</Badge>
             </div>
             <h3 className="font-semibold text-slate-900 text-sm mb-3">{m.topic}</h3>

@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { Target, Star, TrendingUp, Award, Plus, Loader2, CheckCircle2, Clock } from 'lucide-react'
+import { Target, Star, TrendingUp, Award, Plus, Loader2, CheckCircle2, Clock, Check, AlertTriangle } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface Employee { id: string; nom: string; prenoms: string; matricule: string; poste: string; sexe: string | null }
@@ -233,19 +233,19 @@ export function EvaluationsPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3 text-sm">
                     {ev.strengths && (
                       <div className="p-2 rounded bg-emerald-50 border border-emerald-200">
-                        <div className="text-xs font-semibold text-emerald-700 mb-1">✓ Points forts</div>
+                        <div className="text-xs font-semibold text-emerald-700 mb-1 inline-flex items-center gap-1"><Check className="w-3 h-3" /> Points forts</div>
                         <p className="text-xs text-emerald-900">{ev.strengths}</p>
                       </div>
                     )}
                     {ev.improvements && (
                       <div className="p-2 rounded bg-amber-50 border border-amber-200">
-                        <div className="text-xs font-semibold text-amber-700 mb-1">⚠ À améliorer</div>
+                        <div className="text-xs font-semibold text-amber-700 mb-1 inline-flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> À améliorer</div>
                         <p className="text-xs text-amber-900">{ev.improvements}</p>
                       </div>
                     )}
                     {ev.goals && (
                       <div className="p-2 rounded bg-sky-50 border border-sky-200">
-                        <div className="text-xs font-semibold text-sky-700 mb-1">🎯 Objectifs futurs</div>
+                        <div className="text-xs font-semibold text-sky-700 mb-1 inline-flex items-center gap-1"><Target className="w-3 h-3" /> Objectifs futurs</div>
                         <p className="text-xs text-sky-900">{ev.goals}</p>
                       </div>
                     )}

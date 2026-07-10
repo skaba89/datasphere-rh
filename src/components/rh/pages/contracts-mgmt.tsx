@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { FileSignature, AlertTriangle, DollarSign, CheckCircle2, Clock, RefreshCw, X, Calendar, List, Maximize2 } from 'lucide-react'
+import { FileSignature, AlertTriangle, DollarSign, CheckCircle2, Clock, RefreshCw, X, Calendar, List, Maximize2, Timer } from 'lucide-react'
 import { formatGNF, formatDate } from '@/lib/utils-rh'
 import { toast } from 'sonner'
 import { ContractDetailModal } from '@/components/rh/contract-detail-modal'
@@ -125,7 +125,7 @@ export function ContractsMgmtPage({ userRole }: { userRole?: string | null }) {
               </div>
               <div className="flex items-center gap-2 mt-2 text-xs text-slate-500"><Clock className="w-3 h-3" />{formatDate(c.startDate)} → {formatDate(c.endDate)}</div>
               {c.renewalDate && <div className="mt-1 text-xs text-[#27698a] flex items-center gap-1"><AlertTriangle className="w-3 h-3" />Renouvellement : {formatDate(c.renewalDate)}</div>}
-              {c.alerts > 0 && <div className="mt-1 text-xs text-amber-600">⚠ {c.alerts} alerte(s) · Responsable : {c.owner}</div>}
+              {c.alerts > 0 && <div className="mt-1 text-xs text-amber-600 inline-flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> {c.alerts} alerte(s) · Responsable : {c.owner}</div>}
               {isExpiringSoon && canRenew && (
                 <Button variant="outline" size="sm" className="w-full mt-3 h-8 text-xs border-[#27698a] text-[#27698a] hover:bg-[#27698a] hover:text-white" onClick={() => openRenew(c)}>
                   <RefreshCw className="w-3 h-3 mr-1.5" />Renouveler
@@ -299,8 +299,8 @@ function CalendarView({ contracts, month, onMonthChange, onRenew }: {
                                     isExpiringSoon ? 'bg-amber-50 text-amber-700 border-amber-200' :
                                     'bg-emerald-50 text-emerald-700 border-emerald-200'
                       return (
-                        <div key={j} className={`text-[9px] px-1 py-0.5 rounded border ${color} cursor-pointer hover:opacity-80 truncate`} title={`${isRenewal ? '🔄 Renouvellement' : '⏰ Échéance'}: ${c.title} (${c.supplier})`}>
-                          {isRenewal ? '🔄 ' : '⏰ '}{c.title.slice(0, 16)}{c.title.length > 16 ? '…' : ''}
+                        <div key={j} className={`text-[9px] px-1 py-0.5 rounded border ${color} cursor-pointer hover:opacity-80 truncate inline-flex items-center gap-0.5`} title={`${isRenewal ? 'Renouvellement' : 'Échéance'}: ${c.title} (${c.supplier})`}>
+                          {isRenewal ? <RefreshCw className="w-2.5 h-2.5 inline" /> : <Timer className="w-2.5 h-2.5 inline" />}{c.title.slice(0, 16)}{c.title.length > 16 ? '…' : ''}
                         </div>
                       )
                     })}

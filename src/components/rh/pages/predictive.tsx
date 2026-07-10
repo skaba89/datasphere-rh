@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Brain, TrendingUp, AlertTriangle, Award, Sparkles, RefreshCw, BarChart3, Activity } from 'lucide-react'
+import { Brain, TrendingUp, AlertTriangle, Award, Sparkles, RefreshCw, BarChart3, Activity, X, Check } from 'lucide-react'
 import { formatDate } from '@/lib/utils-rh'
 import { toast } from 'sonner'
 import {
@@ -208,13 +208,13 @@ export function PredictivePage({ userRole }: { userRole?: string | null }) {
                 <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2"><Brain className="w-5 h-5 text-[#27698a]" />Métriques du modèle</h2>
                 <p className="text-xs text-slate-500 mt-1">{trainMetrics.modelVersion} · entraîné le {formatDate(trainMetrics.trainedAt)}</p>
               </div>
-              <Button variant="ghost" size="sm" onClick={() => setShowMetrics(false)}>✕</Button>
+              <Button variant="ghost" size="sm" onClick={() => setShowMetrics(false)}><X className="w-4 h-4" /></Button>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
               <div className="p-3 rounded-lg bg-slate-50"><div className="text-xs text-slate-500">Échantillons</div><div className="text-lg font-bold text-slate-900">{trainMetrics.sampleSize}</div></div>
               <div className="p-3 rounded-lg bg-slate-50"><div className="text-xs text-slate-500">Features</div><div className="text-lg font-bold text-slate-900">{trainMetrics.features.length}</div></div>
               <div className="p-3 rounded-lg bg-slate-50"><div className="text-xs text-slate-500">Durée</div><div className="text-lg font-bold text-slate-900">{trainMetrics.trainDurationMs}ms</div></div>
-              <div className="p-3 rounded-lg bg-emerald-50"><div className="text-xs text-slate-500">Statut</div><div className="text-lg font-bold text-emerald-600">✓ {trainMetrics.status}</div></div>
+              <div className="p-3 rounded-lg bg-emerald-50"><div className="text-xs text-slate-500">Statut</div><div className="text-lg font-bold text-emerald-600 inline-flex items-center gap-1"><Check className="w-4 h-4" /> {trainMetrics.status}</div></div>
             </div>
             {[
               { key: 'turnover', label: 'Risque turnover', data: trainMetrics.turnover, color: '#dc2626' },

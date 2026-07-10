@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { PenTool, QrCode, Shield, CheckCircle2, FileCheck, Loader2, ExternalLink, Search, Copy } from 'lucide-react'
+import { PenTool, QrCode, Shield, CheckCircle2, FileCheck, Loader2, ExternalLink, Search, Copy, X } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDate } from '@/lib/utils-rh'
 
@@ -484,6 +484,3 @@ function VerifyDialog({ onClose }: { onClose: () => void }) {
   )
 }
 
-function X({ className }: { className?: string }) {
-  return <span className={className}>✕</span>
-}

@@ -74,7 +74,7 @@ import { LoginModal } from '@/components/rh/login-modal'
 import { CompanySelector } from '@/components/rh/company-selector'
 import { EmployeeDetailModal } from '@/components/rh/employee-detail'
 import { ImportModal } from '@/components/rh/import-modal'
-import { LogOut, LogIn, Upload } from 'lucide-react'
+import { LogOut, LogIn, Upload, Users, Wallet, CalendarDays, FileText, Target, BarChart3, GraduationCap, Bot, ShieldCheck, ClipboardList } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface AuthUser {
@@ -223,22 +223,27 @@ export default function Home() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
-                { icon: '👥', title: 'Gestion des employés', desc: 'Fiches détaillées, contrats, documents, historique. Wizard de création en 5 étapes.' },
-                { icon: '💰', title: 'Paie & CNSS', desc: 'Calculs conformes CNSS (5%/17%), ITS 1.5%, versement forfaitaire. Bulletins PDF.' },
-                { icon: '📅', title: 'Congés & absences', desc: 'Workflow de validation multi-niveaux. Gestion des soldes et types de congés.' },
-                { icon: '📝', title: 'Contrats & documents', desc: 'Génération automatique de CDI, CDD, lettres, attestations par IA.' },
-                { icon: '🎯', title: 'Recrutement', desc: 'Pipeline candidats, offres d\'emploi, entretiens, lettres d\'embauche.' },
-                { icon: '📊', title: 'Analytics & reporting', desc: 'Tableaux de bord, KPIs, pyramide des âges, turnover, prévisions.' },
-                { icon: '🎓', title: 'Formations', desc: 'Planification, inscriptions, suivi des compétences et évaluations.' },
-                { icon: '🤖', title: 'IA & Chatbot', desc: 'Assistant RH propulsé par GLM-4. Génération de documents juridiques.' },
-                { icon: '🔐', title: 'Audit & sécurité', desc: 'Traçabilité complète, multi-tenant, rôles et permissions.' },
-              ].map(f => (
-                <div key={f.title} className="p-5 rounded-xl border border-slate-200 hover:border-[#27698a]/30 hover:shadow-md transition-all">
-                  <div className="text-3xl mb-3">{f.icon}</div>
-                  <h3 className="font-semibold text-slate-900 mb-1.5">{f.title}</h3>
-                  <p className="text-sm text-slate-600 leading-relaxed">{f.desc}</p>
-                </div>
-              ))}
+                { icon: Users, title: 'Gestion des employés', desc: 'Fiches détaillées, contrats, documents, historique. Wizard de création en 5 étapes.' },
+                { icon: Wallet, title: 'Paie & CNSS', desc: 'Calculs conformes CNSS (5%/17%), ITS 1.5%, versement forfaitaire. Bulletins PDF.' },
+                { icon: CalendarDays, title: 'Congés & absences', desc: 'Workflow de validation multi-niveaux. Gestion des soldes et types de congés.' },
+                { icon: FileText, title: 'Contrats & documents', desc: 'Génération automatique de CDI, CDD, lettres, attestations par IA.' },
+                { icon: Target, title: 'Recrutement', desc: 'Pipeline candidats, offres d\'emploi, entretiens, lettres d\'embauche.' },
+                { icon: BarChart3, title: 'Analytics & reporting', desc: 'Tableaux de bord, KPIs, pyramide des âges, turnover, prévisions.' },
+                { icon: GraduationCap, title: 'Formations', desc: 'Planification, inscriptions, suivi des compétences et évaluations.' },
+                { icon: Bot, title: 'IA & Chatbot', desc: 'Assistant RH propulsé par GLM-4. Génération de documents juridiques.' },
+                { icon: ShieldCheck, title: 'Audit & sécurité', desc: 'Traçabilité complète, multi-tenant, rôles et permissions.' },
+              ].map(f => {
+                const Icon = f.icon
+                return (
+                  <div key={f.title} className="p-5 rounded-xl border border-slate-200 hover:border-[#27698a]/30 hover:shadow-md transition-all">
+                    <div className="w-10 h-10 rounded-lg bg-[#27698a]/10 text-[#27698a] flex items-center justify-center mb-3">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <h3 className="font-semibold text-slate-900 mb-1.5">{f.title}</h3>
+                    <p className="text-sm text-slate-600 leading-relaxed">{f.desc}</p>
+                  </div>
+                )
+              })}
             </div>
           </div>
         </section>
@@ -313,7 +318,8 @@ export default function Home() {
                 onClick={() => setPage('audit')}
                 className="hidden md:flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-900 px-2 py-1 rounded hover:bg-slate-100"
               >
-                📋 Audit
+                <ClipboardList className="w-3.5 h-3.5" />
+                Audit
               </button>
               <button
                 onClick={() => setImportOpen(true)}

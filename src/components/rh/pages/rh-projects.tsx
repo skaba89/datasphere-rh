@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { FolderKanban, CheckCircle2, Clock, AlertCircle, Users, DollarSign, Calendar } from 'lucide-react'
+import { FolderKanban, CheckCircle2, Clock, AlertCircle, Users, DollarSign, Calendar, Check, Circle } from 'lucide-react'
 import { formatGNF, formatDate } from '@/lib/utils-rh'
 
 interface Project { id: string; name: string; desc: string; status: string; progress: number; startDate: string; endDate: string; budget: number; spent: number; manager: string; team: number; milestones: any[] }
@@ -51,7 +51,7 @@ export function RHProjectsPage() {
               <div className="mt-2"><div className="flex items-center justify-between text-xs mb-1"><span className="text-slate-500">Budget</span><span className="font-mono text-slate-700">{formatGNF(p.spent)} / {formatGNF(p.budget)} ({budgetPct}%)</span></div><div className="h-1.5 bg-slate-100 rounded-full overflow-hidden"><div className={`h-full rounded-full ${budgetPct > 90 ? 'bg-red-500' : budgetPct > 70 ? 'bg-amber-500' : 'bg-emerald-500'}`} style={{ width: `${budgetPct}%` }} /></div></div>
               <div className="mt-3 pt-3 border-t border-slate-100">
                 <div className="text-xs font-semibold text-slate-600 mb-2">Jalons</div>
-                <div className="flex flex-wrap gap-1">{p.milestones.map((m, i) => <Badge key={i} variant="outline" className={`text-[10px] ${m.done ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-50 text-slate-500'}`}>{m.done ? '✓' : '○'} {m.name}</Badge>)}</div>
+                <div className="flex flex-wrap gap-1">{p.milestones.map((m, i) => <Badge key={i} variant="outline" className={`text-[10px] inline-flex items-center gap-0.5 ${m.done ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-50 text-slate-500'}`}>{m.done ? <Check className="w-2.5 h-2.5" /> : <Circle className="w-2.5 h-2.5" />} {m.name}</Badge>)}</div>
               </div>
             </Card>
           )

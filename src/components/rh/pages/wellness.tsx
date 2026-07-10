@@ -3,7 +3,7 @@
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Heart, Trophy, Footprints, Brain, Apple, Moon, Droplet, Dumbbell, Smile, TrendingUp, Plus, Check } from 'lucide-react'
+import { Heart, Trophy, Footprints, Brain, Apple, Moon, Droplet, Dumbbell, Smile, TrendingUp, Plus, Check, Frown, Meh, Laugh, Phone, Stethoscope, Lotus } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -30,7 +30,7 @@ const MOOD_TRACKER = [
   { day: 'Jeu', mood: 4 }, { day: 'Ven', mood: 5 }, { day: 'Sam', mood: 5 }, { day: 'Dim', mood: 4 },
 ]
 
-const MOOD_EMOJIS = ['😢', '😕', '😐', '🙂', '😄']
+const MOOD_EMOJIS: React.ElementType[] = [Frown, Meh, Meh, Smile, Laugh]
 
 export function WellnessPage() {
   const [joined, setJoined] = useState<string[]>(['water', 'meditation'])
@@ -41,7 +41,7 @@ export function WellnessPage() {
       toast.success('Vous avez quitté le défi')
     } else {
       setJoined([...joined, id])
-      toast.success('Défi rejoint ! Bon courage 💪')
+      toast.success('Défi rejoint ! Bon courage')
     }
   }
 
@@ -68,15 +68,15 @@ export function WellnessPage() {
       <Card className="p-5">
         <h2 className="font-semibold text-slate-900 mb-4 flex items-center gap-2"><Smile className="w-4 h-4 text-[#27698a]" />Suivi de l'humeur (cette semaine)</h2>
         <div className="flex items-end justify-between gap-2">
-          {MOOD_TRACKER.map((m, i) => (
+          {MOOD_TRACKER.map((m, i) => { const MoodIcon = MOOD_EMOJIS[m.mood - 1]; return (
             <div key={i} className="flex-1 text-center">
-              <div className="text-2xl mb-1">{MOOD_EMOJIS[m.mood - 1]}</div>
+              <div className="mb-1 flex justify-center"><MoodIcon className="w-6 h-6 text-[#27698a]" /></div>
               <div className="h-20 flex items-end">
                 <div className="w-full rounded-t-lg bg-gradient-to-t from-[#27698a] to-[#478e5e]" style={{ height: `${(m.mood / 5) * 100}%` }}></div>
               </div>
               <div className="text-xs text-slate-500 mt-1">{m.day}</div>
             </div>
-          ))}
+          ) })}
         </div>
       </Card>
 
@@ -137,15 +137,15 @@ export function WellnessPage() {
         <h2 className="font-semibold text-slate-900 mb-3">Ressources santé</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
           <div className="p-3 rounded-lg bg-white border border-slate-200">
-            <div className="font-medium text-slate-900 mb-1">📞 Ligne d'écoute</div>
+            <div className="font-medium text-slate-900 mb-1 inline-flex items-center gap-1"><Phone className="w-4 h-4 text-[#27698a]" /> Ligne d'écoute</div>
             <p className="text-xs text-slate-600">Support psychologique gratuit et confidentiel. Disponible 24/7 au 116 (numéro vert Guinée).</p>
           </div>
           <div className="p-3 rounded-lg bg-white border border-slate-200">
-            <div className="font-medium text-slate-900 mb-1">🏥 Médecin du travail</div>
+            <div className="font-medium text-slate-900 mb-1 inline-flex items-center gap-1"><Stethoscope className="w-4 h-4 text-[#27698a]" /> Médecin du travail</div>
             <p className="text-xs text-slate-600">Visites médicales planifiées dans le module Santé & Wellness. Prochaine campagne : Septembre 2026.</p>
           </div>
           <div className="p-3 rounded-lg bg-white border border-slate-200">
-            <div className="font-medium text-slate-900 mb-1">🧘 Sessions relaxation</div>
+            <div className="font-medium text-slate-900 mb-1 inline-flex items-center gap-1"><Lotus className="w-4 h-4 text-[#27698a]" /> Sessions relaxation</div>
             <p className="text-xs text-slate-600">Sessions de méditation guidée tous les mardis 12h-12h30 en salle de repos. Gratuit, sans inscription.</p>
           </div>
         </div>

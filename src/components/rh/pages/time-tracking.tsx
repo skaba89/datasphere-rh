@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Clock, LogIn, LogOut, Calendar, Users, TrendingUp, Plus, Loader2, Coffee } from 'lucide-react'
+import { Clock, LogIn, LogOut, Calendar, Users, TrendingUp, Plus, Loader2, Coffee, Timer } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDate } from '@/lib/utils-rh'
 
@@ -184,7 +184,7 @@ export function TimeTrackingPage() {
       </Card>
 
       <div className="p-3 rounded-lg bg-sky-50 border border-sky-200 text-xs text-sky-800">
-        ⏱️ <strong>Règles de calcul :</strong> Heures normales = 8h/jour (480 min). Au-delà = heures supplémentaires (majoration 25% en semaine, 50% de nuit, 75% dimanche, 100% jour férié).
+        <Timer className="w-3.5 h-3.5 inline" /> <strong>Règles de calcul :</strong> Heures normales = 8h/jour (480 min). Au-delà = heures supplémentaires (majoration 25% en semaine, 50% de nuit, 75% dimanche, 100% jour férié).
         Pause déjeuner par défaut : 60 minutes.
       </div>
 

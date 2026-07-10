@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Webhook, Key, Code2, Copy, Plus, Check, X, Zap, Activity, ShieldAlert, Play, Trash2, Power, History, ChevronDown, ChevronUp } from 'lucide-react'
+import { Webhook, Key, Code2, Copy, Plus, Check, X, Zap, Activity, ShieldAlert, Play, Trash2, Power, History, ChevronDown, ChevronUp, AlertTriangle, Lock } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface Data { webhooks: any[]; apiKeys: any[]; events: any[]; endpoints: any[] }
@@ -92,7 +92,7 @@ export function WebhooksPage() {
       })
       const d = await r.json()
       setTestResult({ [id]: d })
-      if (d.success) toast.success(`Webhook testé ✓ (${d.durationMs}ms, HTTP ${d.status})`)
+      if (d.success) toast.success(`Webhook testé (${d.durationMs}ms, HTTP ${d.status})`)
       else toast.error(`Échec test : ${d.errorMsg || 'HTTP ' + d.status}`)
     } catch { toast.error('Erreur réseau') }
     finally { setTestingId(null) }
@@ -224,7 +224,7 @@ export function WebhooksPage() {
 
                   {testResult?.[wh.id] && (
                     <div className={`p-2 rounded text-xs mb-2 ${testResult[wh.id].success ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>
-                      {testResult[wh.id].success ? '✓' : '✗'} HTTP {testResult[wh.id].status || 'N/A'} · {testResult[wh.id].durationMs}ms
+                      <span className="inline-flex items-center gap-1">{testResult[wh.id].success ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />} HTTP {testResult[wh.id].status || 'N/A'} · {testResult[wh.id].durationMs}ms</span>
                       {testResult[wh.id].errorMsg && ` · ${testResult[wh.id].errorMsg}`}
                     </div>
                   )}
@@ -354,7 +354,7 @@ export function WebhooksPage() {
                                 <span className="text-[10px] text-slate-400">{d.durationMs}ms</span>
                                 <span className="text-[10px] text-slate-400 ml-auto">{new Date(d.deliveredAt).toLocaleString('fr-FR')}</span>
                               </div>
-                              {d.errorMsg && <div className="text-[11px] text-red-600 mt-1">⚠ {d.errorMsg}</div>}
+                              {d.errorMsg && <div className="text-[11px] text-red-600 mt-1 inline-flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> {d.errorMsg}</div>}
                               <button
                                 onClick={() => setExpandedPayload(expandedPayload === d.id ? null : d.id)}
                                 className="text-[10px] text-[#27698a] hover:underline mt-1 flex items-center gap-0.5"
@@ -414,7 +414,7 @@ export function WebhooksPage() {
                   <Badge className={`text-[10px] font-mono ${METHOD_COLORS[ep.method] || 'bg-slate-100'}`}>{ep.method}</Badge>
                   <code className="text-xs font-mono text-slate-700 flex-1">{ep.path}</code>
                   <span className="text-xs text-slate-500">{ep.desc}</span>
-                  {ep.auth ? <Badge variant="outline" className="text-[9px] bg-amber-50 text-amber-700">🔐 Auth</Badge> : <Badge variant="outline" className="text-[9px] bg-emerald-50 text-emerald-700">Public</Badge>}
+                  {ep.auth ? <Badge variant="outline" className="text-[9px] bg-amber-50 text-amber-700 inline-flex items-center gap-1"><Lock className="w-2.5 h-2.5" /> Auth</Badge> : <Badge variant="outline" className="text-[9px] bg-emerald-50 text-emerald-700">Public</Badge>}
                 </div>
               ))}
             </div>

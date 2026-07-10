@@ -108,8 +108,8 @@ export function ContractDetailModal({ contractId, onClose, onRenew }: Props) {
               <div className="flex gap-2 mt-2">
                 <Badge variant="outline" className={`text-[10px] ${typeMeta.color}`}>{typeMeta.label}</Badge>
                 <Badge variant="outline" className={`text-[10px] ${statusMeta.color}`}>{statusMeta.label}</Badge>
-                {daysLeft < 30 && daysLeft >= 0 && <Badge variant="outline" className="text-[10px] bg-amber-50 text-amber-700 border-amber-200">⏰ {daysLeft}j restants</Badge>}
-                {daysLeft < 0 && <Badge variant="outline" className="text-[10px] bg-red-50 text-red-700 border-red-200">⚠ Expiré depuis {Math.abs(daysLeft)}j</Badge>}
+                {daysLeft < 30 && daysLeft >= 0 && <Badge variant="outline" className="text-[10px] bg-amber-50 text-amber-700 border-amber-200 inline-flex items-center gap-1"><Clock className="w-3 h-3" /> {daysLeft}j restants</Badge>}
+                {daysLeft < 0 && <Badge variant="outline" className="text-[10px] bg-red-50 text-red-700 border-red-200 inline-flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> Expiré depuis {Math.abs(daysLeft)}j</Badge>}
               </div>
             </div>
           </div>

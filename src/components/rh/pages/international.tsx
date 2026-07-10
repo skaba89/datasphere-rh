@@ -37,7 +37,7 @@ export function InternationalPage() {
                 <div className="flex items-center gap-1"><Plane className="w-3 h-3" />Arrivée : {formatDate(e.arrivalDate)}</div>
                 <div className="flex items-center gap-1"><FileText className="w-3 h-3" />Visa : {formatDate(e.visaExpiry)} · Permis : {formatDate(e.permitExpiry)}</div>
                 <div className="flex items-center gap-1"><Home className="w-3 h-3" />{e.housing}</div>
-                <div className="flex items-center gap-1"><Users className="w-3 h-3" />Famille : {e.familyRelocation ? '✓ Re localisée' : '—'}</div>
+                <div className="flex items-center gap-1"><Users className="w-3 h-3" />Famille : {e.familyRelocation ? <><CheckCircle2 className="w-3 h-3 inline text-emerald-600" /> Re localisée</> : '—'}</div>
               </div>
               <div className="mt-2 p-1.5 rounded bg-slate-50 text-xs text-slate-500">Assurance : {e.insurance}</div>
             </div>

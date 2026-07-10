@@ -72,10 +72,10 @@ export function CustomReportsPage() {
             </table>
           </div>
           <div className="mt-3 flex items-center gap-4 text-xs text-slate-500">
-            <span>📊 {data.data.employeeCount} employés</span>
-            <span>💰 {formatGNF(data.data.payrollTotal)} masse salariale</span>
-            <span>📅 {data.data.leaveCount} congés</span>
-            <span>🎓 {data.data.trainingCount} formations</span>
+            <span className="inline-flex items-center gap-1"><BarChart3 className="w-3 h-3" /> {data.data.employeeCount} employés</span>
+            <span className="inline-flex items-center gap-1"><Wallet className="w-3 h-3" /> {formatGNF(data.data.payrollTotal)} masse salariale</span>
+            <span className="inline-flex items-center gap-1"><Calendar className="w-3 h-3" /> {data.data.leaveCount} congés</span>
+            <span className="inline-flex items-center gap-1"><GraduationCap className="w-3 h-3" /> {data.data.trainingCount} formations</span>
           </div>
         </Card>
       )}

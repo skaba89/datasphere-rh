@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { RefreshCw, Plus, Loader2, Star, Users, User, Crown, ArrowRight } from 'lucide-react'
+import { RefreshCw, Plus, Loader2, Star, Users, User, Crown, ArrowRight, AlertTriangle } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface Feedback360 {
@@ -85,7 +85,7 @@ export function Feedback360Page() {
                         <div className="flex items-center gap-1"><Badge variant="outline" className={meta.color + ' text-[9px]'}>{meta.label}</Badge><span className="text-amber-500 font-bold">{resp.rating}/5</span></div>
                       </div>
                       {resp.strengths && <div className="text-emerald-700"><b>+</b> {resp.strengths.slice(0, 60)}</div>}
-                      {resp.improvements && <div className="text-amber-700"><b>⚠</b> {resp.improvements.slice(0, 60)}</div>}
+                      {resp.improvements && <div className="text-amber-700 flex items-start gap-1"><AlertTriangle className="w-3 h-3 mt-0.5 shrink-0" /> <span>{resp.improvements.slice(0, 60)}</span></div>}
                     </div>
                   )
                 })}

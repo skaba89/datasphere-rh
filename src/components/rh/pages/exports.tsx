@@ -3,7 +3,7 @@
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Download, FileSpreadsheet, FileText, Users, Briefcase, FileCheck, ScrollText, Loader2 } from 'lucide-react'
+import { Download, FileSpreadsheet, FileText, Users, Briefcase, FileCheck, ScrollText, Loader2, CheckCircle2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useState } from 'react'
 
@@ -168,7 +168,7 @@ export function ExportsPage() {
 
       {/* Info */}
       <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800">
-        ✅ <strong>Exports disponibles :</strong>
+        <CheckCircle2 className="w-3.5 h-3.5 inline" /> <strong>Exports disponibles :</strong>
         <ul className="mt-2 ml-4 list-disc space-y-1">
           <li><strong>CSV</strong> : compatible Excel, LibreOffice, Google Sheets (séparateur ; encodage UTF-8 BOM)</li>
           <li><strong>JSON</strong> : pour intégrations API et scripts</li>

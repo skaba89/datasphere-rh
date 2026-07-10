@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { LayoutGrid, Plus, X, Settings2, GripVertical, TrendingUp, Users, Wallet, Calendar, Clock, Award, Brain, Bell, ShieldCheck, Receipt } from 'lucide-react'
+import { LayoutGrid, Plus, X, Settings2, GripVertical, TrendingUp, Users, Wallet, Calendar, Clock, Award, Brain, Bell, ShieldCheck, Receipt, Mail, MessageSquare, AlertTriangle } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatGNF } from '@/lib/utils-rh'
 
@@ -232,9 +232,9 @@ function WidgetRenderer({ type, data, def }: { type: string; data: any; def: any
       <div>
         <h3 className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-3 flex items-center gap-2"><Icon className="w-3.5 h-3.5" />{def.title}</h3>
         <div className="space-y-2 max-h-40 overflow-y-auto">
-          <div className="p-2 rounded text-xs bg-sky-50 text-sky-700">📧 Bulletin de paie Juin 2026 disponible</div>
-          <div className="p-2 rounded text-xs bg-emerald-50 text-emerald-700">💬 Congé de Camara approuvé</div>
-          <div className="p-2 rounded text-xs bg-amber-50 text-amber-700">🔔 Rappel : déclaration CNSS Q2</div>
+          <div className="p-2 rounded text-xs bg-sky-50 text-sky-700 inline-flex items-center gap-1"><Mail className="w-3 h-3 inline" /> Bulletin de paie Juin 2026 disponible</div>
+          <div className="p-2 rounded text-xs bg-emerald-50 text-emerald-700 inline-flex items-center gap-1"><MessageSquare className="w-3 h-3 inline" /> Congé de Camara approuvé</div>
+          <div className="p-2 rounded text-xs bg-amber-50 text-amber-700 inline-flex items-center gap-1"><Bell className="w-3 h-3 inline" /> Rappel : déclaration CNSS Q2</div>
         </div>
       </div>
     )
@@ -257,7 +257,7 @@ function WidgetRenderer({ type, data, def }: { type: string; data: any; def: any
             <div className="text-[10px] text-red-600">En retard</div>
           </div>
         </div>
-        {overdue.length > 0 && <div className="mt-2 p-2 rounded bg-red-50 text-xs text-red-700">⚠ {overdue[0].title}</div>}
+        {overdue.length > 0 && <div className="mt-2 p-2 rounded bg-red-50 text-xs text-red-700 inline-flex items-center gap-1"><AlertTriangle className="w-3 h-3 inline" /> {overdue[0].title}</div>}
       </div>
     )
   }

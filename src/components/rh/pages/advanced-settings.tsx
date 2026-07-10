@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Settings, Shield, Bell, Plug, Lock, Users, Key, Check, X } from 'lucide-react'
+import { Settings, Shield, Bell, Plug, Lock, Users, Key, Check, X, MessageSquare, Smartphone, Mail, Briefcase, CreditCard, Wallet, Globe, LayoutGrid } from 'lucide-react'
 import { toast } from 'sonner'
 import { useState } from 'react'
 
@@ -35,15 +35,15 @@ const PERMISSIONS: Record<string, Record<string, { read: boolean; write: boolean
 }
 
 const INTEGRATIONS = [
-  { name: 'Twilio WhatsApp', desc: 'Notifications WhatsApp Business', icon: '💬', connected: true, category: 'Notifications' },
-  { name: 'Twilio SMS', desc: 'Envoi SMS aux employés', icon: '📱', connected: true, category: 'Notifications' },
-  { name: 'SendGrid Email', desc: 'Envoi emails transactionnels', icon: '📧', connected: true, category: 'Notifications' },
-  { name: 'Slack', desc: 'Notifications canal Slack', icon: '💼', connected: false, category: 'Notifications' },
-  { name: 'Microsoft Teams', desc: 'Intégration Teams', icon: 'Teams', connected: false, category: 'Notifications' },
-  { name: 'Google Workspace', desc: 'Calendar, Drive, Gmail', icon: 'Google', connected: false, category: 'Productivité' },
-  { name: 'Microsoft 365', desc: 'Outlook, SharePoint', icon: 'MS', connected: false, category: 'Productivité' },
-  { name: 'Stripe', desc: 'Paiements abonnements SaaS', icon: '💳', connected: false, category: 'Paiement' },
-  { name: 'Orange Money', desc: 'Paiements mobiles Guinée', icon: '🟠', connected: false, category: 'Paiement' },
+  { name: 'Twilio WhatsApp', desc: 'Notifications WhatsApp Business', icon: MessageSquare, connected: true, category: 'Notifications' },
+  { name: 'Twilio SMS', desc: 'Envoi SMS aux employés', icon: Smartphone, connected: true, category: 'Notifications' },
+  { name: 'SendGrid Email', desc: 'Envoi emails transactionnels', icon: Mail, connected: true, category: 'Notifications' },
+  { name: 'Slack', desc: 'Notifications canal Slack', icon: Briefcase, connected: false, category: 'Notifications' },
+  { name: 'Microsoft Teams', desc: 'Intégration Teams', icon: MessageSquare, connected: false, category: 'Notifications' },
+  { name: 'Google Workspace', desc: 'Calendar, Drive, Gmail', icon: Globe, connected: false, category: 'Productivité' },
+  { name: 'Microsoft 365', desc: 'Outlook, SharePoint', icon: LayoutGrid, connected: false, category: 'Productivité' },
+  { name: 'Stripe', desc: 'Paiements abonnements SaaS', icon: CreditCard, connected: false, category: 'Paiement' },
+  { name: 'Orange Money', desc: 'Paiements mobiles Guinée', icon: Wallet, connected: false, category: 'Paiement' },
 ]
 
 export function AdvancedSettingsPage() {
@@ -124,7 +124,7 @@ export function AdvancedSettingsPage() {
           {INTEGRATIONS.map(integ => (
             <Card key={integ.name} className="p-4">
               <div className="flex items-start justify-between mb-2">
-                <div className="text-2xl">{integ.icon}</div>
+                <div className="text-[#27698a]">{(() => { const Icon = integ.icon; return <Icon className="w-7 h-7" /> })()}</div>
                 <Badge variant="outline" className={integ.connected ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-50 text-slate-500 border-slate-200'}>
                   {integ.connected ? '● Connecté' : '○ Non connecté'}
                 </Badge>

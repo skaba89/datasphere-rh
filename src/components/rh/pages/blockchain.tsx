@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Boxes, Link2, Shield, CheckCircle2, ExternalLink, Copy, Fingerprint, Clock, Ban, X, AlertTriangle } from 'lucide-react'
+import { Boxes, Link2, Shield, CheckCircle2, ExternalLink, Copy, Fingerprint, Clock, Ban, X, AlertTriangle, Lock } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDate } from '@/lib/utils-rh'
 
@@ -90,7 +90,7 @@ export function BlockchainPage({ userRole }: { userRole?: string | null }) {
                   <h3 className="font-semibold text-slate-900 text-sm">{cert.documentTitle}</h3>
                   <Badge variant="outline" className="text-[10px]">{cert.documentType}</Badge>
                   <Badge variant="outline" className="text-[10px] bg-emerald-50 text-emerald-700 border-emerald-200"><CheckCircle2 className="w-2.5 h-2.5 mr-0.5" />Confirmé</Badge>
-                  {cert.immutable && <Badge variant="outline" className="text-[10px] bg-purple-50 text-purple-700 border-purple-200">🔒 Immutable</Badge>}
+                  {cert.immutable && <Badge variant="outline" className="text-[10px] bg-purple-50 text-purple-700 border-purple-200 inline-flex items-center gap-1"><Lock className="w-3 h-3" /> Immutable</Badge>}
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-2 text-xs">
                   <div><span className="text-slate-400">Tx Hash</span><div className="font-mono text-[#27698a] truncate">{cert.txHash}</div></div>
@@ -115,7 +115,7 @@ export function BlockchainPage({ userRole }: { userRole?: string | null }) {
       </div>
 
       <div className="p-3 rounded-lg bg-purple-50 border border-purple-200 text-xs text-purple-800">
-        🔗 <strong>Blockchain privée :</strong> Les documents signés électroniquement sont certifiés sur la chaîne DataSphere Chain. Chaque certification est immuable, horodatée et vérifiable publiquement via le hash du document. Gas utilisé moyen : ~21 000 par transaction.
+        <Link2 className="w-3.5 h-3.5 inline" /> <strong>Blockchain privée :</strong> Les documents signés électroniquement sont certifiés sur la chaîne DataSphere Chain. Chaque certification est immuable, horodatée et vérifiable publiquement via le hash du document. Gas utilisé moyen : ~21 000 par transaction.
       </div>
 
       {/* Modal révocation */}

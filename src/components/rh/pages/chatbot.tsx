@@ -76,7 +76,7 @@ export function ChatbotPage() {
       </Card>
 
       <div className="p-3 rounded-lg bg-[#27698a]/5 border border-[#27698a]/20 text-xs text-slate-600">
-        🤖 <strong>Chatbot IA :</strong> L'assistant a accès aux données RH en temps réel (effectif, congés, notes de frais, conformité). Il peut répondre aux questions des employés et managers sur la politique RH, les congés, la paie CNSS, les formations, etc.
+        <Bot className="w-3.5 h-3.5 inline" /> <strong>Chatbot IA :</strong> L'assistant a accès aux données RH en temps réel (effectif, congés, notes de frais, conformité). Il peut répondre aux questions des employés et managers sur la politique RH, les congés, la paie CNSS, les formations, etc.
       </div>
     </div>
   )

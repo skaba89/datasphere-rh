@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { User, FileText, Calendar, Clock, Wallet, Download, TrendingUp, Award } from 'lucide-react'
+import { User, FileText, Calendar, Clock, Wallet, Download, TrendingUp, Award, Lock } from 'lucide-react'
 import { formatGNF, formatDate, LEAVE_TYPES, LEAVE_STATUS, CONTRACT_TYPES } from '@/lib/utils-rh'
 
 export function EmployeePortalPage() {
@@ -216,7 +216,7 @@ export function EmployeePortalPage() {
                 <div className="text-sm font-medium text-slate-900 truncate">{doc.name}</div>
                 <div className="text-xs text-slate-500">{doc.type} · {doc.category}</div>
               </div>
-              {doc.confidential && <Badge variant="outline" className="text-[10px] bg-red-50 text-red-700">🔒</Badge>}
+              {doc.confidential && <Badge variant="outline" className="text-[10px] bg-red-50 text-red-700"><Lock className="w-3 h-3" /></Badge>}
               <Button variant="ghost" size="sm" className="h-7">
                 <Download className="w-3.5 h-3.5" />
               </Button>

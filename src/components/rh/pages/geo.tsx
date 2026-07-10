@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { MapPin, Plus, Loader2, Navigation, Home, Building2, Wifi, CheckCircle2, XCircle, MapPinned } from 'lucide-react'
+import { MapPin, Plus, Loader2, Navigation, Home, Building2, Wifi, CheckCircle2, XCircle, MapPinned, AlertTriangle, Check } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDate } from '@/lib/utils-rh'
 
@@ -76,7 +76,7 @@ export function GeoPage() {
                 <div className="font-medium text-sm text-slate-900">{loc.name}</div>
                 {loc.address && <div className="text-xs text-slate-500 mt-0.5">{loc.address}</div>}
                 <div className="flex items-center gap-3 mt-2 text-[10px] text-slate-400">
-                  {loc.latitude && <span>📍 {loc.latitude.toFixed(4)}, {loc.longitude?.toFixed(4)}</span>}
+                  {loc.latitude && <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3" /> {loc.latitude.toFixed(4)}, {loc.longitude?.toFixed(4)}</span>}
                   <span>Rayon: {loc.radius}m</span>
                 </div>
               </div>
@@ -101,15 +101,15 @@ export function GeoPage() {
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-medium text-sm text-slate-900">{c.employee.nom} {c.employee.prenoms}</span>
                     <Badge variant="outline" className={mode.color + ' text-[10px]'}>{mode.label}</Badge>
-                    {c.workLocation && <span className="text-xs text-slate-500">📍 {c.workLocation.name}</span>}
+                    {c.workLocation && <span className="text-xs text-slate-500 inline-flex items-center gap-1"><MapPin className="w-3 h-3" /> {c.workLocation.name}</span>}
                   </div>
                   <div className="text-xs text-slate-500 mt-0.5">
                     {formatDate(c.date)} · Arrivée {c.checkIn}{c.checkOut ? ` · Départ ${c.checkOut}` : ''}
                     {c.distance !== null && ` · ${c.distance}m du point`}
                   </div>
                 </div>
-                <Badge variant="outline" className={c.verified ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-red-50 text-red-700 border-red-200'}>
-                  {c.verified ? '✓ Vérifié' : '⚠ Hors zone'}
+                <Badge variant="outline" className={`inline-flex items-center gap-1 ${c.verified ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-red-50 text-red-700 border-red-200'}`}>
+                  {c.verified ? <><Check className="w-3 h-3" /> Vérifié</> : <><AlertTriangle className="w-3 h-3" /> Hors zone</>}
                 </Badge>
               </div>
             )
@@ -119,7 +119,7 @@ export function GeoPage() {
       </Card>
 
       <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800">
-        📍 <strong>Géofencing :</strong> Les pointages sont vérifiés automatiquement en comparant la position GPS de l'employé avec le rayon configuré du lieu de travail. Le télétravail est tracé séparément.
+        <MapPin className="w-3.5 h-3.5 inline" /> <strong>Géofencing :</strong> Les pointages sont vérifiés automatiquement en comparant la position GPS de l'employé avec le rayon configuré du lieu de travail. Le télétravail est tracé séparément.
       </div>
 
       {locWizard && <LocationWizard onClose={() => setLocWizard(false)} onCreated={() => { setLocWizard(false); load() }} />}
@@ -191,7 +191,7 @@ function CheckInWizard({ locations, onClose, onCreated }: { locations: WorkLocat
             <div><Label className="text-sm">Mode</Label><Select value={form.mode} onValueChange={v => setForm({ ...form, mode: v })}><SelectTrigger className="mt-1"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="PRESENTIEL">Présentiel</SelectItem><SelectItem value="TELETRAVAIL">Télétravail</SelectItem><SelectItem value="MISSION">Mission</SelectItem></SelectContent></Select></div>
           </div>
           <Button variant="outline" size="sm" onClick={detectLocation} className="w-full"><Navigation className="w-4 h-4 mr-2" />Détecter ma position GPS</Button>
-          {form.latitude && <div className="p-2 rounded bg-slate-50 text-xs text-slate-600">📍 {form.latitude}, {form.longitude}</div>}
+          {form.latitude && <div className="p-2 rounded bg-slate-50 text-xs text-slate-600 inline-flex items-center gap-1"><MapPin className="w-3 h-3" /> {form.latitude}, {form.longitude}</div>}
         </div>
         <DialogFooter><Button variant="outline" onClick={onClose}>Annuler</Button><Button onClick={handleSubmit} disabled={loading} className="bg-[#27698a] hover:bg-[#1f5570]">{loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}Pointer</Button></DialogFooter>
       </DialogContent>

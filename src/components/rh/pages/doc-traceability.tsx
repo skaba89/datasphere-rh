@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { FileCheck, GitBranch, CheckCircle2, Clock, PenTool, Archive } from 'lucide-react'
+import { FileCheck, GitBranch, CheckCircle2, Clock, PenTool, Archive, Check, Hourglass } from 'lucide-react'
 import { formatDate } from '@/lib/utils-rh'
 
 interface Data { documents: any[]; workflows: any[] }
@@ -40,7 +40,7 @@ export function DocTraceabilityPage() {
                 <div className="flex items-start gap-3">
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${doc.status === 'SIGNE' ? 'bg-emerald-100 text-emerald-600' : 'bg-amber-100 text-amber-600'}`}><FileCheck className="w-4 h-4" /></div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap mb-1"><span className="font-medium text-sm text-slate-900">{doc.name}</span><Badge variant="outline" className={`text-[10px] ${doc.status === 'SIGNE' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>{doc.status === 'SIGNE' ? '✓ Signé' : '⏳ En attente'}</Badge><Badge variant="outline" className="text-[10px]">v{doc.version}</Badge></div>
+                    <div className="flex items-center gap-2 flex-wrap mb-1"><span className="font-medium text-sm text-slate-900">{doc.name}</span><Badge variant="outline" className={`text-[10px] inline-flex items-center gap-1 ${doc.status === 'SIGNE' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>{doc.status === 'SIGNE' ? <><Check className="w-3 h-3" /> Signé</> : <><Hourglass className="w-3 h-3" /> En attente</>}</Badge><Badge variant="outline" className="text-[10px]">v{doc.version}</Badge></div>
                     <div className="text-xs text-slate-500">{doc.type} · {doc.category}{doc.employee ? ` · ${doc.employee}` : ''}</div>
                     <div className="mt-2 flex items-center gap-3 text-xs text-slate-400">
                       <span className="flex items-center gap-1"><GitBranch className="w-3 h-3" />{doc.versions.length} version{doc.versions.length > 1 ? 's' : ''}</span>
@@ -68,7 +68,7 @@ export function DocTraceabilityPage() {
                 {wf.steps.map((step: string, i: number) => (
                   <div key={i} className="flex items-center flex-1 last:flex-none">
                     <div className="flex flex-col items-center">
-                      <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${i < wf.currentStep ? 'bg-emerald-500 text-white' : i === wf.currentStep ? 'bg-[#27698a] text-white' : 'bg-slate-200 text-slate-400'}`}>{i < wf.currentStep ? '✓' : i + 1}</div>
+                      <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${i < wf.currentStep ? 'bg-emerald-500 text-white' : i === wf.currentStep ? 'bg-[#27698a] text-white' : 'bg-slate-200 text-slate-400'}`}>{i < wf.currentStep ? <Check className="w-3.5 h-3.5" /> : i + 1}</div>
                       <span className="text-[9px] mt-1 text-center text-slate-500 max-w-[80px] truncate">{step}</span>
                     </div>
                     {i < wf.steps.length - 1 && <div className={`flex-1 h-0.5 mx-1 ${i < wf.currentStep ? 'bg-emerald-500' : 'bg-slate-200'}`} />}

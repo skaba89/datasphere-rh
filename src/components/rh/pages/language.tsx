@@ -8,12 +8,12 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 
 const LANGUAGES = [
-  { code: 'fr', name: 'Français', nativeName: 'Français', flag: '🇫🇷', desc: 'Langue officielle — complet', coverage: 100, default: true },
-  { code: 'en', name: 'English', nativeName: 'English', flag: '🇬🇧', desc: 'International — complete', coverage: 100, default: false },
-  { code: 'ff', name: 'Fulfulde', nativeName: 'Fulfulde', flag: '🇬🇳', desc: 'Langue locale Guinée — partiel', coverage: 45, default: false },
-  { code: 'sus', name: 'Sosoxui', nativeName: 'Sosoxui', flag: '🇬🇳', desc: 'Langue Soussou — partiel', coverage: 30, default: false },
-  { code: 'man', name: 'Mandingo', nativeName: 'Mandingo', flag: '🇬🇳', desc: 'Langue Maninka — partiel', coverage: 25, default: false },
-  { code: 'ar', name: 'العربية', nativeName: 'العربية', flag: '🇸🇦', desc: 'Arabe — RTL — partiel', coverage: 60, default: false },
+  { code: 'fr', name: 'Français', nativeName: 'Français', flag: 'FR', desc: 'Langue officielle — complet', coverage: 100, default: true },
+  { code: 'en', name: 'English', nativeName: 'English', flag: 'EN', desc: 'International — complete', coverage: 100, default: false },
+  { code: 'ff', name: 'Fulfulde', nativeName: 'Fulfulde', flag: 'GN', desc: 'Langue locale Guinée — partiel', coverage: 45, default: false },
+  { code: 'sus', name: 'Sosoxui', nativeName: 'Sosoxui', flag: 'GN', desc: 'Langue Soussou — partiel', coverage: 30, default: false },
+  { code: 'man', name: 'Mandingo', nativeName: 'Mandingo', flag: 'GN', desc: 'Langue Maninka — partiel', coverage: 25, default: false },
+  { code: 'ar', name: 'العربية', nativeName: 'العربية', flag: 'SA', desc: 'Arabe — RTL — partiel', coverage: 60, default: false },
 ]
 
 const TRANSLATION_STATS = [
@@ -50,7 +50,7 @@ export function LanguagePage() {
       <Card className="p-5 bg-gradient-to-br from-[#27698a]/5 to-transparent">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="text-4xl">{LANGUAGES.find(l => l.code === selectedLang)?.flag}</div>
+            <div className="w-12 h-12 rounded-lg bg-[#27698a]/10 text-[#27698a] flex items-center justify-center text-base font-bold">{LANGUAGES.find(l => l.code === selectedLang)?.flag}</div>
             <div>
               <h2 className="font-semibold text-slate-900 text-lg">{LANGUAGES.find(l => l.code === selectedLang)?.nativeName}</h2>
               <p className="text-sm text-slate-500">{LANGUAGES.find(l => l.code === selectedLang)?.desc}</p>
@@ -71,7 +71,7 @@ export function LanguagePage() {
             <Card key={lang.code} className={`p-4 cursor-pointer transition-all ${selectedLang === lang.code ? 'ring-2 ring-[#27698a] bg-[#27698a]/5' : 'hover:bg-slate-50'}`} >
               <button onClick={() => { setSelectedLang(lang.code); toast.success(`Langue changée : ${lang.nativeName}`) }} className="w-full text-left">
                 <div className="flex items-start justify-between mb-2">
-                  <div className="text-3xl">{lang.flag}</div>
+                  <div className="w-10 h-10 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center text-sm font-bold">{lang.flag}</div>
                   {selectedLang === lang.code && <Check className="w-5 h-5 text-[#27698a]" />}
                 </div>
                 <h3 className="font-semibold text-slate-900 text-sm">{lang.nativeName}</h3>
@@ -160,7 +160,7 @@ export function LanguagePage() {
       </Card>
 
       <div className="p-3 rounded-lg bg-sky-50 border border-sky-200 text-xs text-sky-800">
-        🌍 <strong>Multi-langue :</strong> Le français et l'anglais sont entièrement supportés. Les langues locales guinéennes (Fulfulde, Soussou, Maninka) sont en cours de traduction communautaire. L'arabe (RTL) est partiellement disponible. La détection de langue se fait automatiquement selon les préférences du navigateur.
+        <Globe className="w-3.5 h-3.5 inline" /> <strong>Multi-langue :</strong> Le français et l'anglais sont entièrement supportés. Les langues locales guinéennes (Fulfulde, Soussou, Maninka) sont en cours de traduction communautaire. L'arabe (RTL) est partiellement disponible. La détection de langue se fait automatiquement selon les préférences du navigateur.
       </div>
     </div>
   )

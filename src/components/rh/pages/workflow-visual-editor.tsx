@@ -9,20 +9,20 @@ import 'reactflow/dist/style.css'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Workflow as WorkflowIcon, Save, Play, Loader2, Plus, Trash2, X, Download, Upload } from 'lucide-react'
+import { Workflow as WorkflowIcon, Save, Play, Loader2, Plus, Trash2, X, Download, Upload, FileText, ClipboardList, Globe, Sparkles, Key, Settings, Save as SaveIcon, Library } from 'lucide-react'
 import { toast } from 'sonner'
 
 // ━━━ Types de nœuds personnalisés ━━━
 
 const STEP_TYPES = [
-  { type: 'generate_document', label: '📝 Générer', color: '#27698a', icon: '📝' },
-  { type: 'summarize', label: '📋 Résumer', color: '#10b981', icon: '📋' },
-  { type: 'translate', label: '🌍 Traduire', color: '#0ea5e9', icon: '🌍' },
-  { type: 'improve', label: '✨ Améliorer', color: '#8b5cf6', icon: '✨' },
-  { type: 'extract_keywords', label: '🔑 Mots-clés', color: '#f59e0b', icon: '🔑' },
-  { type: 'custom', label: '⚙️ Custom', color: '#64748b', icon: '⚙️' },
-  { type: 'save_generation', label: '💾 Sauver', color: '#478e5e', icon: '💾' },
-  { type: 'index_in_rag', label: '📚 Indexer RAG', color: '#b94659', icon: '📚' },
+  { type: 'generate_document', label: 'Générer', color: '#27698a', icon: FileText },
+  { type: 'summarize', label: 'Résumer', color: '#10b981', icon: ClipboardList },
+  { type: 'translate', label: 'Traduire', color: '#0ea5e9', icon: Globe },
+  { type: 'improve', label: 'Améliorer', color: '#8b5cf6', icon: Sparkles },
+  { type: 'extract_keywords', label: 'Mots-clés', color: '#f59e0b', icon: Key },
+  { type: 'custom', label: 'Custom', color: '#64748b', icon: Settings },
+  { type: 'save_generation', label: 'Sauver', color: '#478e5e', icon: SaveIcon },
+  { type: 'index_in_rag', label: 'Indexer RAG', color: '#b94659', icon: Library },
 ]
 
 // ━━━ Nœud personnalisé ━━━
@@ -36,8 +36,8 @@ function WorkflowNode({ data, id }: NodeProps) {
     >
       <Handle type="target" position={Position.Left} style={{ background: stepType.color, width: 10, height: 10 }} />
       <div className="flex items-center gap-2">
-        <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0" style={{ backgroundColor: stepType.color + '15' }}>
-          {stepType.icon}
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm shrink-0" style={{ backgroundColor: stepType.color + '15', color: stepType.color }}>
+          {(() => { const Icon = stepType.icon; return <Icon className="w-4 h-4" /> })()}
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-xs font-semibold text-slate-900 truncate">{data.label}</div>
@@ -306,7 +306,7 @@ export function WorkflowVisualEditor() {
                   style={{ borderLeft: `3px solid ${st.color}` }}
                 >
                   <div className="flex items-center gap-1.5">
-                    <span className="text-sm">{st.icon}</span>
+                    <span className="text-sm inline-flex items-center">{(() => { const Icon = st.icon; return <Icon className="w-3.5 h-3.5" style={{ color: st.color }} /> })()}</span>
                     <span className="text-xs font-medium text-slate-700">{st.label}</span>
                   </div>
                 </div>
@@ -384,7 +384,7 @@ export function WorkflowVisualEditor() {
                 <div>
                   <label className="text-xs font-medium text-slate-700 mb-1 block">Type</label>
                   <select value={selectedNode.data.stepType} onChange={e => updateNodeData('stepType', e.target.value)} className="w-full px-2 py-1.5 rounded border border-slate-300 text-sm">
-                    {STEP_TYPES.map(st => <option key={st.type} value={st.type}>{st.icon} {st.label}</option>)}
+                    {STEP_TYPES.map(st => <option key={st.type} value={st.type}>{st.label}</option>)}
                   </select>
                 </div>
                 {['generate_document', 'custom', 'summarize', 'translate', 'extract_keywords'].includes(selectedNode.data.stepType) && (

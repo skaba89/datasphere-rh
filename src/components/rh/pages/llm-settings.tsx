@@ -127,7 +127,7 @@ export function LlmSettingsPage() {
                         <span className="text-sm font-semibold text-slate-900">{provider?.label || s.providerId}</span>
                         <Badge variant="outline" className="text-[9px] font-mono bg-slate-50">{s.modelId}</Badge>
                         {s.isDefault && <Badge variant="outline" className="text-[9px] bg-[#27698a]/10 text-[#27698a] border-[#27698a]/20"><Star className="w-2.5 h-2.5 mr-0.5" />Défaut</Badge>}
-                        {s.lastTestedAt && <Badge variant="outline" className={`text-[9px] ${s.lastTestOk ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>{s.lastTestOk ? '✓ OK' : '✗ Échec'}</Badge>}
+                        {s.lastTestedAt && <Badge variant="outline" className={`text-[9px] inline-flex items-center gap-1 ${s.lastTestOk ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>{s.lastTestOk ? <><Check className="w-2.5 h-2.5" /> OK</> : <><X className="w-2.5 h-2.5" /> Échec</>}</Badge>}
                       </div>
                       <div className="text-[11px] text-slate-500">Température : {s.temperature} · Max tokens : {s.maxTokens}</div>
                     </div>

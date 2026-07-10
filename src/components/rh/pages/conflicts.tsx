@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { AlertTriangle, Plus, Loader2, ShieldAlert, Users, DollarSign, Calendar, MessageSquare } from 'lucide-react'
+import { AlertTriangle, Plus, Loader2, ShieldAlert, Users, DollarSign, Calendar, MessageSquare, ShieldCheck } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDate } from '@/lib/utils-rh'
 
@@ -76,7 +76,7 @@ export function ConflictsPage() {
         {items.length === 0 && <Card className="p-8 text-center text-slate-400"><AlertTriangle className="w-12 h-12 mx-auto text-slate-300 mb-3" /><p>Aucun conflit signalé</p></Card>}
       </div>
       <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-800">
-        🛡️ <strong>Confidentialité :</strong> Les signalements de harcèlement et discrimination sont traités de manière strictement confidentielle. Seuls le RH et la Direction ont accès. Un canal anonyme est disponible via le Helpdesk.
+        <ShieldCheck className="w-3.5 h-3.5 inline" /> <strong>Confidentialité :</strong> Les signalements de harcèlement et discrimination sont traités de manière strictement confidentielle. Seuls le RH et la Direction ont accès. Un canal anonyme est disponible via le Helpdesk.
       </div>
       {wizardOpen && (
         <Dialog open onOpenChange={(v) => !v && setWizardOpen(false)}>

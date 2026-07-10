@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Calculator, FileText, TrendingUp, AlertCircle, Loader2 } from 'lucide-react'
+import { Calculator, FileText, TrendingUp, AlertCircle, Loader2, AlertTriangle } from 'lucide-react'
 import { formatGNF, calculatePayroll } from '@/lib/utils-rh'
 import { toast } from 'sonner'
 
@@ -229,7 +229,7 @@ function PayrollSimulator() {
 
         {plafondAtteint && (
           <div className="mb-4 p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-800">
-            ⚠️ Plafond CNSS atteint ({formatGNF(DEFAULT_PARAMS.plafondCnss)}) — cotisations plafonnées
+            <AlertTriangle className="w-3.5 h-3.5 inline" /> Plafond CNSS atteint ({formatGNF(DEFAULT_PARAMS.plafondCnss)}) — cotisations plafonnées
           </div>
         )}
 
@@ -423,7 +423,7 @@ function CnssParamsEditor() {
         <ParamCard label="Accident travail" value="2%" hint="Selon risque" />
       </div>
       <div className="mt-4 p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-800">
-        ⚠️ Toute modification crée une nouvelle version des paramètres avec date d'effet.
+        <AlertTriangle className="w-3.5 h-3.5 inline" /> Toute modification crée une nouvelle version des paramètres avec date d'effet.
         Les périodes déjà clôturées ne sont pas recalculées.
       </div>
     </Card>

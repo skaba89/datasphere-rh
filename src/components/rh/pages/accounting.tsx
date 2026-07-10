@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Calculator, Download, FileSpreadsheet, Check, X, RefreshCw, TrendingUp } from 'lucide-react'
+import { Calculator, Download, FileSpreadsheet, Check, X, RefreshCw, TrendingUp, Lightbulb } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatGNF } from '@/lib/utils-rh'
 
@@ -69,7 +69,7 @@ export function AccountingPage() {
       </Card>
 
       <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800">
-        💡 <strong>Conformité DGI Guinée :</strong> Les exports FEC sont conformes au format exigé par la Direction Générale des Impôts pour le contrôle fiscal. Le mapping des comptes est configurable dans Paramètres avancés &gt; Intégrations.
+        <Lightbulb className="w-3.5 h-3.5 inline" /> <strong>Conformité DGI Guinée :</strong> Les exports FEC sont conformes au format exigé par la Direction Générale des Impôts pour le contrôle fiscal. Le mapping des comptes est configurable dans Paramètres avancés &gt; Intégrations.
       </div>
     </div>
   )

@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Users, Heart, Brain, Globe, CheckCircle2, Clock, TrendingUp } from 'lucide-react'
+import { Users, Heart, Brain, Globe, CheckCircle2, Clock, TrendingUp, Check } from 'lucide-react'
 import { formatDate } from '@/lib/utils-rh'
 
 interface Data { kpis: any; initiatives: any[]; stats: any }
@@ -50,7 +50,7 @@ export function DiversityPage() {
             const status = STATUS_META[init.status] || STATUS_META.EN_COURS
             return (
               <div key={init.id} className="p-3 rounded-lg border border-slate-200">
-                <div className="flex items-start justify-between mb-2"><Badge variant="outline" className={cat.color + ' text-[10px]'}>{cat.label}</Badge><Badge variant="outline" className={`text-[10px] ${status.color}`}>{init.status === 'DEPLOYE' ? '✓ ' : ''}{status.label}</Badge></div>
+                <div className="flex items-start justify-between mb-2"><Badge variant="outline" className={cat.color + ' text-[10px]'}>{cat.label}</Badge><Badge variant="outline" className={`text-[10px] inline-flex items-center gap-1 ${status.color}`}>{init.status === 'DEPLOYE' && <Check className="w-3 h-3" />}{status.label}</Badge></div>
                 <h3 className="font-medium text-sm text-slate-900">{init.title}</h3><p className="text-xs text-slate-500 mt-1">{init.desc}</p>
                 <div className="mt-2"><div className="flex items-center justify-between text-xs mb-1"><span className="text-slate-400">Progression</span><span className="font-bold text-slate-700">{init.progress}%</span></div><div className="h-1.5 bg-slate-100 rounded-full overflow-hidden"><div className={`h-full rounded-full ${init.progress === 100 ? 'bg-emerald-500' : 'bg-[#27698a]'}`} style={{ width: `${init.progress}%` }} /></div></div>
                 <div className="text-xs text-slate-400 mt-2">Responsable : {init.owner} · Depuis {formatDate(init.date)}</div>

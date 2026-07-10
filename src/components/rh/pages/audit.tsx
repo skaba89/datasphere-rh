@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { ScrollText, Search, Download, Filter, User, FileEdit, CheckCircle2, Trash2, LogIn, Zap, RefreshCw, Ban, AlertTriangle, FileSignature, Boxes, Brain, Database } from 'lucide-react'
+import { ScrollText, Search, Download, Filter, User, FileEdit, CheckCircle2, Trash2, LogIn, Zap, RefreshCw, Ban, AlertTriangle, FileSignature, Boxes, Brain, Database, Link2 } from 'lucide-react'
 
 interface AuditLog {
   id: number
@@ -283,8 +283,8 @@ export function AuditPage() {
                         <span className="text-sm font-medium text-slate-900">{log.targetLabel || '—'}</span>
                         {log.targetId && <span className="text-xs font-mono text-slate-400 truncate">#{log.targetId.slice(-8)}</span>}
                         {log.txHash && (
-                          <span className="text-[10px] font-mono text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded">
-                            🔗 {log.txHash.slice(0, 10)}…{log.txHash.slice(-6)}
+                          <span className="text-[10px] font-mono text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded inline-flex items-center gap-1">
+                            <Link2 className="w-2.5 h-2.5" /> {log.txHash.slice(0, 10)}…{log.txHash.slice(-6)}
                           </span>
                         )}
                       </div>
@@ -423,7 +423,7 @@ export function AuditPage() {
       )}
 
       <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-800">
-        ⚠️ Le journal d'audit est <strong>immuable</strong> : aucune modification ni suppression n'est possible.
+        <AlertTriangle className="w-3.5 h-3.5 inline" /> Le journal d'audit est <strong>immuable</strong> : aucune modification ni suppression n'est possible.
         Rétention légale : 10 ans (Code du travail guinéen + RGPD).
       </div>
     </div>

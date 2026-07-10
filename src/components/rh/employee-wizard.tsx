@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { ChevronLeft, ChevronRight, Check, User, Briefcase, FileText, Phone, CheckCircle2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Check, User, Briefcase, FileText, Phone, CheckCircle2, Lightbulb, AlertTriangle } from 'lucide-react'
 import { formatGNF, CONTRACT_TYPES } from '@/lib/utils-rh'
 import { toast } from 'sonner'
 
@@ -185,7 +185,7 @@ export function EmployeeWizard({ onClose, onCreated }: EmployeeWizardProps) {
               <Field label="Téléphone" value={form.telephone} onChange={v => update('telephone', v)} placeholder="+224 622 000 000" />
               <Field label="Adresse" value={form.adresse} onChange={v => update('adresse', v)} placeholder="Hamdallaye, Conakry" />
               <div className="p-3 rounded-lg bg-sky-50 border border-sky-200 text-xs text-sky-800">
-                💡 Les informations de contact sont optionnelles mais recommandées pour le portail employé.
+                <Lightbulb className="w-3.5 h-3.5 inline" /> Les informations de contact sont optionnelles mais recommandées pour le portail employé.
               </div>
             </div>
           )}
@@ -257,7 +257,7 @@ export function EmployeeWizard({ onClose, onCreated }: EmployeeWizardProps) {
                 </div>
               </div>
               <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-800">
-                ⚠️ Vérifiez les informations avant validation. Un audit trail sera créé.
+                <AlertTriangle className="w-3.5 h-3.5 inline" /> Vérifiez les informations avant validation. Un audit trail sera créé.
               </div>
             </div>
           )}

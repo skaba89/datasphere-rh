@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Brain, AlertTriangle, TrendingUp, GraduationCap, ShieldAlert, DollarSign, UserCheck, Sparkles } from 'lucide-react'
+import { Brain, AlertTriangle, TrendingUp, GraduationCap, ShieldAlert, DollarSign, UserCheck, Sparkles, Lightbulb } from 'lucide-react'
 import { formatGNF } from '@/lib/utils-rh'
 
 interface Insight {
@@ -86,7 +86,7 @@ export function AIInsightsPage() {
                   <h3 className="font-semibold text-slate-900 text-sm">{insight.title}</h3>
                   <p className="text-xs text-slate-600 mt-1">{insight.description}</p>
                   <div className="mt-2 p-2 rounded bg-slate-50 text-xs text-slate-700">
-                    <span className="font-semibold text-[#27698a]">💡 Recommandation : </span>
+                    <span className="font-semibold text-[#27698a] inline-flex items-center gap-1"><Lightbulb className="w-3 h-3 inline" /> Recommandation : </span>
                     {insight.recommendation}
                   </div>
                 </div>

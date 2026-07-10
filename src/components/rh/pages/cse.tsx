@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Users, Calendar, Lightbulb, Heart, Vote, ThumbsUp } from 'lucide-react'
+import { Users, Calendar, Lightbulb, Heart, Vote, ThumbsUp, Check } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDate, formatGNF } from '@/lib/utils-rh'
 
@@ -53,7 +53,7 @@ export function CSEPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {data.suggestions.map((s: any) => (
             <Card key={s.id} className="p-4">
-              <div className="flex items-start justify-between mb-2"><Badge variant="outline" className="text-[10px]">{s.category}</Badge><Badge variant="outline" className={`text-[10px] ${s.status === 'RESOLU' ? 'bg-emerald-50 text-emerald-700' : s.status === 'EN_COURS' ? 'bg-amber-50 text-amber-700' : 'bg-slate-50 text-slate-500'}`}>{s.status === 'RESOLU' ? '✓ Résolu' : s.status === 'EN_COURS' ? 'En cours' : 'En attente'}</Badge></div>
+              <div className="flex items-start justify-between mb-2"><Badge variant="outline" className="text-[10px]">{s.category}</Badge><Badge variant="outline" className={`text-[10px] inline-flex items-center gap-1 ${s.status === 'RESOLU' ? 'bg-emerald-50 text-emerald-700' : s.status === 'EN_COURS' ? 'bg-amber-50 text-amber-700' : 'bg-slate-50 text-slate-500'}`}>{s.status === 'RESOLU' ? <><Check className="w-3 h-3" /> Résolu</> : s.status === 'EN_COURS' ? 'En cours' : 'En attente'}</Badge></div>
               <h3 className="font-semibold text-slate-900 text-sm">{s.title}</h3><p className="text-xs text-slate-500 mt-1">{s.desc}</p>
               <div className="flex items-center justify-between mt-3"><span className="text-xs text-slate-400">Par : {s.author}</span><Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => toast.success('Vote enregistré !')}><ThumbsUp className="w-3 h-3 mr-1" />{s.votes}</Button></div>
             </Card>

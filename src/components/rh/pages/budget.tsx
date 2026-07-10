@@ -75,7 +75,7 @@ export function BudgetPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <KpiCard icon={Wallet} label="Budget prévu 2026" value={formatGNF(data.totals.prevu)} color="#27698a" />
         <KpiCard icon={TrendingDown} label="Réalisé" value={formatGNF(data.totals.realise)} color="#478e5e" />
-        <KpiCard icon={ecartPct >= 0 ? TrendingUp : TrendingDown} label="Écart" value={formatGNF(Math.abs(data.totals.ecart))} color={ecartPct >= 0 ? '#478e5e' : '#b94659'} sub={`${ecartPct >= 0 ? '√' : '⚠'} ${Math.abs(ecartPct).toFixed(1)}%`} />
+        <KpiCard icon={ecartPct >= 0 ? TrendingUp : TrendingDown} label="Écart" value={formatGNF(Math.abs(data.totals.ecart))} color={ecartPct >= 0 ? '#478e5e' : '#b94659'} sub={`${ecartPct >= 0 ? '+' : '-'} ${Math.abs(ecartPct).toFixed(1)}%`} />
         <KpiCard icon={PieChart} label="Taux d'exécution" value={`${data.totals.prevu > 0 ? ((data.totals.realise / data.totals.prevu) * 100).toFixed(0) : 0}%`} color="#96783c" />
       </div>
 

@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
-import { Bell, Mail, MessageCircle, Smartphone, Send, CheckCircle2, Clock, XCircle, Loader2 } from 'lucide-react'
+import { Bell, Mail, MessageCircle, Smartphone, Send, CheckCircle2, Clock, XCircle, Loader2, Lightbulb } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDate } from '@/lib/utils-rh'
 
@@ -72,7 +72,7 @@ const TEMPLATES: Array<{ label: string; subject: string; message: string; type: 
   {
     label: 'Notification paie mensuelle',
     subject: '',
-    message: '🔔 Paie de Juillet 2026 traitée. Consultez votre bulletin sur le portail.',
+    message: 'Paie de Juillet 2026 traitée. Consultez votre bulletin sur le portail.',
     type: 'PAIE',
     channel: 'SMS',
   },
@@ -183,7 +183,7 @@ export function NotificationsPage() {
       </Card>
 
       <div className="p-3 rounded-lg bg-sky-50 border border-sky-200 text-xs text-sky-800">
-        💡 <strong>Intégrations disponibles :</strong> Twilio (WhatsApp Business + SMS), SendGrid (Email).
+        <Lightbulb className="w-3.5 h-3.5 inline" /> <strong>Intégrations disponibles :</strong> Twilio (WhatsApp Business + SMS), SendGrid (Email).
         En mode démo, les notifications sont simulées et stockées en base. En production, configurez les clés API dans .env.
       </div>
 

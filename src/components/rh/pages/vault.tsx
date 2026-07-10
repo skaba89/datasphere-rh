@@ -222,7 +222,7 @@ export function VaultPage() {
       </Card>
 
       <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs text-amber-800">
-        🔒 <strong>Sécurité du coffre-fort :</strong> Tous les documents sont chiffrés en AES-256 au repos.
+        <Lock className="w-3.5 h-3.5 inline" /> <strong>Sécurité du coffre-fort :</strong> Tous les documents sont chiffrés en AES-256 au repos.
         Rétention légale 10 ans (Code du travail guinéen + RGPD).
         Accès tracé dans le journal d'audit.
       </div>

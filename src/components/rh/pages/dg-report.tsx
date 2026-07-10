@@ -238,7 +238,7 @@ export function DGReportPage() {
             <IndicatorRow
               label="Turn-over annuel"
               value={`${kpis.turnover}%`}
-              sub={kpis.turnover < 5 ? '✓ Sous la moyenne' : '⚠ Au-dessus de la moyenne'}
+              sub={kpis.turnover < 5 ? 'Sous la moyenne' : 'Au-dessus de la moyenne'}
               color={kpis.turnover < 5 ? 'text-[#478e5e]' : 'text-[#b94659]'}
             />
             <IndicatorRow

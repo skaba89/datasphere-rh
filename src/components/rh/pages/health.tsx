@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Heart, Plus, Loader2, Stethoscope, Syringe, Bed, Ergonomics, Activity, Calendar, CheckCircle2, Clock } from 'lucide-react'
+import { Heart, Plus, Loader2, Stethoscope, Syringe, Bed, Ergonomics, Activity, Calendar, CheckCircle2, Clock, AlertTriangle } from 'lucide-react'
 import { toast } from 'sonner'
 import { formatDate } from '@/lib/utils-rh'
 
@@ -78,7 +78,7 @@ export function HealthPage() {
                 {item.result && <div className="p-1.5 rounded bg-slate-50 text-slate-700"><b>Résultat :</b> {item.result}</div>}
                 {item.notes && <div className="text-slate-500 italic">{item.notes}</div>}
               </div>
-              {isOverdue && <div className="mt-2 p-1.5 rounded bg-red-50 text-xs text-red-700 font-medium">⚠ En retard — planifier urgemment</div>}
+              {isOverdue && <div className="mt-2 p-1.5 rounded bg-red-50 text-xs text-red-700 font-medium flex items-center gap-1"><AlertTriangle className="w-3 h-3" /> En retard — planifier urgemment</div>}
             </Card>
           )
         })}
