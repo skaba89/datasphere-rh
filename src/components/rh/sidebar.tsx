@@ -5,7 +5,7 @@ import {
   LayoutDashboard, LayoutGrid, Users, Calculator, CalendarDays, Settings, ScrollText,
   Briefcase, Sparkles, BarChart3, Lock, Award, Network, Bell, Download,
   User, Clock, GraduationCap, PenTool, Wallet, ClipboardList, Activity,
-  FileText, Smile, Brain, ShieldCheck, Receipt, MessageSquare, Compass, Lightbulb, MapPinned, TrendingUp, Settings2, Heart, RefreshCw, Megaphone, LifeBuoy, Calendar, Globe, Trophy, Gift, HandCoins, CalendarClock, Package, AlertTriangle, Zap, FolderKanban, GitBranch, Bot, ShieldAlert, Users2, HeartHandshake, Leaf, AlertOctagon, Plane, FileSignature, Database, Boxes, Loader2
+  FileText, Smile, Brain, ShieldCheck, Receipt, MessageSquare, Compass, Lightbulb, MapPinned, TrendingUp, Settings2, Heart, RefreshCw, Megaphone, LifeBuoy, Calendar, Globe, Trophy, Gift, HandCoins, CalendarClock, Package, AlertTriangle, Zap, FolderKanban, GitBranch, Bot, ShieldAlert, Users2, HeartHandshake, Leaf, AlertOctagon, Plane, FileSignature, Database, Boxes, Loader2, ChevronDown, ChevronRight
 } from 'lucide-react'
 import type { PageKey } from '@/app/page'
 
@@ -214,39 +214,89 @@ function SidebarContent({
   current: PageKey
   onNavigate: (page: PageKey) => void
 }) {
+  // Trouver la catégorie de la page active pour la déplier par défaut
+  const activeSection = sections.find(s => s.items.some(i => i.key === current))
+  const [openSections, setOpenSections] = useState<Set<string>>(
+    new Set(activeSection ? [activeSection.title] : [])
+  )
+
+  // Mettre à jour la section ouverte quand la page change
+  useEffect(() => {
+    if (activeSection) {
+      setOpenSections(prev => {
+        const next = new Set(prev)
+        next.add(activeSection.title)
+        return next
+      })
+    }
+  }, [current])
+
+  const toggleSection = (title: string) => {
+    setOpenSections(prev => {
+      const next = new Set(prev)
+      if (next.has(title)) {
+        next.delete(title)
+      } else {
+        next.add(title)
+      }
+      return next
+    })
+  }
+
   return (
     <>
-      <nav className="flex-1 p-3 lg:p-4 space-y-4 overflow-y-auto">
-        {sections.map(section => (
-          <div key={section.title}>
-            <div className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold px-3 mb-2">
-              {section.title}
+      <nav className="flex-1 p-2 lg:p-3 space-y-1 overflow-y-auto">
+        {sections.map(section => {
+          const isOpen = openSections.has(section.title)
+          const hasActive = section.items.some(i => i.key === current)
+          return (
+            <div key={section.title}>
+              <button
+                onClick={() => toggleSection(section.title)}
+                className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors ${
+                  hasActive
+                    ? 'text-[#27698a] bg-[#27698a]/5'
+                    : 'text-slate-500 hover:bg-slate-100 hover:text-slate-700'
+                }`}
+              >
+                <span className="flex-1 text-left">{section.title}</span>
+                <span className="text-[10px] text-slate-400 font-mono">
+                  {section.items.length}
+                </span>
+                {isOpen ? (
+                  <ChevronDown className="w-3.5 h-3.5 shrink-0" />
+                ) : (
+                  <ChevronRight className="w-3.5 h-3.5 shrink-0" />
+                )}
+              </button>
+              {isOpen && (
+                <div className="space-y-0.5 mt-0.5 mb-2">
+                  {section.items.map(item => (
+                    <button
+                      key={item.key}
+                      onClick={() => onNavigate(item.key)}
+                      className={`w-full flex items-center gap-3 pl-6 pr-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                        current === item.key
+                          ? 'bg-[#27698a] text-white shadow-sm'
+                          : 'text-slate-700 hover:bg-slate-100'
+                      }`}
+                    >
+                      <item.icon className="w-4 h-4 shrink-0" />
+                      <span className="flex-1 text-left truncate">{item.label}</span>
+                      {item.badge && (
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
+                          current === item.key ? 'bg-white text-[#27698a]' : 'bg-amber-100 text-amber-700'
+                        }`}>
+                          {item.badge}
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-            <div className="space-y-1">
-              {section.items.map(item => (
-                <button
-                  key={item.key}
-                  onClick={() => onNavigate(item.key)}
-                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    current === item.key
-                      ? 'bg-[#27698a] text-white shadow-sm'
-                      : 'text-slate-700 hover:bg-slate-100'
-                  }`}
-                >
-                  <item.icon className="w-4 h-4 shrink-0" />
-                  <span className="flex-1 text-left">{item.label}</span>
-                  {item.badge && (
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
-                      current === item.key ? 'bg-white text-[#27698a]' : 'bg-amber-100 text-amber-700'
-                    }`}>
-                      {item.badge}
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </nav>
 
       <div className="p-3 lg:p-4 border-t border-slate-200">
