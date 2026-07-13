@@ -12,7 +12,7 @@ import { parseEnabledModules } from '@/lib/modules-catalog'
  */
 export async function GET(request: Request) {
   try {
-    const user = getUserFromRequest(request)
+    const user = await getUserFromRequest(request)
 
     let company = null
     if (user?.companyId) {

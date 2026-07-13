@@ -9,7 +9,7 @@ import { checkPermission } from '@/lib/advanced/auth-helpers'
 export async function POST(request: Request) {
   try {
     // Vérification permission
-    const denied = checkPermission(request, 'certificate.revoke')
+    const denied = await checkPermission(request, 'certificate.revoke')
     if (denied) return denied
 
     const body = await request.json()

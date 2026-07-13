@@ -74,7 +74,8 @@ import { LoginModal } from '@/components/rh/login-modal'
 import { CompanySelector } from '@/components/rh/company-selector'
 import { EmployeeDetailModal } from '@/components/rh/employee-detail'
 import { ImportModal } from '@/components/rh/import-modal'
-import { LogOut, LogIn, Upload, Users, Wallet, CalendarDays, FileText, Target, BarChart3, GraduationCap, Bot, ShieldCheck, ClipboardList, Menu } from 'lucide-react'
+import { FiscalReportsPage } from '@/components/rh/pages/fiscal-reports'
+import { LogOut, LogIn, Upload, Users, Wallet, CalendarDays, FileText, Target, BarChart3, GraduationCap, Bot, ShieldCheck, ClipboardList, Menu, Building2, CheckCircle2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface AuthUser {
@@ -85,7 +86,7 @@ interface AuthUser {
   companyId: string | null
 }
 
-export type PageKey = 'dashboard' | 'pilotage' | 'customdash' | 'calendar' | 'employees' | 'payroll' | 'leaves' | 'recruitment' | 'joboffers' | 'evaluations' | 'orgchart' | 'ai' | 'reports' | 'analytics' | 'vault' | 'signature' | 'notifications' | 'exports' | 'portal' | 'time' | 'training' | 'budget' | 'onboarding' | 'satisfaction' | 'skills' | 'compliance' | 'expenses' | 'interviews' | 'career' | 'contractors' | 'ai-insights' | 'geo' | 'forecasts' | 'health' | 'feedback360' | 'announcements' | 'helpdesk' | 'wellness' | 'language' | 'benefits' | 'loans' | 'shifts' | 'equipment' | 'accounting' | 'conflicts' | 'custom-reports' | 'webhooks' | 'referential' | 'gamification' | 'rh-projects' | 'doc-traceability' | 'chatbot' | 'risks' | 'mentoring' | 'cse' | 'diversity' | 'crisis' | 'international' | 'rse' | 'contracts-mgmt' | 'predictive' | 'data-governance' | 'blockchain' | 'advsettings' | 'settings' | 'audit'
+export type PageKey = 'dashboard' | 'pilotage' | 'customdash' | 'calendar' | 'employees' | 'payroll' | 'leaves' | 'recruitment' | 'joboffers' | 'evaluations' | 'orgchart' | 'ai' | 'reports' | 'analytics' | 'vault' | 'signature' | 'notifications' | 'exports' | 'portal' | 'time' | 'training' | 'budget' | 'onboarding' | 'satisfaction' | 'skills' | 'compliance' | 'expenses' | 'interviews' | 'career' | 'contractors' | 'ai-insights' | 'geo' | 'forecasts' | 'health' | 'feedback360' | 'announcements' | 'helpdesk' | 'wellness' | 'language' | 'benefits' | 'loans' | 'shifts' | 'equipment' | 'accounting' | 'conflicts' | 'custom-reports' | 'webhooks' | 'referential' | 'gamification' | 'rh-projects' | 'doc-traceability' | 'chatbot' | 'risks' | 'mentoring' | 'cse' | 'diversity' | 'crisis' | 'international' | 'rse' | 'contracts-mgmt' | 'predictive' | 'data-governance' | 'blockchain' | 'advsettings' | 'settings' | 'audit' | 'fiscal-reports'
 
 export default function Home() {
   const [page, setPage] = useState<PageKey>('dashboard')
@@ -249,17 +250,163 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Target audience section */}
+        <section id="audience" className="px-4 lg:px-6 py-16 bg-slate-50 border-t border-slate-100">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 text-center mb-12">
+              Conçu pour les entreprises guinéennes
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                { icon: Users, title: 'PME', desc: '5 à 50 employés', detail: 'Gestion simple et abordable : paie, congés, contrats' },
+                { icon: Building2, title: 'Sociétés de services', desc: '50 à 200 employés', detail: 'Multi-sociétés, recrutement, formations, analytics' },
+                { icon: Wallet, title: 'Commerces & Distribution', desc: '10 à 100 employés', detail: 'Pointage, planning, notes de frais' },
+                { icon: Users, title: 'ONG & Organisations', desc: '20 à 500 employés', detail: 'Multi-projets, conformité, reporting avancé' },
+              ].map(a => {
+                const Icon = a.icon
+                return (
+                  <div key={a.title} className="p-5 rounded-xl bg-white border border-slate-200 text-center">
+                    <div className="w-12 h-12 rounded-xl bg-[#27698a]/10 text-[#27698a] flex items-center justify-center mx-auto mb-3">
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <h3 className="font-semibold text-slate-900">{a.title}</h3>
+                    <p className="text-xs text-[#27698a] font-medium mt-0.5">{a.desc}</p>
+                    <p className="text-sm text-slate-600 mt-2">{a.detail}</p>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* Pricing section */}
+        <section id="pricing" className="px-4 lg:px-6 py-16 bg-white border-t border-slate-100">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 text-center mb-4">
+              Des tarifs adaptés au marché guinéen
+            </h2>
+            <p className="text-center text-slate-600 mb-12 max-w-2xl mx-auto">
+              Vous ne payez que pour les modules que vous utilisez. Tarifs en GNF, sans engagement.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                {
+                  name: 'Starter',
+                  price: '150 000',
+                  period: 'GNF / mois',
+                  target: 'Moins de 10 employés',
+                  features: ['5 modules essentiels', 'Paie & CNSS conforme', 'Congés & absences', 'Support email'],
+                  cta: 'Démarrer',
+                  highlighted: false,
+                },
+                {
+                  name: 'Business',
+                  price: '750 000',
+                  period: 'GNF / mois',
+                  target: '10 à 50 employés',
+                  features: ['20 modules', 'Recrutement & formations', 'Rapports fiscaux', 'Multi-sociétés', 'Support prioritaire'],
+                  cta: 'Essai gratuit',
+                  highlighted: true,
+                },
+                {
+                  name: 'Enterprise',
+                  price: 'Sur devis',
+                  period: '',
+                  target: '50+ employés',
+                  features: ['Tous les 70+ modules', 'IA prédictive & blockchain', 'SSO & sécurité avancée', 'Support 24/7', 'Formation incluse'],
+                  cta: 'Nous contacter',
+                  highlighted: false,
+                },
+              ].map(plan => (
+                <div
+                  key={plan.name}
+                  className={`p-6 rounded-2xl border-2 ${
+                    plan.highlighted
+                      ? 'border-[#27698a] bg-[#27698a]/5 relative'
+                      : 'border-slate-200 bg-white'
+                  }`}
+                >
+                  {plan.highlighted && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#27698a] text-white text-[10px] font-bold px-3 py-1 rounded-full">
+                      POPULAIRE
+                    </div>
+                  )}
+                  <h3 className="font-bold text-slate-900 text-lg">{plan.name}</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">{plan.target}</p>
+                  <div className="mt-4 mb-4">
+                    <span className="text-3xl font-bold text-slate-900">{plan.price}</span>
+                    {plan.period && <span className="text-sm text-slate-500 ml-1">{plan.period}</span>}
+                  </div>
+                  <ul className="space-y-2 mb-6">
+                    {plan.features.map(feat => (
+                      <li key={feat} className="flex items-start gap-2 text-sm text-slate-700">
+                        <CheckCircle2 className="w-4 h-4 text-[#478e5e] mt-0.5 shrink-0" />
+                        <span>{feat}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    onClick={() => setLoginOpen(true)}
+                    className={`w-full py-2.5 rounded-lg font-medium text-sm transition-colors ${
+                      plan.highlighted
+                        ? 'bg-[#27698a] hover:bg-[#1f5570] text-white'
+                        : 'bg-slate-100 hover:bg-slate-200 text-slate-900'
+                    }`}
+                  >
+                    {plan.cta}
+                  </button>
+                </div>
+              ))}
+            </div>
+            <p className="text-center text-xs text-slate-500 mt-8">
+              Tous les tarifs incluent : hébergement sécurisé, mises à jour, sauvegardes quotidiennes.
+              <br />Conformité CNSS, ITS, Code du travail guinéen (Loi L/2014/072/AN).
+            </p>
+          </div>
+        </section>
+
+        {/* Demo CTA section */}
+        <section className="px-4 lg:px-6 py-16 bg-gradient-to-br from-[#27698a] to-[#435862] text-white">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-2xl lg:text-3xl font-bold mb-4">
+              Prêt à découvrir DataSphere RH ?
+            </h2>
+            <p className="text-white/80 mb-8 max-w-xl mx-auto">
+              Connectez-vous à la démo avec des données réelles (24 employés, 2 sociétés, paie CNSS conforme)
+              et explorez les 70+ modules disponibles.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <button
+                onClick={() => setLoginOpen(true)}
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-white text-[#27698a] rounded-lg font-medium hover:bg-slate-100 transition-colors"
+              >
+                <LogIn className="w-4 h-4" />
+                Accéder à la démonstration
+              </button>
+              <div className="text-xs text-white/70 bg-white/10 px-4 py-2 rounded-lg">
+                Démo : <code className="font-mono">admin@datasphere.gn</code> / <code className="font-mono">demo123</code>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Footer */}
-        <footer className="bg-slate-900 text-slate-400 px-4 lg:px-6 py-8 text-center text-xs">
+        <footer className="bg-slate-900 text-slate-400 px-4 lg:px-6 py-10 text-center text-xs">
           <div className="max-w-4xl mx-auto">
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <div className="w-6 h-6 rounded bg-gradient-to-br from-[#27698a] to-[#435862] flex items-center justify-center text-white font-bold text-[10px]">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <div className="w-7 h-7 rounded bg-gradient-to-br from-[#27698a] to-[#435862] flex items-center justify-center text-white font-bold text-xs">
                 DS
               </div>
-              <span className="font-semibold text-white">DataSphere RH Guinée</span>
+              <span className="font-semibold text-white text-sm">DataSphere RH Guinée</span>
             </div>
-            <p>© 2026 DataSphere RH · Conakry · République de Guinée</p>
-            <p className="mt-1 text-slate-500">SIRH Premium SaaS — Conforme au Code du travail (Loi L/2014/072/AN)</p>
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mb-4">
+              <a href="#features" className="hover:text-white transition-colors">Fonctionnalités</a>
+              <a href="#audience" className="hover:text-white transition-colors">Cible</a>
+              <a href="#pricing" className="hover:text-white transition-colors">Tarifs</a>
+              <button onClick={() => setLoginOpen(true)} className="hover:text-white transition-colors">Démo</button>
+            </div>
+            <p className="text-slate-500">© 2026 DataSphere RH · Conakry · République de Guinée</p>
+            <p className="mt-1 text-slate-600">SIRH Premium SaaS — Conforme au Code du travail (Loi L/2014/072/AN), CNSS, ITS</p>
           </div>
         </footer>
 
@@ -436,6 +583,7 @@ export default function Home() {
           {page === 'pilotage' && <PilotagePage onNavigate={(p) => setPage(p as PageKey)} />}
           {page === 'settings' && <SettingsPage />}
           {page === 'audit' && <AuditPage />}
+          {page === 'fiscal-reports' && <FiscalReportsPage />}
         </main>
       </div>
 

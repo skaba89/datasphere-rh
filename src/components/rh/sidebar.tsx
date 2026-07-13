@@ -117,6 +117,7 @@ const NAV_SECTIONS: NavSection[] = [
     title: 'Administration',
     items: [
       { key: 'audit', label: "Journal d'audit", icon: ScrollText },
+      { key: 'fiscal-reports', label: 'Rapports fiscaux', icon: FileText },
       { key: 'data-governance', label: 'Gouvernance données', icon: Database },
       { key: 'advsettings', label: 'Paramètres avancés', icon: Settings2 },
       { key: 'settings', label: 'Paramètres', icon: Settings },

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '@/app/api/auth/login/route'
+import { getSession, getTokenFromRequest } from '@/lib/session'
 import { can, type Permission } from './rbac'
 import { db } from '@/lib/db'
 
@@ -12,13 +12,13 @@ export interface RequestUser {
 }
 
 /**
- * Récupère l'utilisateur depuis le cookie de session.
+ * Récupère l'utilisateur depuis la session en base de données.
  * Retourne null si non authentifié (mode démo ou accès public).
  */
-export function getUserFromRequest(request: Request): RequestUser | null {
-  const token = request.cookies.get('dsrh-session')?.value
+export async function getUserFromRequest(request: Request): Promise<RequestUser | null> {
+  const token = getTokenFromRequest(request)
   if (!token) return null
-  const session = getSession(token)
+  const session = await getSession(token)
   if (!session) return null
   return {
     userId: session.userId,
@@ -36,8 +36,8 @@ export function getUserFromRequest(request: Request): RequestUser | null {
  *
  * Retourne null si autorisé, sinon une NextResponse d'erreur 403.
  */
-export function checkPermission(request: Request, permission: Permission): NextResponse | null {
-  const user = getUserFromRequest(request)
+export async function checkPermission(request: Request, permission: Permission): Promise<NextResponse | null> {
+  const user = await getUserFromRequest(request)
   if (!user) return null // mode démo
   if (can(user.role, permission)) return null
   return NextResponse.json(
@@ -57,7 +57,7 @@ export async function getCompanyContext(request: Request): Promise<
   | { companyId: string; user: RequestUser | null; error?: undefined }
   | { error: NextResponse; companyId?: undefined; user?: undefined }
 > {
-  const user = getUserFromRequest(request)
+  const user = await getUserFromRequest(request)
 
   // Si l'utilisateur est authentifié et a une société, l'utiliser
   if (user?.companyId) {

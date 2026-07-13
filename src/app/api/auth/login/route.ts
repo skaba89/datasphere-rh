@@ -1,22 +1,10 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import bcrypt from 'bcryptjs'
-import crypto from 'crypto'
+import { createSession, SESSION_COOKIE, SESSION_DURATION_MS } from '@/lib/session'
 
-// Simple session store (in-memory for dev; in production use Redis)
-const sessions = new Map<string, { userId: string; email: string; name: string; role: string; companyId: string | null; createdAt: number }>()
-
-// Export pour réutilisation
-export function getSession(token: string) {
-  const session = sessions.get(token)
-  if (!session) return null
-  // Expiration 24h
-  if (Date.now() - session.createdAt > 24 * 60 * 60 * 1000) {
-    sessions.delete(token)
-    return null
-  }
-  return session
-}
+// Re-export getSession pour rétrocompatibilité (autres fichiers l'importent depuis ici)
+export { getSession } from '@/lib/session'
 
 export async function POST(request: Request) {
   try {
@@ -57,16 +45,17 @@ export async function POST(request: Request) {
       },
     })
 
-    // Create session token
-    const token = crypto.randomBytes(32).toString('hex')
-    sessions.set(token, {
-      userId: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role,
-      companyId: user.companyId,
-      createdAt: Date.now(),
-    })
+    // Créer la session en base de données
+    const token = await createSession(
+      {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        companyId: user.companyId,
+      },
+      request
+    )
 
     const response = NextResponse.json({
       success: true,
@@ -80,12 +69,13 @@ export async function POST(request: Request) {
       },
     })
 
-    // Cookie HTTP-only
-    response.cookies.set('dsrh-session', token, {
+    // Cookie HTTP-only — secure en production
+    const isProduction = process.env.NODE_ENV === 'production'
+    response.cookies.set(SESSION_COOKIE, token, {
       httpOnly: true,
-      secure: false, // dev only — true in production
+      secure: isProduction,
       sameSite: 'lax',
-      maxAge: 24 * 60 * 60, // 24h
+      maxAge: SESSION_DURATION_MS / 1000, // 24h (en secondes)
       path: '/',
     })
 

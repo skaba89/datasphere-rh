@@ -1,14 +1,17 @@
 import { NextResponse } from 'next/server'
-import { getSession } from '../login/route'
+import { getSession, getTokenFromRequest, SESSION_COOKIE } from '@/lib/session'
 
 export async function GET(request: Request) {
-  const token = request.cookies.get('dsrh-session')?.value
+  const token = getTokenFromRequest(request)
   if (!token) {
     return NextResponse.json({ user: null })
   }
-  const session = getSession(token)
+  const session = await getSession(token)
   if (!session) {
-    return NextResponse.json({ user: null })
+    const response = NextResponse.json({ user: null })
+    // Effacer le cookie invalide
+    response.cookies.delete(SESSION_COOKIE)
+    return response
   }
   return NextResponse.json({
     user: {

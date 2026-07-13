@@ -229,6 +229,28 @@ model User {
   updatedAt     DateTime @updatedAt
 
   company       Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  sessions      Session[]
+}
+
+model Session {
+  id          String   @id @default(cuid())
+  token       String   @unique
+  userId      String
+  userEmail   String
+  userName    String
+  userRole    String
+  companyId   String?
+  ipAdress    String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+  revokedAt   DateTime?
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
+  @@index([expiresAt])
 }
 
 // ━━━ Module Recrutement & Onboarding ━━━

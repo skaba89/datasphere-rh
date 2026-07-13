@@ -9,7 +9,7 @@ import { checkPermission } from '@/lib/advanced/auth-helpers'
 export async function POST(request: Request) {
   try {
     // Vérification permission
-    const denied = checkPermission(request, 'model.train')
+    const denied = await checkPermission(request, 'model.train')
     if (denied) return denied
 
     const company = await db.company.findFirst()
