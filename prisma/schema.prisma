@@ -59,6 +59,8 @@ model Company {
   advancedAuditLogs AdvancedAuditLog[]
   webhookConfigs  WebhookConfig[]
   webhookDeliveries WebhookDelivery[]
+  dataConsents    DataConsent[]
+  dataRequests    DataRequest[]
 }
 
 model Employee {
@@ -1028,4 +1030,42 @@ model WebhookDelivery {
 
   company       Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   webhookConfig WebhookConfig @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+}
+
+// ━━━ RGPD / Protection des données (Loi L/2019/010/AN Guinée) ━━━
+
+model DataConsent {
+  id          String   @id @default(cuid())
+  companyId   String
+  employeeId  String?
+  consentType String   // PROCESSING | MARKETING | TRANSFER | ANALYTICS | BIOMETRIC
+  granted     Boolean
+  grantedAt   DateTime?
+  withdrawnAt DateTime?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([employeeId])
+}
+
+model DataRequest {
+  id          String   @id @default(cuid())
+  companyId   String
+  employeeId  String?
+  requestType String   // ACCESS | RECTIFICATION | ERASURE | PORTABILITY | OBJECTION
+  status      String   @default("PENDING") // PENDING | IN_PROGRESS | COMPLETED | REFUSED
+  details     String?
+  response    String?  // réponse du DPO
+  treatedBy   String?
+  treatedAt   DateTime?
+  createdAt   DateTime @default(now())
+
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([status])
 }
