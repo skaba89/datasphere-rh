@@ -242,7 +242,7 @@ model Session {
   userName    String
   userRole    String
   companyId   String?
-  ipAdress    String?
+  ipAddress   String?
   userAgent   String?
   createdAt   DateTime @default(now())
   expiresAt   DateTime
