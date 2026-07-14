@@ -75,6 +75,7 @@ import { CompanySelector } from '@/components/rh/company-selector'
 import { EmployeeDetailModal } from '@/components/rh/employee-detail'
 import { ImportModal } from '@/components/rh/import-modal'
 import { FiscalReportsPage } from '@/components/rh/pages/fiscal-reports'
+import { HelpPage } from '@/components/rh/pages/help'
 import { LogOut, LogIn, Upload, Users, Wallet, CalendarDays, FileText, Target, BarChart3, GraduationCap, Bot, ShieldCheck, ClipboardList, Menu, Building2, CheckCircle2 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -86,7 +87,7 @@ interface AuthUser {
   companyId: string | null
 }
 
-export type PageKey = 'dashboard' | 'pilotage' | 'customdash' | 'calendar' | 'employees' | 'payroll' | 'leaves' | 'recruitment' | 'joboffers' | 'evaluations' | 'orgchart' | 'ai' | 'reports' | 'analytics' | 'vault' | 'signature' | 'notifications' | 'exports' | 'portal' | 'time' | 'training' | 'budget' | 'onboarding' | 'satisfaction' | 'skills' | 'compliance' | 'expenses' | 'interviews' | 'career' | 'contractors' | 'ai-insights' | 'geo' | 'forecasts' | 'health' | 'feedback360' | 'announcements' | 'helpdesk' | 'wellness' | 'language' | 'benefits' | 'loans' | 'shifts' | 'equipment' | 'accounting' | 'conflicts' | 'custom-reports' | 'webhooks' | 'referential' | 'gamification' | 'rh-projects' | 'doc-traceability' | 'chatbot' | 'risks' | 'mentoring' | 'cse' | 'diversity' | 'crisis' | 'international' | 'rse' | 'contracts-mgmt' | 'predictive' | 'data-governance' | 'blockchain' | 'advsettings' | 'settings' | 'audit' | 'fiscal-reports'
+export type PageKey = 'dashboard' | 'pilotage' | 'customdash' | 'calendar' | 'employees' | 'payroll' | 'leaves' | 'recruitment' | 'joboffers' | 'evaluations' | 'orgchart' | 'ai' | 'reports' | 'analytics' | 'vault' | 'signature' | 'notifications' | 'exports' | 'portal' | 'time' | 'training' | 'budget' | 'onboarding' | 'satisfaction' | 'skills' | 'compliance' | 'expenses' | 'interviews' | 'career' | 'contractors' | 'ai-insights' | 'geo' | 'forecasts' | 'health' | 'feedback360' | 'announcements' | 'helpdesk' | 'wellness' | 'language' | 'benefits' | 'loans' | 'shifts' | 'equipment' | 'accounting' | 'conflicts' | 'custom-reports' | 'webhooks' | 'referential' | 'gamification' | 'rh-projects' | 'doc-traceability' | 'chatbot' | 'risks' | 'mentoring' | 'cse' | 'diversity' | 'crisis' | 'international' | 'rse' | 'contracts-mgmt' | 'predictive' | 'data-governance' | 'blockchain' | 'advsettings' | 'settings' | 'audit' | 'fiscal-reports' | 'help'
 
 export default function Home() {
   const [page, setPage] = useState<PageKey>('dashboard')
@@ -584,6 +585,7 @@ export default function Home() {
           {page === 'settings' && <SettingsPage />}
           {page === 'audit' && <AuditPage />}
           {page === 'fiscal-reports' && <FiscalReportsPage />}
+          {page === 'help' && <HelpPage />}
         </main>
       </div>
 

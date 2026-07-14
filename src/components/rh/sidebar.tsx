@@ -121,6 +121,7 @@ const NAV_SECTIONS: NavSection[] = [
       { key: 'data-governance', label: 'Gouvernance données', icon: Database },
       { key: 'advsettings', label: 'Paramètres avancés', icon: Settings2 },
       { key: 'settings', label: 'Paramètres', icon: Settings },
+      { key: 'help', label: 'Aide & Support', icon: LifeBuoy },
     ],
   },
 ]
