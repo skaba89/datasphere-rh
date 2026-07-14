@@ -76,7 +76,7 @@ import { EmployeeDetailModal } from '@/components/rh/employee-detail'
 import { ImportModal } from '@/components/rh/import-modal'
 import { FiscalReportsPage } from '@/components/rh/pages/fiscal-reports'
 import { HelpPage } from '@/components/rh/pages/help'
-import { LogOut, LogIn, Upload, Users, Wallet, CalendarDays, FileText, Target, BarChart3, GraduationCap, Bot, ShieldCheck, ClipboardList, Menu, Building2, CheckCircle2 } from 'lucide-react'
+import { LogOut, LogIn, Upload, Users, Wallet, CalendarDays, FileText, Target, BarChart3, GraduationCap, Bot, ShieldCheck, ClipboardList, Menu, Building2, CheckCircle2, Calculator } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface AuthUser {
@@ -217,6 +217,107 @@ export default function Home() {
             </div>
           </div>
         </main>
+
+        {/* Product preview section */}
+        <section id="preview" className="px-4 lg:px-6 py-16 bg-slate-900 text-white">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl lg:text-3xl font-bold text-center mb-4">
+              Un aperçu de la plateforme
+            </h2>
+            <p className="text-center text-slate-400 mb-12 max-w-2xl mx-auto">
+              Découvrez l'interface intuitive de DataSphere RH — pensée pour les équipes RH guinéennes
+            </p>
+
+            {/* Mockup 1: Dashboard */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-8 h-8 rounded-lg bg-[#27698a] flex items-center justify-center">
+                    <ClipboardList className="w-4 h-4 text-white" />
+                  </div>
+                  <h3 className="font-semibold text-lg">Tableau de bord RH</h3>
+                </div>
+                <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+                  Vue d'ensemble en temps réel : effectif, masse salariale, congés en attente,
+                  alertes RH. KPIs adaptés au contexte guinéen (CNSS, ITS, GNF).
+                </p>
+                <ul className="space-y-2 text-sm text-slate-300">
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#478e5e]" /> 25 employés, 72,5M GNF masse salariale</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#478e5e]" /> Alertes automatiques (congés, CDD)</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#478e5e]" /> Répartition CDI/CDD/Stage</li>
+                </ul>
+              </div>
+              {/* Visual mockup */}
+              <div className="bg-slate-800 rounded-xl p-4 border border-slate-700 shadow-2xl">
+                <div className="flex items-center gap-2 mb-3 pb-3 border-b border-slate-700">
+                  <div className="w-6 h-6 rounded bg-[#27698a] flex items-center justify-center text-white text-[10px] font-bold">DS</div>
+                  <span className="text-xs text-slate-400">Tableau de bord</span>
+                  <span className="ml-auto text-[10px] text-emerald-400">● En ligne</span>
+                </div>
+                <div className="grid grid-cols-2 gap-2 mb-3">
+                  <div className="bg-slate-700 rounded p-2">
+                    <div className="text-[10px] text-slate-400">Effectif total</div>
+                    <div className="text-lg font-bold text-white">25</div>
+                  </div>
+                  <div className="bg-slate-700 rounded p-2">
+                    <div className="text-[10px] text-slate-400">Masse salariale</div>
+                    <div className="text-lg font-bold text-white">72,5M</div>
+                  </div>
+                  <div className="bg-slate-700 rounded p-2">
+                    <div className="text-[10px] text-slate-400">Congés en attente</div>
+                    <div className="text-lg font-bold text-amber-400">3</div>
+                  </div>
+                  <div className="bg-slate-700 rounded p-2">
+                    <div className="text-[10px] text-slate-400">Charges (27%)</div>
+                    <div className="text-lg font-bold text-white">19,6M</div>
+                  </div>
+                </div>
+                <div className="bg-amber-900/20 border border-amber-700/30 rounded p-2 text-[10px] text-amber-300">
+                  3 demande(s) de congé en attente de validation
+                </div>
+              </div>
+            </div>
+
+            {/* Mockup 2: Paie & CNSS */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Visual mockup */}
+              <div className="bg-slate-800 rounded-xl p-4 border border-slate-700 shadow-2xl order-2 lg:order-1">
+                <div className="flex items-center gap-2 mb-3 pb-3 border-b border-slate-700">
+                  <Calculator className="w-4 h-4 text-[#478e5e]" />
+                  <span className="text-xs text-slate-400">Simulateur de paie</span>
+                </div>
+                <div className="space-y-2 text-xs">
+                  <div className="flex justify-between"><span className="text-slate-400">Salaire de base</span><span className="text-white font-mono">5 000 000 GNF</span></div>
+                  <div className="flex justify-between"><span className="text-slate-400">Salaire brut imposable</span><span className="text-white font-mono">5 000 000 GNF</span></div>
+                  <div className="border-t border-slate-700 pt-2"></div>
+                  <div className="flex justify-between"><span className="text-red-400">CNSS salarié (5%)</span><span className="text-red-400 font-mono">- 232 000</span></div>
+                  <div className="flex justify-between"><span className="text-red-400">ITS (1,5%)</span><span className="text-red-400 font-mono">- 75 000</span></div>
+                  <div className="border-t border-slate-700 pt-2"></div>
+                  <div className="flex justify-between font-bold"><span className="text-emerald-400">Net à payer</span><span className="text-emerald-400 font-mono">4 693 000</span></div>
+                  <div className="flex justify-between text-[10px] text-slate-500"><span>Coût employeur (17% CNSS + 11% taxes)</span><span className="font-mono">+ 1 400 000</span></div>
+                </div>
+              </div>
+              <div className="order-1 lg:order-2">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-8 h-8 rounded-lg bg-[#478e5e] flex items-center justify-center">
+                    <Wallet className="w-4 h-4 text-white" />
+                  </div>
+                  <h3 className="font-semibold text-lg">Paie & CNSS conforme</h3>
+                </div>
+                <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+                  Moteur de calcul de paie 100% conforme à la législation guinéenne.
+                  CNSS, ITS, versement forfaitaire calculés automatiquement.
+                </p>
+                <ul className="space-y-2 text-sm text-slate-300">
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#478e5e]" /> CNSS : 5% salarié, 17% employeur</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#478e5e]" /> ITS 1,5%, versement forfaitaire 4%</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#478e5e]" /> Plafond CNSS 4 640 000 GNF (8×SMIG)</li>
+                  <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#478e5e]" /> Bulletins de paie PDF générés automatiquement</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Features section */}
         <section id="features" className="px-4 lg:px-6 py-16 bg-white border-t border-slate-100">
@@ -401,6 +502,7 @@ export default function Home() {
               <span className="font-semibold text-white text-sm">DataSphere RH Guinée</span>
             </div>
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mb-4">
+              <a href="#preview" className="hover:text-white transition-colors">Aperçu</a>
               <a href="#features" className="hover:text-white transition-colors">Fonctionnalités</a>
               <a href="#audience" className="hover:text-white transition-colors">Cible</a>
               <a href="#pricing" className="hover:text-white transition-colors">Tarifs</a>
