@@ -221,7 +221,7 @@ export function HelpPage() {
             { q: 'Puis-je exporter mes données à tout moment ?', a: 'Oui. Utilisez le bouton "Télécharger" ci-dessus pour exporter toutes vos données au format JSON. Vous pouvez aussi générer des rapports fiscaux (CNSS, ITS) dans le module Administration.' },
             { q: 'Que se passe-t-il si je résilie mon abonnement ?', a: 'Vous avez 30 jours pour télécharger vos données. Après suppression, vos données sont définitivement effacées de nos serveurs (conformément au RGPD - Loi L/2019/010/AN).' },
             { q: 'Le produit est-il conforme à la législation guinéenne ?', a: 'Oui. DataSphere RH intègre les taux CNSS (5%/17%), ITS (1,5%), versement forfaitaire (4%), le Code du travail (Loi L/2014/072/AN) et le RGPD (Loi L/2019/010/AN).' },
-            { q: 'Comment obtenir de l\'aide ?", a: 'Support par email (support@datasphere.gn), WhatsApp Business, ou téléphone aux heures ouvrées. Formation incluse pour les formules Business et Enterprise.' },
+            { q: 'Comment obtenir de l\'aide ?', a: 'Support par email (support@datasphere.gn), WhatsApp Business, ou téléphone aux heures ouvrées. Formation incluse pour les formules Business et Enterprise.' },
           ].map((faq, i) => (
             <div key={i} className="p-3 rounded-lg bg-slate-50 border border-slate-200">
               <p className="font-medium text-slate-900 text-sm">{faq.q}</p>
