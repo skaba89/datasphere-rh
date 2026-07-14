@@ -6,6 +6,7 @@
   NODE_VERSION = "22"
   NPM_FLAGS = "--legacy-peer-deps"
   NETLIFY = "true"
+  NODE_OPTIONS = "--max-old-space-size=4096"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

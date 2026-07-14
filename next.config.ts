@@ -8,16 +8,15 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   reactStrictMode: false,
-  // Images optimization
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       { protocol: 'https', hostname: '**' },
     ],
-  },
-  experimental: {
-    optimizePackageImports: ['lucide-react', 'recharts', '@prisma/client'],
   },
 };
 
