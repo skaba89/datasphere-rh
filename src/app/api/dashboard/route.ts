@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { getCompanyContext } from '@/lib/advanced/auth-helpers'
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const ctx = await getCompanyContext(request)
+    if ('error' in ctx) return ctx.error
+    const companyId = ctx.companyId
+
     const employees = await db.employee.findMany({
+      where: { companyId },
       include: {
         contracts: {
           orderBy: { createdAt: 'desc' },
@@ -26,7 +32,10 @@ export async function GET() {
     const onLeaveToday = employees.filter(e => e.leaveRequests.length > 0).length
 
     const pendingLeaves = await db.leaveRequest.count({
-      where: { statut: 'EN_ATTENTE' },
+      where: {
+        statut: 'EN_ATTENTE',
+        employee: { companyId },
+      },
     })
 
     // Calcul masse salariale mensuelle
@@ -35,8 +44,8 @@ export async function GET() {
       return sum + (contract?.salaireBase || 0)
     }, 0)
 
-    // Charges patronales approximatives (8% CNSS + 4% VF + 1% apprent + 3% form + 2% AT = 18%)
-    const monthlyCharges = monthlyPayroll * 0.18
+    // Charges patronales approximatives (17% CNSS + 4% VF + 1% apprent + 3% form + 2% AT = 27%)
+    const monthlyCharges = monthlyPayroll * 0.27
 
     const cdiCount = employees.filter(e =>
       e.contracts && e.contracts.length > 0 && e.contracts[0].type === 'CDI'
@@ -97,6 +106,7 @@ export async function GET() {
       cddCount,
       stageCount,
       alerts,
+      companyId,
     })
   } catch (error) {
     console.error('GET /api/dashboard error:', error)

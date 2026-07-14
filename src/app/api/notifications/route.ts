@@ -1,18 +1,19 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { getCompanyContext } from '@/lib/advanced/auth-helpers'
 
-// GET /api/notifications?channel=IN_APP — liste les notifications
+// GET /api/notifications?channel=IN_APP — liste les notifications de la société
 export async function GET(request: Request) {
   try {
+    const ctx = await getCompanyContext(request)
+    if ('error' in ctx) return ctx.error
+
     const { searchParams } = new URL(request.url)
     const channel = searchParams.get('channel') || 'IN_APP'
     const limit = parseInt(searchParams.get('limit') || '50')
 
-    const company = await db.company.findFirst()
-    if (!company) return NextResponse.json({ notifications: [], unread: 0 })
-
     const notifications = await db.notification.findMany({
-      where: { companyId: company.id, channel },
+      where: { companyId: ctx.companyId, channel },
       orderBy: { createdAt: 'desc' },
       take: Math.min(limit, 100),
     })

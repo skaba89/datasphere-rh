@@ -1,9 +1,23 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { getCompanyContext } from '@/lib/advanced/auth-helpers'
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const ctx = await getCompanyContext(request)
+    if ('error' in ctx) return ctx.error
+
+    // AuditLog n'a pas de companyId direct, on filtre par les employés de la société
+    // ou par entityId correspondant à la société
     const logs = await db.auditLog.findMany({
+      where: {
+        OR: [
+          { entityId: ctx.companyId },
+          { entityType: 'company', entityId: ctx.companyId },
+          // Logs créés par les utilisateurs de cette société
+          { userId: { in: await db.user.findMany({ where: { companyId: ctx.companyId }, select: { email: true } }).then(u => u.map(x => x.email)) } },
+        ],
+      },
       orderBy: { createdAt: 'desc' },
       take: 100,
     })
@@ -22,7 +36,7 @@ export async function GET() {
         entityId: l.entityId,
         userId: l.userId,
         diff,
-        createdAt: l.createdAt.toISOString(),
+        createdAt: l.createdAt,
       }
     })
 

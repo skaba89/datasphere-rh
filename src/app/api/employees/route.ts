@@ -1,9 +1,14 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { getCompanyContext } from '@/lib/advanced/auth-helpers'
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const ctx = await getCompanyContext(request)
+    if ('error' in ctx) return ctx.error
+
     const employees = await db.employee.findMany({
+      where: { companyId: ctx.companyId },
       include: {
         contracts: {
           orderBy: { createdAt: 'desc' },
@@ -38,6 +43,9 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const ctx = await getCompanyContext(request)
+    if ('error' in ctx) return ctx.error
+
     const body = await request.json()
 
     if (!body.nom || !body.prenoms || !body.poste || !body.dateEmbauche || !body.salaireBase || !body.contractType) {
@@ -47,13 +55,8 @@ export async function POST(request: Request) {
       )
     }
 
-    const company = await db.company.findFirst()
-    if (!company) {
-      return NextResponse.json({ error: 'Aucune société configurée' }, { status: 400 })
-    }
-
-    const count = await db.employee.count()
-    const matricule = body.matricule || `DS-${String(count + 1).padStart(3, '0')}`
+    const count = await db.employee.count({ where: { companyId: ctx.companyId } })
+    const matricule = body.matricule || `EMP-${String(count + 1).padStart(3, '0')}`
 
     const existing = await db.employee.findUnique({ where: { matricule } })
     if (existing) {
@@ -62,7 +65,7 @@ export async function POST(request: Request) {
 
     const employee = await db.employee.create({
       data: {
-        companyId: company.id,
+        companyId: ctx.companyId,
         matricule,
         nom: body.nom,
         prenoms: body.prenoms,
@@ -98,7 +101,7 @@ export async function POST(request: Request) {
         action: 'CREATE',
         entityType: 'employee',
         entityId: employee.id,
-        userId: 'admin@demo.gn',
+        userId: ctx.user?.email || 'system',
         diff: JSON.stringify({ after: { nom: employee.nom, prenoms: employee.prenoms, matricule } }),
       },
     })
