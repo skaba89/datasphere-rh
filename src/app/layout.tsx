@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as SonnerToaster } from "sonner";
 import { Providers } from "@/components/providers";
 import { ServiceWorkerRegistration } from "@/components/sw-registration";
+import { ErrorBoundary } from "@/components/error-boundary";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -47,11 +48,13 @@ export default function RootLayout({
         className={`${inter.variable} font-sans antialiased bg-slate-50 text-slate-900 min-h-screen`}
       >
         <ServiceWorkerRegistration />
-        <Providers>
-          {children}
-        </Providers>
-        <Toaster />
-        <SonnerToaster position="top-right" richColors closeButton />
+        <ErrorBoundary>
+          <Providers>
+            {children}
+          </Providers>
+          <Toaster />
+          <SonnerToaster position="top-right" richColors closeButton />
+        </ErrorBoundary>
       </body>
     </html>
   );

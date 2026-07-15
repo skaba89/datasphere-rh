@@ -99,6 +99,8 @@ export const MODULE_CATALOG: ModuleDef[] = [
   // === Administration ===
   { key: 'exports', label: 'Exports', category: 'Administration', defaultEnabled: true, description: 'Exports CSV, Excel, PDF' },
   { key: 'fiscal-reports', label: 'Rapports fiscaux', category: 'Administration', defaultEnabled: true, description: 'CNSS mensuel, ITS annuel, solde de tout compte' },
+  { key: 'sessions', label: 'Appareils connectés', category: 'Administration', defaultEnabled: true, description: 'Gestion des sessions actives' },
+  { key: 'security', label: 'Sécurité', category: 'Administration', defaultEnabled: true, description: 'Tableau de bord de sécurité (admin)' },
   { key: 'custom-reports', label: 'Rapports custom', category: 'Administration', defaultEnabled: false, description: 'Rapports personnalisés' },
   { key: 'reports', label: 'Rapports DG', category: 'Administration', defaultEnabled: true, description: 'Rapports pour la direction' },
   { key: 'webhooks', label: 'Webhooks', category: 'Administration', defaultEnabled: false, description: 'Intégrations API sortantes' },
