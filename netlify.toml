@@ -9,10 +9,68 @@
   NODE_OPTIONS = "--max-old-space-size=4096"
   NEXT_TELEMETRY_DISABLED = "1"
 
-# Clear cache between builds to avoid stale .next directory
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
 [functions]
   node_bundler = "esbuild"
   external_node_modules = ["@prisma/client", "bcryptjs", "z-ai-web-dev-sdk"]
+
+# ━━━ Headers de sécurité ━━━
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Protection clickjacking
+    X-Frame-Options = "SAMEORIGIN"
+    # Empêche le MIME sniffing
+    X-Content-Type-Options = "nosniff"
+    # Protection XSS (héritage, complément du CSP)
+    X-XSS-Protection = "1; mode=block"
+    # Politique de référent
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # Permissions (caméra, micro, géoloc)
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    # HSTS (déjà géré par Netlify, mais on le renforce)
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    # Pas de cache pour les APIs dynamiques (par défaut)
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    # CORS restreint au même origine
+    Access-Control-Allow-Origin = "https://gestion-sirh.netlify.app"
+    Access-Control-Allow-Methods = "GET, POST, PATCH, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
+    Access-Control-Allow-Credentials = "true"
+
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    # Cache long pour les assets statiques (hashés)
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/api/healthz"
+  [headers.values]
+    # Le health check peut être cache court
+    Cache-Control = "public, max-age=30"
+
+[[headers]]
+  for = "/api/cron/*"
+  [headers.values]
+    # Pas de cache pour les cron
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# ━━━ Redirects utiles ━━━
+
+[[redirects]]
+  from = "/dashboard"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/login"
+  to = "/"
+  status = 301
