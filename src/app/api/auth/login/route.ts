@@ -2,12 +2,17 @@ import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import bcrypt from 'bcryptjs'
 import { createSession, SESSION_COOKIE, SESSION_DURATION_MS } from '@/lib/session'
+import {
+  checkRateLimit,
+  recordLoginAttempt,
+  getIpAddress,
+} from '@/lib/security'
 
 // Re-export getSession pour rétrocompatibilité (autres fichiers l'importent depuis ici)
 export { getSession } from '@/lib/session'
 
 export async function POST(request: Request) {
-  // Diagnostic step 1: Parse body
+  // Étape 1 : Parser le body
   let email: string, password: string
   try {
     const body = await request.json()
@@ -24,7 +29,29 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Email et mot de passe requis' }, { status: 400 })
   }
 
-  // Diagnostic step 2: DB connection
+  // Étape 2 : Extraire IP et User-Agent
+  const ipAddress = getIpAddress(request)
+  const userAgent = request.headers.get('user-agent') || null
+
+  // Étape 3 : Vérifier le rate limiting AVANT toute vérification de mot de passe
+  try {
+    const rateLimit = await checkRateLimit(email, ipAddress)
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        {
+          error: rateLimit.reason || 'Trop de tentatives. Réessayez plus tard.',
+          remainingAttempts: 0,
+          lockoutExpiresAt: rateLimit.lockoutExpiresAt,
+        },
+        { status: 429 }
+      )
+    }
+  } catch (rlError: any) {
+    console.error('Rate limit check error:', rlError)
+    // En cas d'erreur du rate limiter, on continue (fail-open pour ne pas bloquer)
+  }
+
+  // Étape 4 : Vérifier l'utilisateur en base
   let user: any
   try {
     user = await db.user.findUnique({
@@ -34,21 +61,18 @@ export async function POST(request: Request) {
   } catch (dbError: any) {
     console.error('DB error in login:', dbError)
     return NextResponse.json(
-      {
-        error: 'Erreur base de données',
-        step: 'db_query',
-        code: dbError?.code,
-        message: dbError?.message,
-      },
+      { error: 'Erreur base de données', step: 'db_query', code: dbError?.code, message: dbError?.message },
       { status: 500 }
     )
   }
 
   if (!user || !user.active) {
+    // Enregistrer l'échec
+    await recordLoginAttempt(email, ipAddress, false, userAgent)
     return NextResponse.json({ error: 'Utilisateur introuvable ou inactif' }, { status: 401 })
   }
 
-  // Diagnostic step 3: bcrypt
+  // Étape 5 : Vérifier le mot de passe
   let isValid: boolean
   try {
     isValid = await bcrypt.compare(password, user.passwordHash)
@@ -61,10 +85,23 @@ export async function POST(request: Request) {
   }
 
   if (!isValid) {
-    return NextResponse.json({ error: 'Mot de passe incorrect' }, { status: 401 })
+    // Enregistrer l'échec
+    await recordLoginAttempt(email, ipAddress, false, userAgent)
+    // Recalculer les tentatives restantes
+    const rateLimit = await checkRateLimit(email, ipAddress)
+    return NextResponse.json(
+      {
+        error: 'Mot de passe incorrect',
+        remainingAttempts: rateLimit.remainingAttempts,
+      },
+      { status: 401 }
+    )
   }
 
-  // Diagnostic step 4: Update last login
+  // Étape 6 : Enregistrer le succès
+  await recordLoginAttempt(email, ipAddress, true, userAgent)
+
+  // Étape 7 : Mettre à jour lastLogin
   try {
     await db.user.update({
       where: { id: user.id },
@@ -72,10 +109,9 @@ export async function POST(request: Request) {
     })
   } catch (updateError: any) {
     console.error('Update lastLogin error:', updateError)
-    // Non-blocking, continue
   }
 
-  // Diagnostic step 5: Audit log
+  // Étape 8 : Audit log
   try {
     await db.auditLog.create({
       data: {
@@ -83,36 +119,24 @@ export async function POST(request: Request) {
         entityType: 'user',
         entityId: user.id,
         userId: user.email,
-        diff: JSON.stringify({ after: { email: user.email, role: user.role } }),
+        diff: JSON.stringify({ after: { email: user.email, role: user.role, ip: ipAddress } }),
       },
     })
   } catch (auditError: any) {
     console.error('Audit log error:', auditError)
-    // Non-blocking, continue
   }
 
-  // Diagnostic step 6: Create session
+  // Étape 9 : Créer la session
   let token: string
   try {
     token = await createSession(
-      {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-        companyId: user.companyId,
-      },
+      { id: user.id, email: user.email, name: user.name, role: user.role, companyId: user.companyId },
       request
     )
   } catch (sessionError: any) {
     console.error('Session creation error:', sessionError)
     return NextResponse.json(
-      {
-        error: 'Erreur création session',
-        step: 'create_session',
-        code: sessionError?.code,
-        message: sessionError?.message,
-      },
+      { error: 'Erreur création session', step: 'create_session', code: sessionError?.code, message: sessionError?.message },
       { status: 500 }
     )
   }
@@ -129,7 +153,6 @@ export async function POST(request: Request) {
     },
   })
 
-  // Cookie HTTP-only — secure en production
   const isProduction = process.env.NODE_ENV === 'production'
   response.cookies.set(SESSION_COOKIE, token, {
     httpOnly: true,

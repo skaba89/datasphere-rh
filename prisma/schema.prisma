@@ -255,6 +255,19 @@ model Session {
   @@index([expiresAt])
 }
 
+model LoginAttempt {
+  id          String   @id @default(cuid())
+  email       String
+  ipAddress   String?
+  success     Boolean
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  @@index([email])
+  @@index([ipAddress])
+  @@index([createdAt])
+}
+
 // ━━━ Module Recrutement & Onboarding ━━━
 
 model Candidate {

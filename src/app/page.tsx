@@ -76,7 +76,8 @@ import { EmployeeDetailModal } from '@/components/rh/employee-detail'
 import { ImportModal } from '@/components/rh/import-modal'
 import { FiscalReportsPage } from '@/components/rh/pages/fiscal-reports'
 import { HelpPage } from '@/components/rh/pages/help'
-import { LogOut, LogIn, Upload, Users, Wallet, CalendarDays, FileText, Target, BarChart3, GraduationCap, Bot, ShieldCheck, ClipboardList, Menu, Building2, CheckCircle2, Calculator } from 'lucide-react'
+import { ChangePasswordModal } from '@/components/rh/change-password-modal'
+import { LogOut, LogIn, Upload, Users, Wallet, CalendarDays, FileText, Target, BarChart3, GraduationCap, Bot, ShieldCheck, ClipboardList, Menu, Building2, CheckCircle2, Calculator, KeyRound } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface AuthUser {
@@ -98,6 +99,7 @@ export default function Home() {
   const [selectedCompany, setSelectedCompany] = useState<string>('')
   const [employeesTick, setEmployeesTick] = useState(0)
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
+  const [passwordModalOpen, setPasswordModalOpen] = useState(false)
   const [user, setUser] = useState<AuthUser | null>(null)
   const [loadingUser, setLoadingUser] = useState(true)
 
@@ -588,6 +590,13 @@ export default function Home() {
                 Import
               </button>
               <button
+                onClick={() => setPasswordModalOpen(true)}
+                className="flex items-center gap-1.5 text-xs text-slate-600 hover:text-[#27698a] px-2 py-1 rounded hover:bg-slate-100"
+                title="Changer le mot de passe"
+              >
+                <KeyRound className="w-4 h-4" />
+              </button>
+              <button
                 onClick={handleLogout}
                 className="flex items-center gap-1.5 text-xs text-slate-600 hover:text-red-600 px-2 py-1 rounded hover:bg-red-50"
                 title="Se déconnecter"
@@ -735,6 +744,10 @@ export default function Home() {
           employeeId={selectedEmployee}
           onClose={() => setSelectedEmployee(null)}
         />
+      )}
+
+      {passwordModalOpen && (
+        <ChangePasswordModal onClose={() => setPasswordModalOpen(false)} />
       )}
     </div>
   )

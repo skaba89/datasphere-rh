@@ -1,6 +1,144 @@
 /**
  * Utilitaires de sécurité pour DataSphere RH
  */
+import { db } from '@/lib/db'
+
+/**
+ * Constantes de rate limiting
+ */
+export const MAX_LOGIN_ATTEMPTS = 5
+export const LOCKOUT_DURATION_MS = 15 * 60 * 1000 // 15 minutes
+export const RATE_LIMIT_WINDOW_MS = 60 * 1000 // 1 minute
+
+export interface RateLimitResult {
+  allowed: boolean
+  remainingAttempts: number
+  lockoutExpiresAt: Date | null
+  reason?: string
+}
+
+/**
+ * Vérifie le rate limiting pour un email et une IP donnés.
+ * Règles :
+ * - Maximum 5 tentatives par email dans les 15 dernières minutes
+ * - Maximum 10 tentatives par IP dans la dernière minute
+ * - Après 5 échecs par email, verrouillage 15 minutes
+ */
+export async function checkRateLimit(email: string, ipAddress: string | null): Promise<RateLimitResult> {
+  const now = new Date()
+  const lockoutCutoff = new Date(now.getTime() - LOCKOUT_DURATION_MS)
+  const rateLimitCutoff = new Date(now.getTime() - RATE_LIMIT_WINDOW_MS)
+
+  // 1. Compter les tentatives échouées par email dans les 15 dernières minutes
+  const failedByEmail = await db.loginAttempt.count({
+    where: {
+      email: email.toLowerCase(),
+      success: false,
+      createdAt: { gt: lockoutCutoff },
+    },
+  })
+
+  // 2. Compter les tentatives par IP dans la dernière minute
+  let failedByIp = 0
+  if (ipAddress) {
+    failedByIp = await db.loginAttempt.count({
+      where: {
+        ipAddress,
+        createdAt: { gt: rateLimitCutoff },
+      },
+    })
+  }
+
+  // 3. Vérifier le verrouillage par email
+  if (failedByEmail >= MAX_LOGIN_ATTEMPTS) {
+    // Trouver la dernière tentative pour calculer l'expiration du lockout
+    const lastAttempt = await db.loginAttempt.findFirst({
+      where: {
+        email: email.toLowerCase(),
+        success: false,
+        createdAt: { gt: lockoutCutoff },
+      },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    const lockoutExpiresAt = lastAttempt
+      ? new Date(lastAttempt.createdAt.getTime() + LOCKOUT_DURATION_MS)
+      : new Date(now.getTime() + LOCKOUT_DURATION_MS)
+
+    return {
+      allowed: false,
+      remainingAttempts: 0,
+      lockoutExpiresAt,
+      reason: `Compte temporairement verrouillé. Réessayez après ${lockoutExpiresAt.toLocaleTimeString('fr-FR')}.`,
+    }
+  }
+
+  // 4. Vérifier le rate limiting par IP (10 tentatives/min)
+  if (failedByIp >= 10) {
+    return {
+      allowed: false,
+      remainingAttempts: 0,
+      lockoutExpiresAt: null,
+      reason: 'Trop de tentatives depuis cette adresse. Réessayez dans 1 minute.',
+    }
+  }
+
+  return {
+    allowed: true,
+    remainingAttempts: MAX_LOGIN_ATTEMPTS - failedByEmail,
+    lockoutExpiresAt: null,
+  }
+}
+
+/**
+ * Enregistre une tentative de connexion (succès ou échec).
+ */
+export async function recordLoginAttempt(
+  email: string,
+  ipAddress: string | null,
+  success: boolean,
+  userAgent: string | null
+): Promise<void> {
+  try {
+    await db.loginAttempt.create({
+      data: {
+        email: email.toLowerCase(),
+        ipAddress,
+        success,
+        userAgent,
+      },
+    })
+  } catch (error) {
+    console.error('recordLoginAttempt error:', error)
+  }
+}
+
+/**
+ * Nettoie les anciennes tentatives de connexion (> 24h).
+ */
+export async function cleanupOldLoginAttempts(): Promise<number> {
+  try {
+    const result = await db.loginAttempt.deleteMany({
+      where: {
+        createdAt: { lt: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+      },
+    })
+    return result.count
+  } catch {
+    return 0
+  }
+}
+
+/**
+ * Extrait l'adresse IP d'une requête.
+ */
+export function getIpAddress(request: Request): string | null {
+  const forwarded = request.headers.get('x-forwarded-for')
+  if (forwarded) {
+    return forwarded.split(',')[0].trim()
+  }
+  return request.headers.get('x-real-ip') || null
+}
 
 /**
  * Vérifie la force d'un mot de passe selon la politique de sécurité.
