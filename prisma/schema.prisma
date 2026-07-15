@@ -268,6 +268,21 @@ model LoginAttempt {
   @@index([createdAt])
 }
 
+model PasswordReset {
+  id          String   @id @default(cuid())
+  email       String
+  token       String   @unique
+  userId      String?
+  expiresAt   DateTime
+  usedAt      DateTime?
+  ipAddress   String?
+  createdAt   DateTime @default(now())
+
+  @@index([email])
+  @@index([token])
+  @@index([expiresAt])
+}
+
 // ━━━ Module Recrutement & Onboarding ━━━
 
 model Candidate {
